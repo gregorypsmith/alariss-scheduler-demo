@@ -119,9 +119,16 @@ def select_timezone():
     return render_template('select_timezone.html', errormsg='')
 
 # schedule for candidate
-@app.route("/candidate_scheduler")
+@app.route("/candidate_scheduler", methods=['GET', 'POST'])
 def candidate_scheduler():
-    return render_template('candidate_scheduler.html')
+	print("made it to routing stage!!")
+	if request.method == "POST":
+		print("Post operation called!!")
+		candidate_time_info = 1 #will eventually be retrieved through the URL we sent, hardcoded for now
+		candidate_time_info = request.form['submit_times']
+		print(candidate_time_info)
+
+	return render_template('candidate_scheduler.html')
 
 # schedule for client
 @app.route("/client_scheduler")

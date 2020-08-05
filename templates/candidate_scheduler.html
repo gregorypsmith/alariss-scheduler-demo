@@ -29,10 +29,18 @@
 </div>
 </table>
 <br></br>
-<button type="button" class="btn btn-primary" 
+
+<!-- <form method="POST">
+<input type="hidden" id="submit_times" name="submit_times"> -->
+<button type="submit" class="btn btn-primary" 
 style="width: 150px; height: 50px; background-color: #1E90FF; font-size:30px; color: #FFFAF0" 
 onclick= "on_submit();"> SUBMIT</button>
+<!-- </form> -->
 <center>
+
+<form method="POST" id="meme_doge">
+<input type="hidden" class="hidden-form" id="submit_times" name="submit_times" >
+</form>
 
 </html>
 
@@ -42,16 +50,23 @@ onclick= "on_submit();"> SUBMIT</button>
 
 var selected_list = [] 
 
-
+//@Greg use this function for sending to backend 
 function on_submit(){
- console.log("Submitted to backend successfully")
+ console.log("Submitting to backend")
+ console.log(selected_list)
  info = { selected_times:selected_list,
           timezone: "Unknown",
-          userID: "user" 
+          userID: "user"     
  }
  //do some stuff to send the info to the backend here 
  //also need to move off of the page to a "success" page that gives
  //the candidate some more info and expectations
+var myJSON = JSON.stringify(info);
+var jinja_submitter = document.getElementById("submit_times");
+jinja_submitter.value = myJSON 
+console.log(jinja_submitter)
+$("#meme_doge").submit(); 
+  
 }
 
 
@@ -80,6 +95,7 @@ function update_selection(time){
     }
     console.log("Current Selected List:")
     console.log(selected_list)
+
 
 }
 
@@ -145,8 +161,8 @@ function init_table(){
 
 day_information = get_info_for_next_n_days(7)
 console.log(day_information)
-var times = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", 
-                 "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];
+var times = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00","06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", 
+                 "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
 
 // $('.josh-class').append('<table>');
 $('.josh-class').append('<tr>');
