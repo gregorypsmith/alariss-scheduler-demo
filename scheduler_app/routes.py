@@ -31,6 +31,7 @@ def administrator():
         client_fname = request.form['client_fname'].strip()
         client_lname = request.form['client_lname'].strip()
         client_email = request.form['client_email'].strip()
+        client_timezone = request.form['client_timezone'].strip()
 
         if not candidate_fname or not candidate_email or not candidate_email \
             or not client_email or not client_fname or not client_fname:
@@ -56,7 +57,7 @@ def administrator():
                 first_name=client_fname,
                 last_name=client_lname,
                 email=client_email,
-                timezone=''
+                timezone=client_timezone
             )
             db.session.add(client)
         db.session.commit()
@@ -98,17 +99,32 @@ def login():
     return render_template('login.html', errormsg='')
 
 # select your timezone
-@app.route("/select-timezone", methods=['GET', 'POST'])
+@app.route("/select_timezone", methods=['GET', 'POST'])
 def select_timezone():
-    return render_template('select_timezone.html')
+    if request.method == "POST":
+
+        candidate_id = 1 #will eventually be retrieved through the URL we sent, hardcoded for now
+        candidate_timezone = request.form['timezone']
+
+        # reminder that this is hardcoded for now
+        candidate = User.query.filter_by(id=candidate_id).first()
+        if candidate:
+            candidate.timezone = candidate_timezone
+            db.session.commit()
+            return redirect(url_for('candidate_scheduler'))
+        else:
+            return render_template('select_timezone.html', errormsg='It seems you are not scheduled for an interview. Please contact nick@alariss.com for assistance.')
+
+
+    return render_template('select_timezone.html', errormsg='')
 
 # schedule for candidate
-@app.route("/candidate-scheduler")
+@app.route("/candidate_scheduler")
 def candidate_scheduler():
     return render_template('candidate_scheduler.html')
 
 # schedule for client
-@app.route("/client-scheduler")
+@app.route("/client_scheduler")
 def client_scheduler():
     return render_template('index.html')
 
