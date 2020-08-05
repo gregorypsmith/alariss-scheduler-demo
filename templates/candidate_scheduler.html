@@ -1,18 +1,26 @@
 
 <html>
-<div id="header">
-        <img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
-        <h1>Interview Scheduler</h1>
+
+
+<!-- Twitter Bootstrap Sandbox -->
+
+ <!-- <img style="float:right" id="logo" src="alarisslogo.png"  width="200" height="200"> -->
+<center>
+
+<div id="header">       
+        <h1>Alariss Candidate Interview Scheduler</h1>
     </div>
     
     <div id="instructions">
-        <p><b>Please read the intructions below:</b><br>1. Each interview is a 1 hour long video chat via Zoom.<br>
+        <p><b>Please read the intructions below:</b><br>1. Each timeslot below corresponds to a 1 hour long video chat via Zoom.<br>
         2. Please be considerate of your interviewer’s waking hours.<br>
-        3. Picking more times will help ensure you receive an interview.</p>
+        3. Picking more times will help ensure you receive an interview.<br>
+        4. Make sure you are actually available at the times you pick <br>
+        5. Click on the times you are available to interview,then click the SUBMIT button</p>
     </div>
 
-<!-- Twitter Bootstrap Sandbox -->
-<center>
+
+
 <table>
 
 <div class="josh-class" role="group" aria-label="First group">
@@ -22,7 +30,8 @@
 </table>
 <br></br>
 <button type="button" class="btn btn-primary" 
-style="width: 150px; height: 50px; background-color: #1E90FF; font-size:30px; color: #FFFAF0" >SUBMIT</button>
+style="width: 150px; height: 50px; background-color: #1E90FF; font-size:30px; color: #FFFAF0" 
+onclick= "update_selection(selected_time);"> SUBMIT</button>
 <center>
 
 </html>
