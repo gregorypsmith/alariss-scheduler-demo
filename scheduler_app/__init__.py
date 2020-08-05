@@ -7,9 +7,11 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_mail import Mail
+from flask_login import LoginManager, UserMixin
+from flask_bootstrap import Bootstrap
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates')
 app.config.from_object("scheduler_app.config.DevelopmentConfig")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # print(os.environ['APP_SETTINGS'])
@@ -36,6 +38,10 @@ app.config.update(
 db = SQLAlchemy(app)
 admin = Admin(app)
 mail = Mail(app)
+Bootstrap(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 
 from scheduler_app import routes

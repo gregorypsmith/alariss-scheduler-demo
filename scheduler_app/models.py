@@ -2,6 +2,14 @@ import os
 from datetime import datetime
 from scheduler_app import db, admin, mail
 from flask_admin.contrib.sqla import ModelView
+from flask_login import UserMixin
+
+class Administrator(UserMixin, db.Model):
+	__tablename__ = 'administrator'
+	id = db.Column(db.Integer, primary_key=True)
+	first_name = db.Column(db.Unicode)
+	email=db.Column(db.Unicode)
+	password=db.Column(db.Unicode)
 
 InterviewStatus = {
 	"STARTED": 1,
@@ -44,7 +52,4 @@ class Interview(db.Model):
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Interview, db.session))
-
-
-
-    
+admin.add_view(ModelView(Administrator, db.session))
