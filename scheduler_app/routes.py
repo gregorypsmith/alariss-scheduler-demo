@@ -1,6 +1,6 @@
 from scheduler_app import app, db, mail, login_manager
 from flask_login import login_user, login_required, logout_user, current_user
-from scheduler_app.models import Administrator, Candidate, Client, Interview
+from scheduler_app.models import User, Interview, Administrator
 from flask import render_template, request, make_response, redirect, url_for
 from flask_mail import Message
 import os 
