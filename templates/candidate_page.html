@@ -76,24 +76,29 @@
 	</div>
 	
 	<div id="submit" class="text-center pt-5">
-		<button type="button" class="btn btn-lg btn-primary" disabled>Submit</button>
+		<button id="button" type="button" class="btn btn-lg btn-primary" disabled>Submit</button>
 
 		<script type="text/javascript">
 			// check value of pulldown menu
 			var select = document.getElementById('timezone');
 			select.addEventListener('change', (event) => {
 				var selected = document.getElementById('timezone');
+				var message = document.getElementById('error-message');
 				console.log(selected.value);
-				var button = getElementByClassName("btn");
+				var button = document.getElementById("button");
 				if (selected.value != "None") {
-					//button.disabled =
+					button.disabled = false;
+					message.textContent = "";
+				} else {
+					button.disabled = true;
+					message.textContent = "Please select a timezone before submitting";
 				}
-				//	  status of submit = disabled
-				// else
-				// 	  submit = enabled
 			});
 
 		</script>
+	</div>
+	<div id=error-message>
+		Please Select a timezone before submitting!
 	</div>
 	
 
