@@ -1,5 +1,5 @@
 from scheduler_app import app, db, mail
-from scheduler_app.models import Candidate, Client, Interview
+from scheduler_app.models import User, Interview
 from flask import render_template, request, make_response, redirect, url_for
 from flask_mail import Message
 import os 
