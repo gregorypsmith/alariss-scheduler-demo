@@ -23,8 +23,7 @@ class User(db.Model):
 	first_name = db.Column(db.String(20), nullable=False)
 	last_name = db.Column(db.String(20), nullable=False)
 	email = db.Column(db.String(120), nullable=False, unique=True)
-	client_airtable_id = db.Column(db.String(50))
-	candidate_airtable_id = db.Column(db.String(50))
+	timezone = db.Column(db.Unicode)
 
 	def __repr__(self):
 		return f"User {self.first_name} {self.last_name}, {self.email}"
