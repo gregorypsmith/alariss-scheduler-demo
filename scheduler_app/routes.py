@@ -1,5 +1,5 @@
 from scheduler_app import app, db, mail, login_manager
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, fresh_login_required, logout_user, current_user
 from scheduler_app.models import User, Interview, Administrator
 from flask import render_template, request, make_response, redirect, url_for
 from flask_mail import Message
@@ -19,8 +19,8 @@ def home():
 
 # need flask-login to authenticate
 @app.route("/administrator", methods=['GET', 'POST'])
-@login_required
-def admin():
+@fresh_login_required
+def administrator():
 
     if request.method == 'POST':
 
@@ -38,24 +38,25 @@ def admin():
                 filled out incorrectly. Please try again')
 
         # add users to db if necessary
-        cand = Candidate.query.filter_by(email=candidate_email).first()
-        client = Client.query.filter_by(email=client_email).first()
+        cand = User.query.filter_by(email=candidate_email).first()
+        client = User.query.filter_by(email=client_email).first()
 
         if not cand:
-            cand = Candidate(
+            cand = User(
                 first_name=candidate_fname,
                 last_name=candidate_lname,
-                airtable_id='', 
-                email=candidate_email
+                email=candidate_email,
+                timezone=''
             )
             db.session.add(cand)
+        db.session.commit()
 
         if not client:
-            client = Client(
+            client = User(
                 first_name=client_fname,
                 last_name=client_lname,
-                airtable_id='', 
-                email=client_email
+                email=client_email,
+                timezone=''
             )
             db.session.add(client)
         db.session.commit()
@@ -88,7 +89,7 @@ def login():
             if admin.password == password_form:
                 login_user(admin)
                 # successful login
-                return admin()
+                return redirect(url_for('administrator'))
 
         # unsuccessful login        
         return render_template('login.html', errormsg='Incorrect email/password combination')

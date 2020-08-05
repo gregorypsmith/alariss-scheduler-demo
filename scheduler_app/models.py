@@ -18,7 +18,7 @@ InterviewStatus = {
 }
 
 class User(db.Model):
-	__tablename__ = "users"
+	__tablename__ = "user"
 	id = db.Column(db.Integer, primary_key=True)
 	first_name = db.Column(db.String(20), nullable=False)
 	last_name = db.Column(db.String(20), nullable=False)
@@ -30,10 +30,10 @@ class User(db.Model):
 
 
 class Interview(db.Model):
-	__tablename__ = 'interviews'
+	__tablename__ = 'interview'
 	id = db.Column(db.Integer, primary_key=True)
-	candidate_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-	client_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+	candidate_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	client_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 	candidate = db.relationship("User", foreign_keys=candidate_id, backref='as_interviewee')
 	client = db.relationship("User", foreign_keys=client_id, backref='as_interviewer')
 	candidate_times = db.Column(db.String(1000))
