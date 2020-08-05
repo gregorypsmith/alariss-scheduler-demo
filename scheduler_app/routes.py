@@ -31,7 +31,7 @@ def select_timezone():
 # schedule for candidate
 @app.route("/candidate-scheduler")
 def candidate_scheduler():
-    return render_template('index.html')
+    return render_template('candidate_scheduler.html')
 
 # schedule for client
 @app.route("/client-scheduler")
