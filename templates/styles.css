@@ -1,0 +1,24 @@
+h1 {
+	color: blue;
+	font-size: 36px;
+	font-family: "Oswald";
+}
+
+#header {
+	text-align: center;
+	padding-top: 10px;
+}
+
+
+#instructions p {
+	text-align: center; 
+	font-size: 18px;
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+#settings {
+	font-size: 24px;
+	text-align: center;
+	padding-top: 20px;
+}

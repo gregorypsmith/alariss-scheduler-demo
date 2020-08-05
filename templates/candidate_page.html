@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  	<title>Interview Scheduler</title>
+	<link rel="stylesheet" href="styles.css">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+</head>
+<body>
+    <div id="header">
+		<img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
+		<h1>Interview Scheduler</h1>
+	</div>
+	
+	<div id="instructions">
+		<p><b>Please read the intructions below:</b><br>1. Each interview is a 1 hour long video chat via Zoom.<br>
+		2. Please be considerate of your interviewer’s waking hours.<br>
+		3. Picking more times will help ensure you receive an interview.</p>
+	</div>	
+
+	<div id="settings">
+		<label for="times">Choose a timezone:</label>
+		<select name="timezone" id="timezone">
+			<option value="None" selected="selected"> --- Please Select a Timezone --- </option>
+		    <option value="-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+			<option value="-11:00">(GMT -11:00) Midway Island, Samoa</option>
+			<option value="-10:00">(GMT -10:00) Hawaii</option>
+			<option value="-09:50">(GMT -9:30) Taiohae</option>
+			<option value="-09:00">(GMT -9:00) Alaska</option>
+			<option value="-08:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+			<option value="-07:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+			<option value="-06:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+			<option value="-05:00">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+			<option value="-04:50">(GMT -4:30) Caracas</option>
+			<option value="-04:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+			<option value="-03:50">(GMT -3:30) Newfoundland</option>
+			<option value="-03:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+			<option value="-02:00">(GMT -2:00) Mid-Atlantic</option>
+			<option value="-01:00">(GMT -1:00) Azores, Cape Verde Islands</option>
+			<option value="+00:00">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+			<option value="+01:00">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
+			<option value="+02:00">(GMT +2:00) Kaliningrad, South Africa</option>
+			<option value="+03:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+			<option value="+03:50">(GMT +3:30) Tehran</option>
+			<option value="+04:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+			<option value="+04:50">(GMT +4:30) Kabul</option>
+			<option value="+05:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+			<option value="+05:50">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+			<option value="+05:75">(GMT +5:45) Kathmandu, Pokhara</option>
+			<option value="+06:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+			<option value="+06:50">(GMT +6:30) Yangon, Mandalay</option>
+			<option value="+07:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+			<option value="+08:00">(GMT +8:00) China, Perth, Singapore, Hong Kong</option>
+			<option value="+08:75">(GMT +8:45) Eucla</option>
+			<option value="+09:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+			<option value="+09:50">(GMT +9:30) Adelaide, Darwin</option>
+			<option value="+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+			<option value="+10:50">(GMT +10:30) Lord Howe Island</option>
+			<option value="+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+			<option value="+11:50">(GMT +11:30) Norfolk Island</option>
+			<option value="+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+			<option value="+12:75">(GMT +12:45) Chatham Islands</option>
+			<option value="+13:00">(GMT +13:00) Apia, Nukualofa</option>
+			<option value="+14:00">(GMT +14:00) Line Islands, Tokelau</option>
+		</select>
+	</div>
+
+	<div id="schedule">
+		<!-- SCHEDULE GOES HERE!!!!!!! (Grid of Bootstrap Buttons???)-->
+
+		<!-- TO DO: Script that only lets candidate submit when 10 choices have been selected.-->
+	</div>
+	
+	<div id="submit" class="text-center pt-5">
+		<button type="button" class="btn btn-lg btn-primary" disabled>Submit</button>
+
+		<script type="text/javascript">
+			// check value of pulldown menu
+			var select = document.getElementById('timezone');
+			select.addEventListener('change', (event) => {
+				var selected = document.getElementById('timezone');
+				console.log(selected.value);
+				var button = getElementByClassName("btn");
+				if (selected.value != "None") {
+					//button.disabled =
+				}
+				//	  status of submit = disabled
+				// else
+				// 	  submit = enabled
+			});
+
+		</script>
+	</div>
+	
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+</body>
+</html>
