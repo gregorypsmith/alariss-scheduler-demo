@@ -36,7 +36,7 @@ def login():
             if admin.password == password_form:
                 login_user(admin)
                 # successful login
-                return render_template('login.html', errormsg='Success! Welcome, Nick!')
+                return render_template('admin_page.html')
 
         # unsuccessful login        
         return render_template('login.html', errormsg='Incorrect email/password combination')
