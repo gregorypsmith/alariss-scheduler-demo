@@ -31,7 +31,7 @@
 <br></br>
 <button type="button" class="btn btn-primary" 
 style="width: 150px; height: 50px; background-color: #1E90FF; font-size:30px; color: #FFFAF0" 
-onclick= "update_selection(selected_time);"> SUBMIT</button>
+onclick= "on_submit();"> SUBMIT</button>
 <center>
 
 </html>
@@ -41,6 +41,19 @@ onclick= "update_selection(selected_time);"> SUBMIT</button>
 <script>
 
 var selected_list = [] 
+
+
+function on_submit(){
+ console.log("Submitted to backend successfully")
+ info = { selected_times:selected_list,
+          timezone: "Unknown",
+          userID: "user" 
+ }
+ //do some stuff to send the info to the backend here 
+ //also need to move off of the page to a "success" page that gives
+ //the candidate some more info and expectations
+}
+
 
 function remove_item_from_selected_list(item){
 for( var i = 0; i < selected_list.length; i++){ 
