@@ -9,7 +9,7 @@ from flask_admin import Admin
 from flask_mail import Mail
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates')
 app.config.from_object("scheduler_app.config.DevelopmentConfig")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # print(os.environ['APP_SETTINGS'])
