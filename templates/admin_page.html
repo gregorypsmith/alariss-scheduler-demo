@@ -22,25 +22,26 @@
 	</div>	
 
 	<div id="info" class="text-center pt-1">
-		<form action="/action_page.php">
+		{{ errormsg }}
+		<form method="POST">
 			<div id="candidate">
 		  		<label for="fname"><b>Candidate First Name:</b></label><br>
-		  		<input type="text" id="cfname" name="fname" value=""><br><br>
+		  		<input class="input" type="text" name="candidate_fname"><br><br>
 		  		<label for="lname"><b>Candidate Last Name:</b></label><br>
-		  		<input type="text" id="clname" name="lname" value=""><br><br>
+		  		<input class="input" type="text" name="candidate_lname"><br><br>
 		  		<label for="fname"><b>Candidate Email:</b></label><br>
-		  		<input type="text" id="cfname" name="fname" value=""><br><br><br>
+		  		<input class="input" type="email" name="candidate_email"><br><br><br>
 	  		</div>
 	  		<div id="client">
 		  		<label for="fname"><b>Client First Name:</b></label><br>
-		  		<input type="text" id="cfname" name="fname" value=""><br><br>
+		  		<input class="input" type="text" name="client_fname"><br><br>
 		  		<label for="lname"><b>Client Last name:</b></label><br>
-		  		<input type="text" id="clname" name="lname" value=""><br><br>
+		  		<input class="input" type="text" name="client_lname"><br><br>
 		  		<label for="fname"><b>Client Email:</b></label><br>
-		  		<input type="text" id="cfname" name="fname" value=""><br><br><br>
+		  		<input class="input" type="email" name="client_email"><br><br><br>
 	  		</div>
 
-	 		<input type="submit" id="submitbutton" class="btn btn-lg btn-primary" disabled="disabled"></button>
+	 		<input type="submit" id="submitbutton" class="btn btn-lg btn-primary"></button>
 	 		<script type="text/javascript">
 	 			
 	 		</script>

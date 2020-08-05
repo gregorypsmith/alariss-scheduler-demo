@@ -18,6 +18,7 @@ class Candidate(db.Model):
 	first_name = db.Column(db.Unicode)
 	last_name = db.Column(db.Unicode)
 	email = db.Column(db.Unicode)
+	timezone = db.Column(db.Unicode)
 	interviews = db.relationship("Interview", back_populates="candidate")
 
 class Client(db.Model):
@@ -27,6 +28,7 @@ class Client(db.Model):
 	first_name = db.Column(db.Unicode)
 	last_name = db.Column(db.Unicode)
 	email = db.Column(db.Unicode)
+	timezone = db.Column(db.Unicode)
 	interviews = db.relationship("Interview", back_populates="client")
 
 class Interview(db.Model):
