@@ -1,0 +1,147 @@
+
+<html>
+<div id="header">
+        <img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
+        <h1>Interview Scheduler</h1>
+    </div>
+    
+    <div id="instructions">
+        <p><b>Please read the intructions below:</b><br>1. Each interview is a 1 hour long video chat via Zoom.<br>
+        2. Please be considerate of your interviewer’s waking hours.<br>
+        3. Picking more times will help ensure you receive an interview.</p>
+    </div>
+
+<!-- Twitter Bootstrap Sandbox -->
+<center>
+<table>
+
+<div class="josh-class" role="group" aria-label="First group">
+  <!-- add buttons to this group -->
+
+</div>
+</table>
+<br></br>
+<button type="button" class="btn btn-primary" 
+style="width: 150px; height: 50px; background-color: #1E90FF; font-size:30px; color: #FFFAF0" >SUBMIT</button>
+<center>
+
+</html>
+
+<script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src= 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js'></script>
+<script>
+
+var selected_list = [] 
+
+function remove_item_from_selected_list(item){
+for( var i = 0; i < selected_list.length; i++){ 
+    if (selected_list[i] === item) { 
+    selected_list.splice(i, 1); 
+        }
+    }
+}
+
+
+function update_selection(time){
+
+    var property = document.getElementById(time);
+    console.log(property)
+    console.log("signaling time selection update");
+    console.log(time);
+    if(selected_list.includes(time)){
+        remove_item_from_selected_list(time)
+        property.style.backgroundColor = "#F5F5F5"
+    }else{
+        //add the new time to the list
+        selected_list.push(time)
+        property.style.backgroundColor = "#7FFF00"
+    }
+    console.log("Current Selected List:")
+    console.log(selected_list)
+
+}
+
+
+function get_info_for_next_n_days(n){
+    //list containing info objects for each day 
+    retList = [] 
+    //start at today 
+    var today = new Date()
+    for (var i=0; i < n; i++) {
+        var tomorrow = new Date(today)
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        retList.push(_get_date_info(tomorrow))
+        //a day has passed lol 
+        today = tomorrow
+    }
+    return retList 
+}
+    
+//helper function that extracts detailed info for a given date and puts it into an easy to use object
+function _get_date_info(today){    
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", 
+              "October", "November", "December"]
+    var day_of_week = days[today.getDay()]
+    var month_name = months[today.getMonth()]
+    well_formatted = day_of_week + "\n" + month_name + " " + dd
+    well_formatted2 = day_of_week + ", " + month_name + " " + dd
+    const date_info = {
+            day: dd,
+            month: mm,
+            weekday: day_of_week,
+            month_as_word:month_name,
+            date_object: today,
+            as_string: well_formatted,
+            as_string_one_line: well_formatted2,
+            }   
+    return date_info
+}
+
+function makeRow(time, index){
+     $('.josh-class').append('<div>');
+     $('.josh-class').append('<tr> \n <div class="btn-group" role="group" aria-label="First group">');
+    
+    day_information = get_info_for_next_n_days(7)
+    for (var i=0; i < 7; i++) {
+      var cur_day_info = day_information[i];
+      var selected_time = time + " on "+ cur_day_info["as_string_one_line"]
+      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+selected_time+'\');"' +
+       ' id ="'+selected_time+'">'+time.toString()+'</button></td>');
+      
+      // check index is counting correctly
+      console.log(index);
+    }
+    
+    $('.josh-class').append('</div>');
+    $('.josh-class').append('</tr>');
+}
+
+function init_table(){
+
+day_information = get_info_for_next_n_days(7)
+console.log(day_information)
+var times = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", 
+                 "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];
+
+// $('.josh-class').append('<table>');
+$('.josh-class').append('<tr>');
+$('.josh-class').append('<div class="btn-group" role="group" aria-label="First group">');
+ for (var i=0; i < 7; i++) {
+      var cur_day_info = day_information[i];
+      var cur_day_as_str = cur_day_info["as_string"]
+      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_as_str+'</button></td>');
+    }
+    
+$('.josh-class').append('</div>');
+// $('.josh-class').append('</tr>');
+times.forEach(makeRow);
+
+// $('.josh-class').append('</table>');
+}
+
+init_table()
+
+</script>
