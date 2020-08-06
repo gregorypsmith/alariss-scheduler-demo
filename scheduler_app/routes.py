@@ -128,12 +128,10 @@ def candidate_scheduler():
 		candidate_time_info = 1 #will eventually be retrieved through the URL we sent, hardcoded for now
 		candidate_time_info = request.form['submit_times']
 		print(candidate_time_info)
-		
-		as_dict = json.loads(candidate_time_info)
 		interview = Interview.query.filter_by(candidate_id= candidate_ID).filter_by(client_id = client_ID).first()
-		interview.candidate_times = as_dict['selected_times']
+		interview.candidate_times = candidate_time_info
 
-		return redirect(url_for('candidate_success'))
+		return redirect(url_for('candidate_success_page'))
 	return render_template('candidate_scheduler.html', client_GMT_offset = 0, candidate_GMT_offset = 0)
 
 # schedule for client
@@ -146,3 +144,7 @@ def client_scheduler():
 def confirmed():
     return render_template('index.html')
 
+# confirmed page
+@app.route("/candidate_success")
+def confirmed():
+    return render_template('candidate_success_page.html')
