@@ -100,9 +100,14 @@ function update_selection(time){
 
 //some crazy helper function for converting candidate times to utc for backend representation 
 function convert_to_utc(hour_as_str, midnight_of_day){
+console.log(parseInt(hour_as_str.substring(0, 2)))
 var candidate_offset_ms = MS_PER_HOUR * parseInt({{candidate_GMT_offset}});
 var hour_ms = MS_PER_HOUR * parseInt(hour_as_str.substring(0, 2));
-var retVal = midnight_of_day + hour_ms - candidate_offset_ms;
+var retVal = midnight_of_day + hour_ms  + candidate_offset_ms;
+var date = new Date(parseInt(midnight_of_day))
+console.log(date)
+var date = new Date(parseInt(retVal))
+console.log(date)
 return retVal;
 }
 
@@ -130,7 +135,8 @@ function _get_date_info(today){
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", 
               "October", "November", "December"]
     //do some crazy modding to get the UTC time in milliseconds of the start of the day
-    var at_midnight = today.getTime() - (today.getTime() % (24 * MS_PER_HOUR))
+    var x = today.getTime()
+    var at_midnight = x - ( x % (24 * MS_PER_HOUR))
 
     var day_of_week = days[today.getDay()]
     var month_name = months[today.getMonth()]
@@ -158,6 +164,10 @@ function makeRow(time, index){
       var selected_time = time + " on "+ cur_day_info["as_string_one_line"]
 
       as_utc_str = convert_to_utc(time, cur_day_info["at_midnight_of_day"]).toString()
+      console.log("Date:")
+      var date = new Date(parseInt(as_utc_str))
+      console.log(date)
+      console.log("spacer")
       console.log(as_utc_str)
       if(time == "..."){
         $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');

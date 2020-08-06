@@ -134,7 +134,7 @@ def candidate_scheduler():
 		interview.candidate_times = as_dict['selected_times']
 
 		return redirect(url_for('candidate_success'))
-	return render_template('candidate_scheduler.html', client_GMT_offset = 5, candidate_GMT_offset = -2)
+	return render_template('candidate_scheduler.html', client_GMT_offset = 0, candidate_GMT_offset = 0)
 
 # schedule for client
 @app.route("/client_scheduler")
