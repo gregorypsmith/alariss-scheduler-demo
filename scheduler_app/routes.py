@@ -5,6 +5,7 @@ from flask import render_template, request, make_response, redirect, url_for
 from flask_mail import Message
 import os 
 from flask import render_template
+import json 
 
 admin_mail = os.environ.get('MAIL_USERNAME')
 
@@ -127,8 +128,11 @@ def candidate_scheduler():
 		candidate_time_info = 1 #will eventually be retrieved through the URL we sent, hardcoded for now
 		candidate_time_info = request.form['submit_times']
 		print(candidate_time_info)
+		as_dict = json.loads(candidate_time_info)
+		print(as_dict)
+		print(as_dict['timezone'])
 
-	return render_template('candidate_scheduler.html')
+	return render_template('candidate_scheduler.html', client_GMT_offput = -5, candidate_GMT_offset = 2)
 
 # schedule for client
 @app.route("/client_scheduler")

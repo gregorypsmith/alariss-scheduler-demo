@@ -13,7 +13,7 @@
     
     <div id="instructions">
         <p><b>Please read the intructions below:</b><br>1. Each timeslot below corresponds to a 1 hour long video chat via Zoom.<br>
-        2. Please be considerate of your interviewer’s waking hours.<br>
+        2. Note that the times listed are based upon your interviewer's waking hours<br>
         3. Picking more times will help ensure you receive an interview.<br>
         4. Make sure you are actually available at the times you pick <br>
         5. Click on the times you are available to interview,then click the SUBMIT button</p>
@@ -146,11 +146,15 @@ function makeRow(time, index){
     for (var i=0; i < 7; i++) {
       var cur_day_info = day_information[i];
       var selected_time = time + " on "+ cur_day_info["as_string_one_line"]
+      if(time == "..."){
+        $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');
+      }
+      else{
       $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+selected_time+'\');"' +
        ' id ="'+selected_time+'">'+time.toString()+'</button></td>');
-      
+      }
       // check index is counting correctly
-      console.log(index);
+      // console.log(index);
     }
     
     $('.josh-class').append('</div>');
@@ -161,9 +165,10 @@ function init_table(){
 
 day_information = get_info_for_next_n_days(7)
 console.log(day_information)
-var times = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00","06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", 
-                 "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
 
+client_GMT_offset =12
+candidate_GMT_offset = 0
+times = get_acceptable_times(client_GMT_offset, candidate_GMT_offset)
 // $('.josh-class').append('<table>');
 $('.josh-class').append('<tr>');
 $('.josh-class').append('<div class="btn-group" role="group" aria-label="First group">');
@@ -178,6 +183,51 @@ $('.josh-class').append('</div>');
 times.forEach(makeRow);
 
 // $('.josh-class').append('</table>');
+}
+
+function get_acceptable_times(client_GMT_offset, candidate_GMT_offset){
+    var diff = candidate_GMT_offset - client_GMT_offset
+    var times = []
+    for(var i=30; i < 46; i++) {
+        // console.log("fuck fuck fuck a duck")
+        var num = (i + diff) % 24
+        // console.log(num)
+        // console.log("div 10 is")
+        // console.log(Math.floor(num/10))
+        // console.log("\n\n")
+       
+        times.push(num)
+    }
+    return convert_to_str_array(times)
+
+}
+
+
+
+function convert_to_str_array(times){
+    var ret_str_array = []
+    times = times.sort(function(a, b) {
+                  return a - b;
+                });
+    console.log("fuckery")
+    console.log(times)
+    var prev = times[0]   
+    for(var i=0; i < times.length; i++) {
+        var num_as_str = ""
+        var num = times[i]
+        if(num - prev > 1){
+            ret_str_array.push("...")
+        } 
+        if(Math.floor(num/10) == 0){
+            num_as_str = "0"+num.toString()+":00"
+        }else{
+            num_as_str = num.toString()+":00"
+        }
+        ret_str_array.push(num_as_str)
+        prev = num
+    }
+    return ret_str_array
+
 }
 
 init_table()
