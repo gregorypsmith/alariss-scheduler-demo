@@ -41,6 +41,8 @@ class Interview(db.Model):
 	client = db.relationship("User", foreign_keys=client_id, backref='as_interviewer')
 	candidate_times = db.Column(db.String(1000))
 	client_selection = db.Column(db.String(1000))
+	company_name = db.Column(db.String(100))
+	position_name = db.Column(db.String(200))
 	created_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 	last_updated_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 	status = db.Column(db.Integer, default=InterviewStatus["STARTED"], nullable=False)
