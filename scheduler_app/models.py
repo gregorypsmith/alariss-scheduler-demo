@@ -11,11 +11,13 @@ class Administrator(UserMixin, db.Model):
 	email=db.Column(db.String(20))
 	password=db.Column(db.String(40))
 
+
 InterviewStatus = {
 	"STARTED": 1,
 	"CANDIDATE_CF": 2,
 	"CLIENT_CF": 3
 }
+
 
 class User(db.Model):
 	__tablename__ = "user"
@@ -24,6 +26,7 @@ class User(db.Model):
 	last_name = db.Column(db.String(20), nullable=False)
 	email = db.Column(db.String(120), nullable=False, unique=True)
 	timezone = db.Column(db.Unicode)
+
 
 	def __repr__(self):
 		return f"User {self.first_name} {self.last_name}, {self.email}"
