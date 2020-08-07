@@ -6,21 +6,18 @@ def get_interview_test():
 	test_candidate = User(
 		first_name='John',
 		last_name='Doe',
-		candidate_airtable_id='123456', 
 		email='john@mail.com'
 	)
 
 	test_client_1 = User(
 		first_name='Jane',
 		last_name='Doe',
-		client_airtable_id='123456', 
 		email='jane@mail.com'
 	)
 
 	test_client_2 = User(
 		first_name="Greg",
 		last_name="Greg",
-		client_airtable_id='123456',
 		email='greg@mail.com'
 	)
 
