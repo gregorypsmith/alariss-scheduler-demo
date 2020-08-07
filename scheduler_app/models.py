@@ -3,6 +3,7 @@ from datetime import datetime
 from scheduler_app import db, admin, mail
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin
+import uuid
 
 class Administrator(UserMixin, db.Model):
 	__tablename__ = 'administrator'
@@ -19,7 +20,7 @@ InterviewStatus = {
 
 class User(db.Model):
 	__tablename__ = "user"
-	id = db.Column(db.Integer, primary_key=True)
+	id = db.Column(db.String(5), primary_key=True, default=str(uuid.uuid4()))
 	first_name = db.Column(db.String(20), nullable=False)
 	last_name = db.Column(db.String(20), nullable=False)
 	email = db.Column(db.String(120), nullable=False, unique=True)
@@ -38,6 +39,8 @@ class Interview(db.Model):
 	client = db.relationship("User", foreign_keys=client_id, backref='as_interviewer')
 	candidate_times = db.Column(db.String(1000))
 	client_selection = db.Column(db.String(1000))
+	company_name = db.Column(db.String(100))
+	position_name = db.Column(db.String(200))
 	created_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 	last_updated_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 	status = db.Column(db.Integer, default=InterviewStatus["STARTED"], nullable=False)
