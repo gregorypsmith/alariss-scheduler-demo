@@ -42,7 +42,6 @@ def get_interview_test():
 
 
 	test_admin = Administrator(
-		name="Nick",
 		email="nick@alariss.com",
 		password="123456"
 	)
