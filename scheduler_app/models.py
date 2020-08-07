@@ -7,9 +7,9 @@ from flask_login import UserMixin
 class Administrator(UserMixin, db.Model):
 	__tablename__ = 'administrator'
 	id = db.Column(db.Integer, primary_key=True)
-	first_name = db.Column(db.Unicode)
-	email=db.Column(db.Unicode)
-	password=db.Column(db.Unicode)
+	first_name = db.Column(db.String(20))
+	email=db.Column(db.String(20))
+	password=db.Column(db.String(40))
 
 InterviewStatus = {
 	"STARTED": 1,

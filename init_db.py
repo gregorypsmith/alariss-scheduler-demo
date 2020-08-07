@@ -1,5 +1,5 @@
 from scheduler_app import db
-from scheduler_app.models import User, Interview
+from scheduler_app.models import User, Interview, Administrator
 
 
 def get_interview_test():
@@ -29,9 +29,6 @@ def get_interview_test():
 	db.session.add(test_client_2)
 	db.session.commit()
 
-	print(test_candidate)
-	print(test_client_1)
-
 	test_interview = Interview(
 		candidate=test_candidate,
 		client=test_client_1,
@@ -46,14 +43,18 @@ def get_interview_test():
 	db.session.add(test_interview_2)
 	db.session.commit()
 
-	interviews = Interview.query.all()
-	print(interviews)
 
-	candidate = User.query.filter_by(id=2).first()
-	print(candidate.as_interviewer)
+	test_admin = Administrator(
+		name="Nick",
+		email="nick@alariss.com",
+		password="123456"
+	)
+
+	db.session.add(test_admin)
+	db.session.commit()
 
 
 if __name__ == '__main__':
     db.drop_all()
     db.create_all()
-    #get_interview_test()
+    get_interview_test()
