@@ -3,14 +3,14 @@ from datetime import datetime
 from scheduler_app import db, admin, mail
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin
-import uuid
 
 class Administrator(UserMixin, db.Model):
 	__tablename__ = 'administrator'
 	id = db.Column(db.Integer, primary_key=True)
-	first_name = db.Column(db.Unicode)
-	email=db.Column(db.Unicode)
-	password=db.Column(db.Unicode)
+	first_name = db.Column(db.String(20))
+	email=db.Column(db.String(20))
+	password=db.Column(db.String(40))
+
 
 InterviewStatus = {
 	"STARTED": 1,
@@ -18,13 +18,15 @@ InterviewStatus = {
 	"CLIENT_CF": 3
 }
 
+
 class User(db.Model):
 	__tablename__ = "user"
-	id = db.Column(db.String(5), primary_key=True, default=str(uuid.uuid4()))
+	id = db.Column(db.Integer, primary_key=True)
 	first_name = db.Column(db.String(20), nullable=False)
 	last_name = db.Column(db.String(20), nullable=False)
 	email = db.Column(db.String(120), nullable=False, unique=True)
 	timezone = db.Column(db.Unicode)
+
 
 	def __repr__(self):
 		return f"User {self.first_name} {self.last_name}, {self.email}"

@@ -11,7 +11,7 @@ from flask_login import LoginManager, UserMixin
 from flask_bootstrap import Bootstrap
 
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__)
 app.config.from_object("scheduler_app.config.DevelopmentConfig")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # print(os.environ['APP_SETTINGS'])
