@@ -1,7 +1,7 @@
 from scheduler_app import app, db, mail, login_manager
 from flask_login import login_user, login_required, fresh_login_required, logout_user, current_user
 from scheduler_app.models import User, Interview, Administrator
-from flask import render_template, request, make_response, redirect, url_for
+from flask import render_template, request, make_response, redirect, url_for, flash
 from flask_mail import Message
 import os 
 from flask import render_template
@@ -12,16 +12,17 @@ admin_mail = os.environ.get('MAIL_USERNAME')
 def load_user(user_id):
     return Administrator.query.get(int(user_id))
 
+
 @app.route("/")
 @app.route("/index")
 def home():
     return render_template('index.html')
 
+
 # need flask-login to authenticate
 @app.route("/administrator", methods=['GET', 'POST'])
 @fresh_login_required
 def administrator():
-
     if request.method == 'POST':
 
         # get and validate results from form
@@ -35,8 +36,8 @@ def administrator():
 
         if not candidate_fname or not candidate_email or not candidate_email \
             or not client_email or not client_fname or not client_fname:
-            return render_template('admin_page.html', errormsg = 'Error: One or more fields was \
-                filled out incorrectly. Please try again')
+            flash("One or more fields was filled out incorrectly. Please try again", "danger")
+            return render_template('admin_page.html')
 
         # add users to db if necessary
         cand = User.query.filter_by(email=candidate_email).first()
@@ -72,7 +73,6 @@ def administrator():
         db.session.add(interview)
         db.session.commit()
         return render_template('admin_success.html', candidate_email=candidate_email, client_email=client_email)
-
 
     return render_template('admin_page.html', errormsg='')
 
@@ -118,15 +118,18 @@ def select_timezone():
 
     return render_template('select_timezone.html', errormsg='')
 
+
 # schedule for candidate
 @app.route("/candidate_scheduler")
 def candidate_scheduler():
     return render_template('candidate_scheduler.html')
 
+
 # schedule for client
 @app.route("/client_scheduler")
 def client_scheduler():
     return render_template('index.html')
+
 
 # confirmed page
 @app.route("/confirmed")
