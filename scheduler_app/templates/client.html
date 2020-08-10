@@ -23,14 +23,14 @@
 	<div id="settings">
 		<label for="times">Choose a timezone:</label>
 		<form method="POST">
-			<select name="timezone" id="timezone">
+			<select name="timeint" id="timeint">
 				<option value="None" selected="selected"> --- Please Select a Meeting Time --- </option>
 				{% for time in times %}
-				<option value="{{times.int}}">{{times.str}}</option>
+				<option value="{{time.int}}">{{time.str}}</option>
 				{% endfor %}
 			</select>
 			<div id="submit" class="text-center pt-5">
-				<button id="button" type="button" class="btn btn-lg btn-primary">Schedule Interview</button>
+				<input id="button" type="submit" class="btn btn-lg btn-primary">Schedule Interview</input>
 			</div>
 		</form>
 	</div>

@@ -8,7 +8,7 @@ from flask import render_template
 import json 
 from pytz import timezone
 import pytz
-from timezone_module import *
+import scheduler_app.timezone_module
 
 scheduler_email = os.getenv('EMAIL_USERNAME')
 
@@ -170,6 +170,10 @@ def client_scheduler(interview_id):
     # if something went wrong
     if not interview:
         return render_template('select_timezone.html', error_msg='This interview could not be found. Please contact nick@alariss.com for assistance.')
+
+    if request.method == 'POST':
+        # save this
+        selected_time_utc = request.form['timeint']
 
     times_str, times_int = get_str_and_utc_lists_for_client(interview_id)
     times_object_list = []
