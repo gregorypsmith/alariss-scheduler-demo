@@ -100,15 +100,15 @@ function update_selection(time){
 
 //some crazy helper function for converting candidate times to utc for backend representation 
 function convert_to_utc(hour_as_str, midnight_of_day){
-console.log(parseInt(hour_as_str.substring(0, 2)))
-var candidate_offset_ms = MS_PER_HOUR * parseInt({{candidate_GMT_offset}});
-var hour_ms = MS_PER_HOUR * parseInt(hour_as_str.substring(0, 2));
-var retVal = midnight_of_day + hour_ms  + candidate_offset_ms;
-var date = new Date(parseInt(midnight_of_day))
-console.log(date)
-var date = new Date(parseInt(retVal))
-console.log(date)
-return retVal;
+    console.log(parseInt(hour_as_str.substring(0, 2)))
+    var candidate_offset_ms = MS_PER_HOUR * parseInt({{candidate_GMT_offset}});
+    var hour_ms = MS_PER_HOUR * parseInt(hour_as_str.substring(0, 2));
+    var retVal = midnight_of_day + hour_ms  + candidate_offset_ms;
+    var date = new Date(parseInt(midnight_of_day))
+    console.log(date)
+    var date = new Date(parseInt(retVal))
+    console.log(date)
+    return retVal;
 }
 
 function get_info_for_next_n_days(n){

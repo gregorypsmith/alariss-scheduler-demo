@@ -6,6 +6,8 @@ from flask_mail import Message
 import os 
 from flask import render_template
 import json 
+from pytz import timezone
+import pytz
 
 admin_mail = os.environ.get('MAIL_USERNAME')
 
@@ -155,3 +157,4 @@ def candidate_success():
 def client_success():
     return render_template('client.html')
 
+print(pytz.all_timezones)
