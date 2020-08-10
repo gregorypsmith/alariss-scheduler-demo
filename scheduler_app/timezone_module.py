@@ -11,7 +11,6 @@
 import datetime
 from pytz import timezone
 import pytz
-import pandas as pd
 
 # gloabl variable used to map from hours of offset to seconds or milliseconds depending on 
 # our use case. Assuming we are using milliseconds per hour based on javascript representation  
@@ -21,7 +20,7 @@ utc_UNITS_PER_HOUR = 3600000
  # Returns the difference in hours between timezone1 and timezone2
  # for a given date.
 def tz_diff(utc_int, tz1, tz2):
-    date = pd.to_datetime(utc_int, unit='ms')
+    date = datetime.datetime.fromtimestamp(int(utc_int))
     return (tz2.localize(date) - 
             tz1.localize(date).astimezone(tz2))\
             .seconds/3600
@@ -42,9 +41,12 @@ def timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):
 #takes a string name of a timezone and an integer representing utc time in 
 #seconds and then maps the int into its value in the new timezone 
 def utc_int_to_timezone_adjusted_int(timezone_str, utc_int):
-	offset = utc_UNITS_PER_HOUR * timezone_str_to_ust_offset_int(timezone_str, utc_int)
+	offset = utc_UNITS_PER_HOUR * timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)
 	return (offset + utc_int)
 
+tz = 'US/Eastern'
+utc_int = int(datetime.datetime.utcnow().timestamp())
+print(datetime.datetime.fromtimestamp(utc_int_to_timezone_adjusted_int(tz, utc_int * 10)))
 
 
 #maps the int representation of a time(adjusted utc) into a string representation
@@ -61,7 +63,7 @@ def int_time_representation_to_str_time_representation(int_representation, timez
 def int_times_list_to_str_times_list(utc_times_int_list, timezone_str):
 	str_times_list = []
 	for each in utc_times_int_list:
-		adjusted_int = utc_int_to_timezone_adjusted_int(timezone_str, utc_int)
+		adjusted_int = utc_int_to_timezone_adjusted_int(timezone_str, each)
 		int_as_str_in_terms_of_utc = int_time_representation_to_str_time_representation(adjusted_int, timezone_str)
 		str_times_list.append(int_as_str_in_terms_of_utc)
 	return str_times_list 
@@ -70,14 +72,10 @@ def int_times_list_to_str_times_list(utc_times_int_list, timezone_str):
 
 #this is the primary function used externally. It takes an interview object(db ref)
 #and returns two lists. The first is of strings 
-def get_str_and_utc_lists_for_client(interview_id):
-	interview = Interview.query.filter_by(id = interview_id).first() 
-	client = User.query.filter_by(id = interview.client_id).first() 
-
-	utc_times_int_list = interview.candidate_times	
-	timezone_str = client.timezone
-
+def get_str_and_utc_lists_for_client(interview):
+	utc_times_int_list = interview.candidate_times
+	timezone_str = interview.client.timezone
 	str_times_list = int_times_list_to_str_times_list(utc_times_int_list, timezone_str)
 
 	#lists need to be in exactly the same order 
-	return(utc_times_int_list, str_times_list )
+	return(utc_times_int_list, str_times_list)

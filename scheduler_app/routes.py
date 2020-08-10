@@ -170,10 +170,14 @@ def candidate_scheduler(interview_id):
         interview.candidate_times = candidate_time_info
         db.session.commit()
 
+        mail_module.send_candidate_confirmed_times(interview.candidate, interview)
+        url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.id)
+        mail_module.send_client_scheduler_email(interview.candidate, interview.client, interview, url)
         return redirect(url_for('candidate_success'))
 
 
     cur_utc_int = int(datetime.datetime.utcnow().timestamp())
+    print(cur_utc_int)
     client_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.client.timezone, cur_utc_int)
     candidate_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.candidate.timezone, cur_utc_int)
     print("Client Offset: " + str(client_offset))
@@ -195,7 +199,7 @@ def client_scheduler(interview_id):
         # save this
         selected_time_utc = request.form['timeint']
 
-    times_str, times_int = get_str_and_utc_lists_for_client(interview_id)
+    times_str, times_int = tz_module.get_str_and_utc_lists_for_client(interview)
     times_object_list = []
     
     for i in range(len(times_str)):
