@@ -8,6 +8,7 @@ from flask import render_template
 import json 
 from pytz import timezone
 import pytz
+from timezone_module import *
 
 admin_mail = os.environ.get('MAIL_USERNAME')
 
@@ -136,10 +137,20 @@ def candidate_scheduler():
 		return redirect(url_for('candidate_success'))
 	return render_template('candidate_scheduler.html', client_GMT_offset = 7, candidate_GMT_offset = -2)
 
-# schedule for client
+# client picks times of the ones candidate suggested
 @app.route("/client_scheduler")
 def client_scheduler():
-    return render_template('index.html')
+    interview_id = 0 # we get this somehow from the link based on hung's design
+    times_str, times_int = get_str_and_utc_lists_for_client(interview_id)
+    times_object_list = []
+    
+    for i in range(len(times_str)):
+        times_object_list.append({
+            "str": times_str[i],
+            "int": times_int[i]
+        })
+
+    return render_template('client_scheduler.html', times=times_object_list)
 
 # confirmed page
 @app.route("/confirmed")
