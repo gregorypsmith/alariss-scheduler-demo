@@ -17,23 +17,8 @@
 	</div>
 	
 	<div id="instructions">
-		<p><b>Please select a time from the dropdown menu to interview with {client}</b></p>
+		<p><b>Thank you for using the Alariss Scheduler!</b><br>You should recieve a confirmation email shortly containing the meeting information.<br>If you would like to reshedule, please contact nick@alariss.com.</p>
 	</div>	
-
-	<div id="settings">
-		<label for="times">Choose a timezone:</label>
-		<form method="POST">
-			<select name="timezone" id="timezone">
-				<option value="None" selected="selected"> --- Please Select a Meeting Time --- </option>
-				{% for time in times %}
-				<option value="{{times.int}}">{{times.str}}</option>
-				{% endfor %}
-			</select>
-			<div id="submit" class="text-center pt-5">
-				<button id="button" type="button" class="btn btn-lg btn-primary">Schedule Interview</button>
-			</div>
-		</form>
-	</div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

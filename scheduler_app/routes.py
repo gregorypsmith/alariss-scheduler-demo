@@ -6,6 +6,9 @@ from flask_mail import Message
 import os 
 from flask import render_template
 import json 
+from pytz import timezone
+import pytz
+from timezone_module import *
 
 scheduler_email = os.getenv('EMAIL_USERNAME')
 
@@ -154,8 +157,8 @@ def candidate_scheduler(interview_id):
 		interview = Interview.query.filter_by(id=interview_id).first()
 		interview.candidate_times = candidate_time_info
 
-		return redirect(url_for('candidate_success_page'))
-	return render_template('candidate_scheduler.html', client_GMT_offset = 0, candidate_GMT_offset = 0)
+		return redirect(url_for('candidate_success'))
+	return render_template('candidate_scheduler.html', client_GMT_offset = 7, candidate_GMT_offset = -2)
 
 
 # Schedule for client
@@ -168,11 +171,20 @@ def client_scheduler(interview_id):
     if not interview:
         return render_template('select_timezone.html', error_msg='This interview could not be found. Please contact nick@alariss.com for assistance.')
 
+    times_str, times_int = get_str_and_utc_lists_for_client(interview_id)
+    times_object_list = []
+    
+    for i in range(len(times_str)):
+        times_object_list.append({
+            "str": times_str[i],
+            "int": times_int[i]
+        })
+
     # TODO: Implement this method
     if request.method == "POST":
         pass
     
-    return render_template('index.html', cand_id=1, client_id=1)
+    return render_template('client_scheduler.html', times=times_object_list)
 
 
 # confirmed page
