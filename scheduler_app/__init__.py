@@ -11,7 +11,7 @@ from flask_login import LoginManager, UserMixin
 from flask_bootstrap import Bootstrap
 
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__)
 app.config.from_object("scheduler_app.config.DevelopmentConfig")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # print(os.environ['APP_SETTINGS'])
@@ -30,9 +30,8 @@ app.config.update(
 	MAIL_PORT = 465,
 	MAIL_USE_TLS = False,
 	MAIL_USE_SSL = True,
-	MAIL_USERNAME = os.environ.get('MAIL_USERNAME'),
-	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-	
+	MAIL_USERNAME = os.getenv("EMAIL_USERNAME"),
+	MAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 	)
 
 db = SQLAlchemy(app)
