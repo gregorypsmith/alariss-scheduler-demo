@@ -11,7 +11,7 @@
 import datetime
 from pytz import timezone
 import pytz
-import pandas as pd 
+import pandas as pd
 
 # gloabl variable used to map from hours of offset to seconds or milliseconds depending on 
 # our use case. Assuming we are using milliseconds per hour based on javascript representation  
