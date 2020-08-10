@@ -7,8 +7,9 @@ import os
 from flask import render_template
 import json 
 from pytz import timezone
-import scheduler_app.timezone_module
+import scheduler_app.timezone_module as tz_module
 import scheduler_app.email_module as mail_module
+import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -37,6 +38,8 @@ def administrator():
         client_company = request.form['client_company'].strip()
         client_email = request.form['client_email'].strip()
         client_timezone = request.form['client_timezone'].strip()
+        print("Dank Client Timezone Memes:")
+        print(client_timezone)
 
         if not candidate_fname or not candidate_email or not candidate_email \
             or not client_email or not client_fname or not client_fname:
@@ -49,22 +52,33 @@ def administrator():
 
         if not cand:
             cand = User(
-                first_name=candidate_fname,
-                last_name=candidate_lname,
-                email=candidate_email,
-                timezone=''
+                first_name=str(candidate_fname),
+                last_name=str(candidate_lname),
+                email=str(candidate_email),
+                timezone="meme beasts"
             )
             db.session.add(cand)
+        else: 
+            cand.first_name=str(candidate_fname)
+            cand.last_name=str(candidate_lname)
+            cand.email=str(candidate_email)
         db.session.commit()
 
         if not client:
+            print("Yeet it wasn't client")
             client = User(
-                first_name=client_fname,
-                last_name=client_lname,
-                email=client_email,
-                timezone=client_timezone
+                first_name=str(client_fname),
+                last_name=str(client_lname),
+                email=str(client_email),
+                timezone=str(client_timezone)
             )
             db.session.add(client)
+        
+        else: 
+            client.first_name=str(client_fname)
+            client.last_name=str(client_lname)
+            client.email=str(client_email)
+            client.timezone=str(client_timezone)
         db.session.commit()
 
         # Create new interview    
@@ -125,11 +139,19 @@ def select_timezone(interview_id):
 
     if request.method == "POST":
         candidate_timezone = request.form['timezone']
+        print("Dank Candidate Timezone Memes:")
+        print(candidate_timezone)
         candidate.timezone = candidate_timezone
+   
 
-        print("here")
+        # print("here")
 
         db.session.commit()
+       
+        print("Dank Candidate Timezone Memes II:")
+        print(interview.candidate.timezone)
+        print("Dank Client Timezone Memes II:")
+        print(interview.client.timezone)
         return redirect(url_for('candidate_scheduler', interview_id=interview.id))
 
 
@@ -139,17 +161,24 @@ def select_timezone(interview_id):
 # schedule for candidate
 @app.route("/interviews/<int:interview_id>/candidate_scheduler", methods=['GET', 'POST'])
 def candidate_scheduler(interview_id):
-	print("made it to routing stage!!")
-	if request.method == "POST":
-		print("Post operation called!!")
-		candidate_time_info = 1 #will eventually be retrieved through the URL we sent, hardcoded for now
-		candidate_time_info = request.form['submit_times']
-		print(candidate_time_info)
-		interview = Interview.query.filter_by(id=interview_id).first()
-		interview.candidate_times = candidate_time_info
+    print("made it to routing stage!!")
+    interview = Interview.query.filter_by(id=interview_id).first()
+    if request.method == "POST":
+        print("Post operation called!!")
+        candidate_time_info = request.form['submit_times']
+        # print(candidate_time_info)
+        interview.candidate_times = candidate_time_info
+        db.session.commit()
 
-		return redirect(url_for('candidate_success_page.html'))
-	return render_template('candidate_scheduler.html', client_GMT_offset = 7, candidate_GMT_offset = -2)
+        return redirect(url_for('candidate_success'))
+
+
+    cur_utc_int = int(datetime.datetime.utcnow().timestamp())
+    client_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.client.timezone, cur_utc_int)
+    candidate_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.candidate.timezone, cur_utc_int)
+    print("Client Offset: " + str(client_offset))
+    print("Candidate Offset: " + str(candidate_offset))
+    return render_template('candidate_scheduler.html', client_GMT_offset = client_offset, candidate_GMT_offset = candidate_offset)
 
 
 # Schedule for client
@@ -184,6 +213,11 @@ def confirmed():
     return render_template('index.html')
 
 # confirmed page
-# @app.route("/candidate_success")
-# def confirmed():
-#     return render_template('candidate_success_page.html')
+@app.route("/candidate_success")
+def candidate_success():
+    return render_template('candidate_success_page.html')
+
+# confirmed page
+@app.route("/client_success")
+def client_success():
+    return render_template('client_success_page.html')

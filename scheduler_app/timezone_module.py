@@ -22,8 +22,8 @@ utc_UNITS_PER_HOUR = 3600000
  # for a given date.
 def tz_diff(utc_int, tz1, tz2):
     date = pd.to_datetime(utc_int, unit='ms')
-    return (tz1.localize(date) - 
-            tz2.localize(date).astimezone(tz1))\
+    return (tz2.localize(date) - 
+            tz1.localize(date).astimezone(tz2))\
             .seconds/3600
 
 #takes a string that names a timezone and maps it to the integer offset relative to utc(GMT) 
@@ -31,7 +31,9 @@ def tz_diff(utc_int, tz1, tz2):
 #or in seconds. Directly used to pass offset to frontend
 def timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):
 	utc_timezone = timezone("Etc/GMT+0")
-	local_timezone = timzezone(timezone_str)
+	print("DANK MEMES")
+	print(timezone_str)
+	local_timezone = timezone(timezone_str)
 	timezone_offset_integer = tz_diff(utc_int, local_timezone, utc_timezone, )
 	return timezone_offset_integer
 
@@ -51,7 +53,7 @@ def int_time_representation_to_str_time_representation(int_representation, timez
 	#python representation, i.e. milliseconds to seconds for utc
 	date = datetime.datetime.fromtimestamp(int_representation / 1000)
 	#Weekday, Month day number, year at hour:minute 
-	dateStr = dateTimeObj.strftime("%A, %B %d, %Y at %H:00 " + timzezone_str)
+	dateStr = dateTimeObj.strftime("%A, %B %d, %Y at %H:00 " + timezone_str)
 	return dateStr
 
 
@@ -79,5 +81,3 @@ def get_str_and_utc_lists_for_client(interview_id):
 
 	#lists need to be in exactly the same order 
 	return(utc_times_int_list, str_times_list )
-
-print(pytz.all_timezones)
