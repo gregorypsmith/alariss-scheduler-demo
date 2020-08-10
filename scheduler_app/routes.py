@@ -7,10 +7,8 @@ import os
 from flask import render_template
 import json 
 from pytz import timezone
-import pytz
 import scheduler_app.timezone_module
-
-scheduler_email = os.getenv('EMAIL_USERNAME')
+import scheduler_app.email_module as mail_module
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -79,18 +77,9 @@ def administrator():
         db.session.add(interview)
         db.session.commit()
 
-        # create email message for candidate
-        client_fullname = client_fname + ' ' + client_lname
-        msg = Message('[ACTION REQUIRED] Schedule your upcoming interview with ' + client_company,
-        sender=scheduler_email,
-        recipients=[cand.email])
-        msg.body = 'Dear ' + candidate_fname + ',\n\n'
-        msg.body += 'Congratulations! ' + client_company + ' would like you to interview as for an open ' + candidate_position + ' position.\n\n'
-        msg.body += 'Your point of contact is ' + client_fullname + '. Please continue to the following link to schedule your interview:\n\n'
-        msg.body += os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.id) + '\n\n'
-        msg.body += 'Best wishes and good luck,\n'
-        msg.body += 'The Alariss Global Team'
-        mail.send(msg)
+        # send email to candidate with scheduler
+        url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.id)
+        mail_module.send_candidate_scheduler_email(cand, client, interview, url)
 
         return render_template('admin_success.html', candidate_email=candidate_email, client_email=client_email)
 
@@ -138,6 +127,8 @@ def select_timezone(interview_id):
         candidate_timezone = request.form['timezone']
         candidate.timezone = candidate_timezone
 
+        print("here")
+
         db.session.commit()
         return redirect(url_for('candidate_scheduler', interview_id=interview.id))
 
@@ -157,7 +148,7 @@ def candidate_scheduler(interview_id):
 		interview = Interview.query.filter_by(id=interview_id).first()
 		interview.candidate_times = candidate_time_info
 
-		return redirect(url_for('candidate_success'))
+		return redirect(url_for('candidate_success_page.html'))
 	return render_template('candidate_scheduler.html', client_GMT_offset = 7, candidate_GMT_offset = -2)
 
 
@@ -183,10 +174,6 @@ def client_scheduler(interview_id):
             "str": times_str[i],
             "int": times_int[i]
         })
-
-    # TODO: Implement this method
-    if request.method == "POST":
-        pass
     
     return render_template('client_scheduler.html', times=times_object_list)
 
