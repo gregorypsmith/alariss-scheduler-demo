@@ -19,13 +19,36 @@ utc_UNITS_PER_HOUR = 3600000
 
  # Returns the difference in hours between timezone1 and timezone2
  # for a given date.
-def tz_diff(utc_int, tz1, tz2):
+# def tz_diff(utc_int, tz1, tz2):
 
-	print("tz_diff(utc_int, tz1, tz2), utc_int = " + str(utc_int))
-	date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
-	return (tz2.localize(date) - 
-		tz1.localize(date).astimezone(tz2))\
-		.seconds/3600
+# 	print("tz_diff(utc_int, tz1, tz2), utc_int = " + str(utc_int))
+# 	date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
+# 	return (tz2.localize(date) - 
+# 		tz1.localize(date).astimezone(tz2)).seconds/3600
+
+def tz_diff(utc_int, tz1, tz2):
+    '''
+    Returns the difference in hours between timezone1 and timezone2
+    for a given date.
+    '''
+    baseline_utc = timezone('Etc/GMT+0')
+    print(utc_int)
+    date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
+    tz1_localize = tz1.localize(date)
+    tz2_localize = tz2.localize(date)
+    as_timezone = tz2.localize(date).astimezone(tz2)
+    print(tz1_localize)
+    print(tz2_localize)
+   
+    diff = (tz2.localize(date).astimezone(baseline_utc) - tz1.localize(date).astimezone(baseline_utc)).seconds/3600
+    if (diff > 12):
+    	diff += -24
+    print(diff)
+    return diff
+# cur_utc_int = int(datetime.datetime.utcnow().timestamp())*1000
+# tz1 = timezone('Etc/GMT+4')
+# tz2 = timezone('Etc/GMT-7')
+# tz_diff(cur_utc_int, tz1, tz2)
 
 #takes a string that names a timezone and maps it to the integer offset relative to utc(GMT) 
 #the offest is in terms of hours. This is a critical note because utc is typically in milliseconds
@@ -48,9 +71,9 @@ def utc_int_to_timezone_adjusted_int(timezone_str, utc_int):
 	offset = utc_UNITS_PER_HOUR * timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)
 	return (offset + int(utc_int))
 
-tz = 'US/Eastern'
-utc_int = int(datetime.datetime.utcnow().timestamp())
-print(datetime.datetime.fromtimestamp(utc_int_to_timezone_adjusted_int(tz, utc_int * 10)))
+# tz = 'US/Eastern'
+# utc_int = int(datetime.datetime.utcnow().timestamp())
+# print(datetime.datetime.fromtimestamp(utc_int_to_timezone_adjusted_int(tz, utc_int * 10)))
 
 
 #maps the int representation of a time(adjusted utc) into a string representation
