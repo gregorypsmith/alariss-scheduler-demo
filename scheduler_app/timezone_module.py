@@ -48,11 +48,6 @@ def utc_int_to_timezone_adjusted_int(timezone_str, utc_int):
 	offset = utc_UNITS_PER_HOUR * timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)
 	return (offset + int(utc_int))
 
-tz = 'US/Eastern'
-utc_int = int(datetime.datetime.utcnow().timestamp())
-print(datetime.datetime.fromtimestamp(utc_int_to_timezone_adjusted_int(tz, utc_int * 10)))
-
-
 #maps the int representation of a time(adjusted utc) into a string representation
 def int_time_representation_to_str_time_representation(int_representation, timezone_str):
 	#I assume we are converting from javascript representation to 
