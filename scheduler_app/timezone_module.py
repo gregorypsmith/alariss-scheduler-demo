@@ -69,6 +69,7 @@ def timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):
 def utc_int_to_timezone_adjusted_int(timezone_str, utc_int):
 	print("utc_int_to_timezone_adjusted_int(timezone_str, utc_int), utc_int = " + str(utc_int))
 	offset = utc_UNITS_PER_HOUR * timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)
+	print('OFFSET: ' + str(offset / utc_UNITS_PER_HOUR))
 	return (offset + int(utc_int))
 
 #maps the int representation of a time(adjusted utc) into a string representation

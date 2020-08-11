@@ -200,9 +200,9 @@ def client_scheduler(interview_id):
 
     if request.method == 'POST':
         # convert utc int to string representation in both client/cand timezones
-        selected_time_utc = int(request.form['timeint'])
-        selected_time_client_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.client.timezone, utc_int)
-        selected_time_cand_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.candidate.timezone, utc_int)
+        selected_time_utc = int(request.form['time_int'])
+        selected_time_client_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.client.timezone, selected_time_utc)
+        selected_time_cand_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.candidate.timezone, selected_time_utc)
         client_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_client_tz, interview.client.timezone)
         cand_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_cand_tz, interview.candidate.timezone)
 
@@ -210,8 +210,8 @@ def client_scheduler(interview_id):
         zoom_url = '<url>'
 
         # send confirmation email to both with link
-        send_client_confirmation_email(interview.candidate, interview.client, interview, zoom_url, client_time_str)
-        send_candidate_confirmation_email(interview.candidate, interview.client, interview, zoom_url, cand_time_str)
+        mail_module.send_client_confirmation_email(interview.candidate, interview.client, interview, zoom_url, client_time_str)
+        mail_module.send_candidate_confirmation_email(interview.candidate, interview.client, interview, zoom_url, cand_time_str)
 
         interview.status = 3
         db.session.commit()
