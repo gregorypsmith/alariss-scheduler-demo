@@ -204,11 +204,11 @@ def client_scheduler(interview_id):
     
     for i in range(len(times_str)):
         times_object_list.append({
-            "str": times_str[i],
-            "int": times_int[i]
+            "str": str(times_str[i]),
+            "int": int(times_int[i])
         })
     print("times_object_list:" + str(times_object_list))
-    return render_template('client_scheduler.html', times=times_object_list)
+    return render_template('client_scheduler.html', times=times_object_list, thing = "the shit")
 
 
 # confirmed page
