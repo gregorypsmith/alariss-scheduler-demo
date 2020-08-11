@@ -199,7 +199,16 @@ def client_scheduler(interview_id):
         # save this
         selected_time_utc = request.form['timeint']
 
-    return render_template('client_scheduler.html', times=times_object_list)
+    times_int, times_str = tz_module.get_str_and_utc_lists_for_client(interview)
+    times_object_list = []
+    
+    for i in range(len(times_str)):
+        times_object_list.append({
+            "str": str(times_str[i]),
+            "int": int(times_int[i])
+        })
+    print("times_object_list:" + str(times_object_list))
+    return render_template('client_scheduler.html', times=times_object_list, thing = "the shit")
 
 
 # confirmed page
