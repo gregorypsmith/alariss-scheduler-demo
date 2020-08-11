@@ -173,6 +173,9 @@ def candidate_scheduler(interview_id):
         mail_module.send_candidate_confirmed_times(interview.candidate, interview)
         url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.id)
         mail_module.send_client_scheduler_email(interview.candidate, interview.client, interview, url)
+
+        interview.status = 2
+        db.session.commit()
         return redirect(url_for('candidate_success'))
 
 
@@ -196,8 +199,22 @@ def client_scheduler(interview_id):
         return render_template('select_timezone.html', error_msg='This interview could not be found. Please contact nick@alariss.com for assistance.')
 
     if request.method == 'POST':
-        # save this
-        selected_time_utc = request.form['timeint']
+        # convert utc int to string representation in both client/cand timezones
+        selected_time_utc = int(request.form['timeint'])
+        selected_time_client_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.client.timezone, utc_int)
+        selected_time_cand_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.candidate.timezone, utc_int)
+        client_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_client_tz, interview.client.timezone)
+        cand_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_cand_tz, interview.candidate.timezone)
+
+        # need zoom integration to generate link
+        zoom_url = '<url>'
+
+        # send confirmation email to both with link
+        send_client_confirmation_email(interview.candidate, interview.client, interview, zoom_url, client_time_str)
+        send_candidate_confirmation_email(interview.candidate, interview.client, interview, zoom_url, cand_time_str)
+
+        interview.status = 3
+        db.session.commit()
 
     times_int, times_str = tz_module.get_str_and_utc_lists_for_client(interview)
     times_object_list = []
@@ -208,7 +225,7 @@ def client_scheduler(interview_id):
             "int": int(times_int[i])
         })
     print("times_object_list:" + str(times_object_list))
-    return render_template('client_scheduler.html', times=times_object_list, thing = "the shit")
+    return render_template('client_scheduler.html', times=times_object_list)
 
 
 # confirmed page
