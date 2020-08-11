@@ -21,11 +21,16 @@
 	</div>	
 
 	<div id="settings">
-		<label for="times">Choose a timezone:</label>
+		<label for="times">Choose a meeting time:</label>
 		<form method="POST">
 			<select name="timezone" id="timezone">
 				<option value="None" selected="selected"> --- Please Select a Meeting Time --- </option>
 				{% for time in times %}
+				<!-- <script>
+					// console.log({{time}})
+					console.log({{time.str}})
+					console.log({{time.int}})
+				</script> -->
 				<option value="{{times.int}}">{{times.str}}</option>
 				{% endfor %}
 			</select>
@@ -35,6 +40,7 @@
 		</form>
 	</div>
 
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -42,3 +48,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
 </body>
 </html>
+
+
+<script>
+					console.log("fuck fuck fuck a duck")
+				</script>
+
+				<script>
+					console.log("to the window")
+					{% for time in times %}
+					console.log("screw a kangaroo")
+					console.log("to the wall")
+					console.log({{time}})
+					console.log({{time.str}})
+					console.log({{time.int}})
+					{% endfor %}
+					console.log("to the sweat drip down my balls")
+				</script>
+				
