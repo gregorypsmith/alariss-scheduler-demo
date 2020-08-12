@@ -253,8 +253,8 @@ def time_acceptable(time_utc_int, offset):
 # get date of a utc integer in the client timezone
 def get_date_in_tz(utc_int, tz_hour_offset):
 	to_date = datetime.datetime.fromtimestamp(time_utc_int)
-	pass
-
+	to_date += timedelta(hours=tz_hour_offset)
+	return convert_int_to_frontend_str(to_date.timestamp())
 # Josh
 # Creates list o 24 * 7 utc times, separated by one hour, starting at start_utc
 def get_times_list(start_utc, n_days_out):
