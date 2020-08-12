@@ -1,9 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
+<head>
+	<link rel="stylesheet" href="../static/styles.css">
+	<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+    <img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
+    <h3><b>Hi Alariss!</b></h3>
+</head>
+
 <div class="col">
 	<div class="row">
 		<div id="instructions" class="col">
-			<h3><b>Hi Alariss!</b></h3>
 			<p>Welcome to the interview scheduler, created by the coolest interns ever.</p>
 			<p>Please fill out the information below to schedule an interview between a client and candidate!</p>
 		</div>	
@@ -18,28 +25,28 @@
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Candidate First Name</b></label>
-							<input class="input form-control" type="text" name="candidate_fname">
+							<input class="input form-control" type="text" name="candidate_fname" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="lname"><b>Candidate Last Name</b></label>
-							<input class="input form-control" type="text" name="candidate_lname">
+							<input class="input form-control" type="text" name="candidate_lname" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Candidate Email</b></label>
-							<input class="input form-control" type="email" name="candidate_email">
+							<input class="input form-control" type="email" name="candidate_email" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="position"><b>Candidate Position</b></label>
-							<input class="input form-control" type="text" name="candidate_position">
+							<input class="input form-control" type="text" name="candidate_position" required>
 						</div>
 					</div>
 
@@ -50,28 +57,28 @@
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Client First Name</b></label>
-							<input class="input form-control" type="text" name="client_fname">
+							<input class="input form-control" type="text" name="client_fname" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="lname"><b>Client Last name</b></label>
-							<input class="input form-control" type="text" name="client_lname">
+							<input class="input form-control" type="text" name="client_lname" required>
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Client Email</b></label>
-							<input class="input form-control" type="email" name="client_email">
+							<input class="input form-control" type="email" name="client_email" required>
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="client_company"><b>Client Company</b></label>
-							<input class="input form-control" type="text" name="client_company">
+							<input class="input form-control" type="text" name="client_company" required>
 						</div>
 					</div>
 				</div>
@@ -80,8 +87,8 @@
 			<div class="row">
 				<div class="col-md-8">
 					<label for="client_timezone"><b>Client timezone</label>
-						<select name="client_timezone" id="client_timezone" class="form-control">
-							<option value="None" selected="selected"> --- Please Select a Timezone --- </option>
+						<select name="client_timezone" id="client_timezone" class="form-control" required>
+							<option value=""> --- Please Select a Timezone --- </option>
 							<option value='-10'>GMT -10:00</option>
 							<option value='-9'>GMT -9:00</option>
 							<option value='-8'>GMT -8:00</option>
