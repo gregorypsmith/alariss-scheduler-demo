@@ -1,5 +1,25 @@
 
 <html>
+<style>
+.btn-group button {
+  background-color: #4CAF50; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 50%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+}
+
+.btn-group button:not(:last-child) {
+  border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+</style>
 
 
 <!-- Twitter Bootstrap Sandbox -->
@@ -53,18 +73,18 @@ var MS_PER_HOUR =  3600000
 
 //@Greg use this function for sending to backend 
 function on_submit(){
- console.log("Submitting to backend")
- console.log(selected_list)
- info = selected_list 
- 
- //do some stuff to send the info to the backend here 
- //also need to move off of the page to a "success" page that gives
- //the candidate some more info and expectations
-var myJSON = JSON.stringify(info);
-var jinja_submitter = document.getElementById("submit_times");
-jinja_submitter.value = myJSON 
-console.log(jinja_submitter)
-$("#meme_doge").submit(); 
+  console.log("Submitting to backend")
+  console.log(selected_list)
+  info = selected_list 
+
+  //do some stuff to send the info to the backend here 
+  //also need to move off of the page to a "success" page that gives
+  //the candidate some more info and expectations
+  var myJSON = JSON.stringify(info);
+  var jinja_submitter = document.getElementById("submit_times");
+  jinja_submitter.value = myJSON 
+  console.log(jinja_submitter)
+  $("#meme_doge").submit(); 
   
 }
 
@@ -98,32 +118,18 @@ function update_selection(time){
 
 }
 
-
-//fucntion that actualy constructs the rows of the table. This depends heavily on 
 function makeRow(time, index){
      $('.josh-class').append('<div>');
      $('.josh-class').append('<tr> \n <div class="btn-group" role="group" aria-label="First group">');
     
-    // var day_strs = {{get_strs_for_next_7_days}}
-
     for (var i=0; i < 7; i++) {
-      
-      // var cur_day_str = day_strs[i];
-      var as_utc_str = time.as_utc_int.toString()
-      var hour_as_str = time.hour_as_str.toString()
-
-      // console.log("Date:")
-      // var date = new Date(parseInt(as_utc_str))
-      // console.log(date)
-      // console.log("spacer")
-      // console.log(as_utc_str)
-
+ 
       if(time == "..."){
         $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');
       }
       else{
-      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc_str+'\');"' +
-       ' id ="'+as_utc_str+'">'+hour_as_str+'</button></td>');
+      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc.toString()+'\');"' +
+       ' id ="'+as_utc.toString()+'">'+time.toString()+'</button></td>');
       }
       // check index is counting correctly
       // console.log(index);
@@ -133,35 +139,97 @@ function makeRow(time, index){
     $('.josh-class').append('</tr>');
 }
 
+function init_table(){
 
+day_information = {{col_headers}};
+// console.log(day_information)
 
-//the actual shit is here
-function addButton(time, index ){
-      var as_utc_str = time.as_utc_int.toString()
-      var hour_as_str = time.hour_as_str.toString()
-      if(time == "..."){
-        $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');
-      }
-      else{
-      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc_str+'\');"' +
-       ' id ="'+as_utc_str+'">'+hour_as_str+'</button></td>');
-      }
+// $('.josh-class').append('<table>');
+$('.josh-class').append('<tr>');
+$('.josh-class').append('<div class="btn-group" role="group" aria-label="First group">');
+ for (var i=0; i < 7; i++) {
+      var cur_day_info = day_information[i];
+      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_info+'</button></td>');
     }
-
-//fucntion that actualy constructs the rows of the table. This depends heavily on 
-function makeColumn(day_of_week_with_times, index){
-     $('.josh-class').append('<div>');
-     // "display: block" should make the buttons group togther vertically
-     $('.josh-class').append('<tr> \n <div class="btn-group" role="group"  style="display: block;" aria-label="First group">');
     
-    //get the current day out of the object
-     cur_day_as_str = day_of_week_with_times.day_info_str 
+$('.josh-class').append('</div>');
+// $('.josh-class').append('</tr>');
+times.forEach(makeRow);
 
-     //add the current day as a string 
-      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_as_str+'</button></td>');
-    // var day_strs = {{get_strs_for_next_7_days}}
+// $('.josh-class').append('</table>');
+}
 
-    // [{day_of_week_info: " Monday, August 10th",
+
+
+
+// //the actual shit is here
+// function makeButton(time, index ){
+//       var as_utc_str = time.as_utc_int.toString()
+//       var hour_as_str = time.hour_as_str.toString()
+//       if(time == "..."){
+//         $('.josh-class').append('<button class="btn" style="width: 100px;background-color: #AEB6BF;display: block;" > ... </button>');
+//       }
+//       else{
+//       $('.josh-class').append('<button class="btn" style="width: 100px; background-color: #F5F5F5;display: block;" onclick="update_selection(\''+as_utc_str+'\');"' +
+//        ' id ="'+as_utc_str+'">'+hour_as_str+'</button>');
+//       }
+//     }
+
+
+// //fucntion that actualy constructs the rows of the table. This depends heavily on 
+// function makeColumn(day_of_week_with_times, index){
+//   $('.josh-class').append('<div>');
+//   // "display: block" should make the buttons group togther vertically
+//   $('.josh-class').append('\n<div class="btn-group" role="group"  style="display: block;" aria-label="'+index.toString()+'">');
+
+//   //get the current day out of the object
+//   cur_day_as_str = day_of_week_with_times.day_info_str 
+
+//   //add the current day as a string 
+//   $('.josh-class').append('<button class="btn" style="width: 100px;display: block;" >'+cur_day_as_str+'</button>');
+//   // var day_strs = {{get_strs_for_next_7_days}}
+
+//   times = day_of_week_with_times.times
+//   times.forEach(makeButton);
+
+//   // $('.josh-class').append('</tr>');
+//   $('.josh-class').append('</div>');
+//   $('.josh-class').append('</div>');
+//   $('.josh-class').append('<span></span>');
+// }
+
+
+
+
+// /// functioon that actually initializes our stuff
+// function init_table(){
+
+//   var time_object = [{day_info_str:"Monday, August 10th", times: [{hour_as_str: "21:00", as_utc_int: 3098301293210},
+//                                                         {hour_as_str: "22:00", as_utc_int: 97837492343248},
+//                                                         {hour_as_str: "23:00", as_utc_int: 213792139820283}
+//                                                       ]
+//                                                     },
+//                       {day_info_str:"Monday, August 11th", times: [{hour_as_str: "20:00", as_utc_int: 3098301293210},
+//                                                         {hour_as_str: "21:00", as_utc_int: 97837492343248},
+//                                                         {hour_as_str: "22:00", as_utc_int: 213792139820283}
+//                                                       ]
+//                                                     }
+//                        ];
+//   // var time_object = {{shit_from_backend}}
+//   // $('.josh-class').append('</tr>');
+//   time_object.forEach(makeColumn);
+
+//   // $('.josh-class').append('</table>');
+// }
+
+
+init_table()
+
+</script>
+
+
+
+<!--     // [{day_of_week_info: " Monday, August 10th",
     // times: [{ display_hour: "23:00",
     //           utc_timestamp:"217371987321389"
     //           date: "Tuesday August 10th, 21:00"
@@ -173,40 +241,4 @@ function makeColumn(day_of_week_with_times, index){
     //           utc_timestamp:"217371987321389"
     // }]
 
-    // }]
-   times = day_of_week_with_times.times
-   times.forEach(makeButton);
-    
-
-    $('.josh-class').append('</div>');
-    $('.josh-class').append('</tr>');
-}
-
-
-
-
-/// functioon that actually initializes our stuff
-function init_table(){
-
-
-var times = {{shit_from_backend}}
-var day_information = {{get_strs_for_next_7_days}}
-// $('.josh-class').append('<table>');
-$('.josh-class').append('<tr>');
-$('.josh-class').append('<div class="btn-group" role="group" aria-label="First group">');
- for (var i=0; i < 7; i++) {
-      var cur_day_as_str = day_information[i];
-      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_as_str+'</button></td>');
-    }
-    
-$('.josh-class').append('</div>');
-// $('.josh-class').append('</tr>');
-times.forEach(makeRow);
-
-// $('.josh-class').append('</table>');
-}
-
-
-init_table()
-
-</script>
+    // }] -->

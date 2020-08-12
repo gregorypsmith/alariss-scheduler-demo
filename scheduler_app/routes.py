@@ -175,11 +175,11 @@ def candidate_scheduler(interview_id):
 
     cur_utc_int = int(datetime.datetime.utcnow().timestamp())
     print(cur_utc_int)
-    client_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.client.timezone, cur_utc_int)
-    candidate_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.candidate.timezone, cur_utc_int)
-    print("Client Offset: " + str(client_offset))
-    print("Candidate Offset: " + str(candidate_offset))
-    return render_template('candidate_scheduler.html', client_GMT_offset = client_offset, candidate_GMT_offset = candidate_offset)
+    # client_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.client.timezone, cur_utc_int)
+    # candidate_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.candidate.timezone, cur_utc_int)
+    # print("Client Offset: " + str(client_offset))
+    # print("Candidate Offset: " + str(candidate_offset))
+    return render_template('candidate_scheduler.html', client_GMT_offset = 0, candidate_GMT_offset = 0)
 
 
 # Schedule for client
