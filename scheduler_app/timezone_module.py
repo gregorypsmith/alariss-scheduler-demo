@@ -207,112 +207,112 @@ def get_times_list(start_utc, n_days_out):
 ##############################################################################################################################################
 #######################################START JAVASCRIPT BULLSHIT##############################################################################
 ##############################################################################################################################################
-//some crazy helper function for converting candidate times to utc for backend representation 
-function convert_to_utc(hour_as_str, midnight_of_day){
-    console.log(parseInt(hour_as_str.substring(0, 2)))
-    var candidate_offset_ms = MS_PER_HOUR * parseInt({{candidate_GMT_offset}});
-    var hour_ms = MS_PER_HOUR * parseInt(hour_as_str.substring(0, 2));
-    var retVal = midnight_of_day + hour_ms  + candidate_offset_ms;
-    var date = new Date(parseInt(midnight_of_day))
-    console.log(date)
-    var date = new Date(parseInt(retVal))
-    console.log(date)
-    return retVal;
-}
+# //some crazy helper function for converting candidate times to utc for backend representation 
+# function convert_to_utc(hour_as_str, midnight_of_day){
+#     console.log(parseInt(hour_as_str.substring(0, 2)))
+#     var candidate_offset_ms = MS_PER_HOUR * parseInt({{candidate_GMT_offset}});
+#     var hour_ms = MS_PER_HOUR * parseInt(hour_as_str.substring(0, 2));
+#     var retVal = midnight_of_day + hour_ms  + candidate_offset_ms;
+#     var date = new Date(parseInt(midnight_of_day))
+#     console.log(date)
+#     var date = new Date(parseInt(retVal))
+#     console.log(date)
+#     return retVal;
+# }
 
-function get_info_for_next_n_days(n){
-    //list containing info objects for each day 
-    retList = [] 
-    //start at today 
-    var today = new Date() # current utc time 
-    for (var i=0; i < n; i++) {
-        var tomorrow = new Date(today)
-        tomorrow.setDate(tomorrow.getDate() + 1)
-        retList.push(_get_date_info(tomorrow))
-        //a day has passed lol 
-        today = tomorrow
-    }
-    return retList 
-}
+# function get_info_for_next_n_days(n){
+#     //list containing info objects for each day 
+#     retList = [] 
+#     //start at today 
+#     var today = new Date() # current utc time 
+#     for (var i=0; i < n; i++) {
+#         var tomorrow = new Date(today)
+#         tomorrow.setDate(tomorrow.getDate() + 1)
+#         retList.push(_get_date_info(tomorrow))
+#         //a day has passed lol 
+#         today = tomorrow
+#     }
+#     return retList 
+# }
     
-//helper function that extracts detailed info for a given date and puts it into an easy to use object
-function _get_date_info(today){    
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yr = 
-    days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", 
-              "October", "November", "December"]
-    //do some crazy modding to get the UTC time in milliseconds of the start of the day
-    var x = today.getTime()
-    var at_midnight = x - ( x % (24 * MS_PER_HOUR))
+# //helper function that extracts detailed info for a given date and puts it into an easy to use object
+# function _get_date_info(today){    
+#     var dd = String(today.getDate()).padStart(2, '0');
+#     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+#     var yr = 
+#     days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+#     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", 
+#               "October", "November", "December"]
+#     //do some crazy modding to get the UTC time in milliseconds of the start of the day
+#     var x = today.getTime()
+#     var at_midnight = x - ( x % (24 * MS_PER_HOUR))
 
-    var day_of_week = days[today.getDay()]
-    var month_name = months[today.getMonth()]
-    well_formatted = day_of_week + "\n" + month_name + " " + dd
-    well_formatted2 = day_of_week + ", " + month_name + " " + dd
-    const date_info = {
-            day: dd,
-            month: mm,
-            weekday: day_of_week,
-            month_as_word:month_name,
-            as_string: well_formatted,
-            as_string_one_line: well_formatted2,
-            at_midnight_of_day: at_midnight 
-            }   
-    return date_info
-}
+#     var day_of_week = days[today.getDay()]
+#     var month_name = months[today.getMonth()]
+#     well_formatted = day_of_week + "\n" + month_name + " " + dd
+#     well_formatted2 = day_of_week + ", " + month_name + " " + dd
+#     const date_info = {
+#             day: dd,
+#             month: mm,
+#             weekday: day_of_week,
+#             month_as_word:month_name,
+#             as_string: well_formatted,
+#             as_string_one_line: well_formatted2,
+#             at_midnight_of_day: at_midnight 
+#             }   
+#     return date_info
+# }
 
-function get_acceptable_times(client_GMT_offset, candidate_GMT_offset){
-    var diff = candidate_GMT_offset - client_GMT_offset
-    var times = []
-    for(var i=30; i < 46; i++) {
-        // console.log("fuck fuck fuck a duck")
-        var num = (i + diff) % 24
-        // console.log(num)
-        // console.log("div 10 is")
-        // console.log(Math.floor(num/10))
-        // console.log("\n\n")
-        if(num >= 5){
-        times.push(num)
-        }
-    }
-    return convert_to_str_array(times)
+# function get_acceptable_times(client_GMT_offset, candidate_GMT_offset){
+#     var diff = candidate_GMT_offset - client_GMT_offset
+#     var times = []
+#     for(var i=30; i < 46; i++) {
+#         // console.log("fuck fuck fuck a duck")
+#         var num = (i + diff) % 24
+#         // console.log(num)
+#         // console.log("div 10 is")
+#         // console.log(Math.floor(num/10))
+#         // console.log("\n\n")
+#         if(num >= 5){
+#         times.push(num)
+#         }
+#     }
+#     return convert_to_str_array(times)
 
-}
-
-
-
-function convert_to_str_array(times){
-    var ret_str_array = []
-    times = times.sort(function(a, b) {
-                  return a - b;
-                });
-    // console.log("fuckery")
-    console.log(times)
-    var prev = times[0]   
-    for(var i=0; i < times.length; i++) {
-        var num_as_str = ""
-        var num = times[i]
-        if(num - prev > 1){
-            ret_str_array.push("...")
-        } 
-        if(Math.floor(num/10) == 0){
-            num_as_str = "0"+num.toString()+":00"
-        }else{
-            num_as_str = num.toString()+":00"
-        }
-        ret_str_array.push(num_as_str)
-        prev = num
-    }
-    return ret_str_array
-
-}
+# }
 
 
 
+# function convert_to_str_array(times){
+#     var ret_str_array = []
+#     times = times.sort(function(a, b) {
+#                   return a - b;
+#                 });
+#     // console.log("fuckery")
+#     console.log(times)
+#     var prev = times[0]   
+#     for(var i=0; i < times.length; i++) {
+#         var num_as_str = ""
+#         var num = times[i]
+#         if(num - prev > 1){
+#             ret_str_array.push("...")
+#         } 
+#         if(Math.floor(num/10) == 0){
+#             num_as_str = "0"+num.toString()+":00"
+#         }else{
+#             num_as_str = num.toString()+":00"
+#         }
+#         ret_str_array.push(num_as_str)
+#         prev = num
+#     }
+#     return ret_str_array
 
-day_information = get_info_for_next_n_days(7);
-var client_GMT_offset =parseInt({{client_GMT_offset}})
-var candidate_GMT_offset = parseInt({{candidate_GMT_offset}})
-times = get_acceptable_times(client_GMT_offset, candidate_GMT_offset)
+# }
+
+
+
+
+# day_information = get_info_for_next_n_days(7);
+# var client_GMT_offset =parseInt({{client_GMT_offset}})
+# var candidate_GMT_offset = parseInt({{candidate_GMT_offset}})
+# times = get_acceptable_times(client_GMT_offset, candidate_GMT_offset)
