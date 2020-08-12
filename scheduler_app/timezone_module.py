@@ -21,7 +21,7 @@ def time_in_tz_str(utc_time, tz_hour_offset):
 	utc_time_in_tz = tz_hour_offset * utc_UNITS_PER_HOUR
 	hour_of_day = utc_time_in_tz % 24 * utc_UNITS_PER_HOUR
 	time_in_tz_str = ''
-	if hour < 10:
+	if hour_of_day < 10:
 		time_in_tz_str += '0'
 	return time_in_tz_str + str(hour_of_day) + ":00"
 
