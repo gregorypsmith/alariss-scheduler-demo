@@ -55,8 +55,7 @@ def administrator():
             cand = User(
                 first_name=str(candidate_fname),
                 last_name=str(candidate_lname),
-                email=str(candidate_email),
-                timezone="meme beasts"
+                email=str(candidate_email)
             )
             db.session.add(cand)
         else: 
@@ -71,7 +70,7 @@ def administrator():
                 first_name=str(client_fname),
                 last_name=str(client_lname),
                 email=str(client_email),
-                timezone=str(client_timezone)
+                timezone=int(client_timezone)
             )
             db.session.add(client)
         
@@ -79,7 +78,7 @@ def administrator():
             client.first_name=str(client_fname)
             client.last_name=str(client_lname)
             client.email=str(client_email)
-            client.timezone=str(client_timezone)
+            client.timezone=int(client_timezone)
         db.session.commit()
 
         # Create new interview    
@@ -139,9 +138,7 @@ def select_timezone(interview_id):
     candidate = interview.candidate
 
     if request.method == "POST":
-        candidate_timezone = request.form['timezone']
-        print("Dank Candidate Timezone Memes:")
-        print(candidate_timezone)
+        candidate_timezone = int(request.form['timezone'])
         candidate.timezone = candidate_timezone
    
         db.session.commit()
