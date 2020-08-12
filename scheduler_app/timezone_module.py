@@ -167,10 +167,16 @@ def get_times_object(interview, n_days_out):
 #Josh
 #gets the next seven days from the moment called as utc integers 
 #start at midnight of next day in UTC 
-def get_next_n_days_int(n, start_time):
-	return "unimplemented"
+def get_next_n_days_int(n, start_time_int):
+	as_date_object = datetime.datetime.fromtimestamp(start_time_int)
+	delta = timedelta(days=1)
+	utc_int_list = []
+	for i in range(0, n):
+		as_date_object += delta
+		utc_int_list.append(as_date_object.totimestamp())
+	return utc_int_list
 
-#Josh
+#Greg
 #maps a utc integer into a string of the form Weekday, Month Day Number 
 #leaves out info about hours, minutes, etc.  
 def convert_int_to_frontend_str(day_int):
@@ -194,7 +200,8 @@ def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_
 def time_acceptable(time, offset):
 	pass
 
-#Josh
+
+#Greg
 # get date of a utc integer in the client timezone
 def get_date_in_tz(utc_int, tz_hour_offset):
 	pass
@@ -202,7 +209,14 @@ def get_date_in_tz(utc_int, tz_hour_offset):
 # Josh
 # Creates list o 24 * 7 utc times, separated by one hour, starting at start_utc
 def get_times_list(start_utc, n_days_out):
-	pass
+	as_date_object = datetime.datetime.fromtimestamp(start_utc)
+	delta = timedelta(days=1)
+	utc_int_list = []
+	for i in(0,7):
+		for j in (0,24)
+			utc_int_list.append(as_date_object.totimestamp())			
+			as_date_object += delta
+	return utc_int_list
 
 ##############################################################################################################################################
 #######################################START JAVASCRIPT BULLSHIT##############################################################################
