@@ -93,7 +93,7 @@ def administrator():
 
         # send email to candidate with scheduler
         url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.id)
-        mail_module.send_candidate_scheduler_email(cand, client, interview, url)
+        mail_module.send_candidate_scheduler_email(interview, url)
 
         return render_template('admin_success.html', candidate_email=candidate_email, client_email=client_email)
 
@@ -142,13 +142,7 @@ def select_timezone(interview_id):
         candidate.timezone = candidate_timezone
    
         db.session.commit()
-       
-        print("Dank Candidate Timezone Memes II:")
-        print(interview.candidate.timezone)
-        print("Dank Client Timezone Memes II:")
-        print(interview.client.timezone)
         return redirect(url_for('candidate_scheduler', interview_id=interview.id))
-
 
     return render_template('select_timezone.html', errormsg='')
 
@@ -156,31 +150,23 @@ def select_timezone(interview_id):
 # schedule for candidate
 @app.route("/interviews/<int:interview_id>/candidate_scheduler", methods=['GET', 'POST'])
 def candidate_scheduler(interview_id):
-    print("made it to routing stage!!")
+
     interview = Interview.query.filter_by(id=interview_id).first()
+
     if request.method == "POST":
-        print("Post operation called!!")
         candidate_time_info = request.form['submit_times']
         interview.candidate_times = candidate_time_info
         db.session.commit()
 
-        mail_module.send_candidate_confirmed_times(interview.candidate, interview)
+        mail_module.send_candidate_confirmed_times(interview)
         url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.id)
-        mail_module.send_client_scheduler_email(interview.candidate, interview.client, interview, url)
+        mail_module.send_client_scheduler_email(interview, url)
 
         interview.status = 2
         db.session.commit()
         return redirect(url_for('candidate_success'))
 
-
-    cur_utc_int = int(datetime.datetime.utcnow().timestamp())
-    print(cur_utc_int)
-    client_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.client.timezone, cur_utc_int)
-    candidate_offset = tz_module.timezone_str_to_utc_offset_int_in_hours(interview.candidate.timezone, cur_utc_int)
-    print("Client Offset: " + str(client_offset))
-    print("Candidate Offset: " + str(candidate_offset))
-    return render_template('candidate_scheduler.html', client_GMT_offset = client_offset, candidate_GMT_offset = candidate_offset)
-
+    return render_template('candidate_scheduler.html', client_GMT_offset = interview.client.timezone, candidate_GMT_offset = interview.candidate.timezone)
 
 # Schedule for client
 @app.route("/interviews/<int:interview_id>/client_scheduler", methods=['GET', 'POST'])
@@ -193,23 +179,21 @@ def client_scheduler(interview_id):
         return render_template('select_timezone.html', error_msg='This interview could not be found. Please contact nick@alariss.com for assistance.')
 
     if request.method == 'POST':
-        # convert utc int to string representation in both client/cand timezones
+
+        # save information in db
         selected_time_utc = int(request.form['time_int'])
-        selected_time_client_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.client.timezone, selected_time_utc)
-        selected_time_cand_tz = tz_module.utc_int_to_timezone_adjusted_int(interview.candidate.timezone, selected_time_utc)
-        client_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_client_tz, interview.client.timezone)
-        cand_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_cand_tz, interview.candidate.timezone)
-
         interview.client_selection = selected_time_utc
-        
-        zoom_url = zoom_module.create_zoom_room(interview)
-
-        # send confirmation email to both with link
-        mail_module.send_client_confirmation_email(interview.candidate, interview.client, interview, zoom_url, client_time_str)
-        mail_module.send_candidate_confirmation_email(interview.candidate, interview.client, interview, zoom_url, cand_time_str)
-
         interview.status = 3
         db.session.commit()
+
+        # get formatted date strings we need for emails
+        client_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.client.timezone)
+        cand_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.client.timezone)
+
+        # send confirmation email to both with link
+        zoom_url = zoom_module.create_zoom_room(interview)
+        mail_module.send_client_confirmation_email(interview, zoom_url, client_time_str)
+        mail_module.send_candidate_confirmation_email(interview, zoom_url, cand_time_str)
 
         return redirect(url_for("client_success"))
 
