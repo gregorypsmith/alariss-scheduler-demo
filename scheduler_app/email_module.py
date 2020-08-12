@@ -19,8 +19,7 @@ def send_candidate_scheduler_email(candidate, client, interview, url):
     msg.body = 'Dear ' + candidate.first_name + ',\n\n'
     msg.body += 'Congratulations! ' + interview.company_name + ' would like you to interview for an open ' + \
         interview.position_name + ' position.\n\n'
-    msg.body += 'Your point of contact is ' + client.first_name + ' ' + client.last_name + '. Please continue to \
-        the following link to schedule your interview:\n\n'
+    msg.body += 'Your point of contact is ' + client.first_name + ' ' + client.last_name + '. Please continue to the following link to schedule your interview:\n\n'
     msg.body += url + '\n\n'
     msg.body += 'Best wishes and good luck,\n'
     msg.body += 'The Alariss Global Team'
@@ -34,8 +33,7 @@ def send_candidate_confirmed_times(candidate, interview):
     msg.body = 'Dear ' + candidate.first_name + ',\n\n'
     msg.body += 'Thank you for submitting your availability for your upcoming interview with' + interview.company_name + \
         '.\n\n'
-    msg.body += 'Your interviewer has been sent this information and we will let you know when they have chosen one of \
-        your available time slots.\n\n'
+    msg.body += 'Your interviewer has been sent this information and we will let you know when they have chosen one of your available time slots.\n\n'
     msg.body += 'No further action is required on your part. We wish you the best of luck!\n\n'
     msg.body += 'Best wishes,\n'
     msg.body += 'The Alariss Global Team'
@@ -48,8 +46,7 @@ def send_client_scheduler_email(candidate, client, interview, url):
     sender=scheduler_email,
     recipients=[client.email])
     msg.body = 'Dear ' + client.first_name + ',\n\n'
-    msg.body += candidate_full_name + ' has submitted their availibility to interview for the open ' + \
-        interview.position_name + ' position at your company.\n\n'
+    msg.body += candidate_full_name + ' has submitted their availibility to interview for the open ' + interview.position_name + ' position at your company.\n\n'
     msg.body += 'Please continue to the following link to select a time:\n\n'
     msg.body += url + '\n\n'
     msg.body += 'Thank you,\n'
@@ -63,8 +60,7 @@ def send_client_confirmation_email(candidate, client, interview, zoom_url, inter
     sender=scheduler_email,
     recipients=[client.email])
     msg.body = 'Dear ' + client.first_name + ',\n\n'
-    msg.body += 'Thank you for your selection! Your interview with ' + candidate_full_name + ' for the ' + \
-        interview.position_name + ' has been scheduled and the candidate has been notified of your selection.\n\n'
+    msg.body += 'Thank you for your selection! Your interview with ' + candidate_full_name + ' for the ' + interview.position_name + ' has been scheduled and the candidate has been notified of your selection.\n\n'
     msg.body += 'The interview has been scheduled for ' + interview_datetime_client + '.\n\n'
     msg.body += 'When it is time for the interview, click this Zoom link to meet:\n\n'
     msg.body += zoom_url + '\n\n'
@@ -79,8 +75,7 @@ def send_candidate_confirmation_email(candidate, client, interview, zoom_url, in
     sender=scheduler_email,
     recipients=[candidate.email])
     msg.body = 'Dear ' + candidate.first_name + ',\n\n'
-    msg.body += 'Great news! ' + client_full_name + ' has selected a time to interview you for the ' + \
-        interview.position_name + ' position.\n\n'
+    msg.body += 'Great news! ' + client_full_name + ' has selected a time to interview you for the ' + interview.position_name + ' position.\n\n'
     msg.body += 'The interview has been scheduled for ' + interview_datetime_candidate + '.\n\n'
     msg.body += 'When it is time for the interview, click this Zoom link to meet:\n\n'
     msg.body += zoom_url + '\n\n'
