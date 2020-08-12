@@ -9,12 +9,15 @@ from flask_admin import Admin
 from flask_mail import Mail
 from flask_login import LoginManager, UserMixin
 from flask_bootstrap import Bootstrap
+from zoomus import ZoomClient
+
+from dotenv import load_dotenv
+load_dotenv()
 
 
 app = Flask(__name__)
 app.config.from_object("scheduler_app.config.DevelopmentConfig")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# print(os.environ['APP_SETTINGS'])
 basedir = os.path.abspath(os.path.dirname(__file__))
 # database_uri_postgres = 'postgres://cvcpylyugwdnwt:8ee8510d9a25f68c30514e002dada5934d4bdbef06595f01e4b002fffc6b38da@ec2-54-204-39-43.compute-1.amazonaws.com:5432/d90r5mu72ko8a3'
 database_uri = 'sqlite:///' + os.path.join(basedir, 'alariss.sqlite')
@@ -38,6 +41,7 @@ db = SQLAlchemy(app)
 admin = Admin(app)
 mail = Mail(app)
 Bootstrap(app)
+zoom_client = ZoomClient(os.getenv("ZOOM_API_KEY"), os.getenv("ZOOM_API_SECRET"))
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
