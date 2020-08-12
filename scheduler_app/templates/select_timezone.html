@@ -17,40 +17,43 @@
 	</div>
 	
 	<div id="instructions" class="text-center pt-5">
-		<p><b>Please read the intructions below:</b><br>1. Each interview is a 1 hour long video chat via Zoom.<br>
-		2. Please be considerate of your interviewer’s waking hours.<br>
-		3. Picking more times will help ensure you receive an interview.</p>
+		<p>Hello, welcome to the Alariss Interview Scheduling System! We have automatically detected that your timezone is<br></p>
+			<b><p id="timezone_str"></p></b>
+		<p>We have automatcially selected the associated GMT timezone offset. If the timezone listed above is incorrect, please look up <br>
+		the corresponding GMT ofset for your desried timezone and select it in the dropdown menu below. 
+		</p>
 	</div>	
+
 
 	<div id="settings" class="text-center pt-5">
 		<form method="POST">
 			{{errormsg}}<br><br>
 			<label for="times">Choose a timezone:</label>
 			<select name="timezone" id="timezone" class="form-control">
-				<option value="None" selected="selected"> --- Please Select a Timezone --- </option>
-				<option value='-10'>GMT -10:00</option>
-				<option value='-9'>GMT -9:00</option>
-				<option value='-8'>GMT -8:00</option>
-				<option value='-7'>GMT -7:00</option>
-				<option value='-6'>GMT -6:00</option>
-				<option value='-5'>GMT -5:00</option>
-				<option value='-4'>GMT -4:00</option>
-				<option value='-3'>GMT -3:00</option>
-				<option value='-2'>GMT -2:00</option>
-				<option value='-1'>GMT -1:00</option>
-				<option value='0'>GMT +0:00</option>
-				<option value='1'>GMT +1:00</option>
-				<option value='2'>GMT +2:00</option>
-				<option value='3'>GMT +3:00</option>
-				<option value='4'>GMT +4:00</option>
-				<option value='5'>GMT +5:00</option>
-				<option value='6'>GMT +6:00</option>
-				<option value='7'>GMT +7:00</option>
-				<option value='8'>GMT +8:00</option>
-				<option value='9'>GMT +9:00</option>
-				<option value='10'>GMT +10:00</option>
-				<option value='11'>GMT +11:00</option>
-				<option value='12'>GMT +12:00</option>
+				<option value="None"  id="default"> --- Please Select a Timezone --- </option>
+				<option value='-10' id = '-10'>GMT -10:00</option>
+				<option value='-9' id='-9' >GMT -9:00</option>
+				<option value='-8' id='-8'>GMT -8:00</option>
+				<option value='-7' id='-7'>GMT -7:00</option>
+				<option value='-6' id='-6'>GMT -6:00</option>
+				<option value='-5' id='-5'>GMT -5:00</option>
+				<option value='-4' id='-4'>GMT -4:00</option>
+				<option value='-3' id='-3'>GMT -3:00</option>
+				<option value='-2' id='-2'>GMT -2:00</option>
+				<option value='-1' id='-1'>GMT -1:00</option>
+				<option value='0' id='0'>GMT +0:00</option>
+				<option value='1' id='1'>GMT +1:00</option>
+				<option value='2' id='2' >GMT +2:00</option>
+				<option value='3' id='3'>GMT +3:00</option>
+				<option value='4' id='4'>GMT +4:00</option>
+				<option value='5' id='5'>GMT +5:00</option>
+				<option value='6' id='6'>GMT +6:00</option>
+				<option value='7' id='7'>GMT +7:00</option>
+				<option value='8' id='8'>GMT +8:00</option>
+				<option value='9' id='9'>GMT +9:00</option>
+				<option value='10' id='10'>GMT +10:00</option>
+				<option value='11' id='11'>GMT +11:00</option>
+				<option value='12' id='12'>GMT +12:00</option>
 			</select>
 			<div id="submit" class="text-center pt-5">
 				<input type="submit" id="submitbutton" class="btn btn-lg btn-primary"></button>
@@ -96,5 +99,29 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+    <script>
+    	// get teh current time
+    	var offset_in_hours = - (new Date().getTimezoneOffset())/60;
+    	console.log("Offset in hours:"+offset_in_hours.toString())
+
+    	const d = new Date();
+
+		// Get a DateTimeFormat object for the user's current culture (via undefined)
+		// Ask specifically for the long-form of the time zone name in the options
+		const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'long'});
+
+		// Format the date to parts, and pull out the value of the time zone name
+		const timezone_as_str = dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value
+		console.log(timezone_as_str)
+
+		// var default = document.getElementById("default");
+		var timezone_slot = document.getElementById(offset_in_hours.toString());
+		// default.selected="unselected";
+		timezone_slot.selected = "selected";
+
+		var paragraph = document.getElementById("timezone_str");
+
+		paragraph.textContent += timezone_as_str;
+    </script>
 </body>
 </html>
