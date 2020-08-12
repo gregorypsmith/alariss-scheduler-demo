@@ -175,20 +175,32 @@ def get_next_n_day_strs(n, candidate_offset):
 #representation , UTC seconds. Second property is the corresponding hour as a string, e.g. 23:00.  
 #These functions face other client modules on the backend and directly feed critical info to frontend 
 def get_times_object(interview, n_days_out):
+
+	# needed for helper function calls
 	client_offset = int(interview.client.timezone)
 	candidate_offset = int(interview.candidate.timezone)
 	start_time = get_tomorrow_midnight_cand_tz(candidate_offset)
 
-#stores all the critical nfo for the frontedn in an a list of objects
-	times_object = []
-	acceptable_utc_times = get_acceptable_utc_times(client_offset, candidate_offset, start_time, n_days_out)
-	for utc_int in acceptable_utc_times:
-		times_object.append({
-			"hour_as_str": time_in_tz_str(utc_int, tz_hour_offset),
-			"as_utc_int": utc_int,
-			"date": get_date_in_tz(utc_int, tz_hour_offset)
+	# get info needed to construct table
+	table_object = []
+	acceptable_utc_times_by_day = get_acceptable_utc_times(client_offset, candidate_offset, start_time, n_days_out)
+	day_strs = get_next_n_day_strs(n_days_out, candidate_offset)
+
+	# put info in json/jinja readable format
+	for i in range(n_days_out):
+		times_object = []
+		for utc_time in acceptable_utc_times_by_day[i]:
+			times_object.append({
+				"hour_as_str": time_in_tz_str(utc_time, candidate_offset),
+				"as_utc_int": utc_int,
+				"date": get_date_in_tz(utc_int, candidate_offset)
 			})
-	return times_object
+		table_object.append({
+			"day_info_string": convert_int_to_frontend_str(times_object[0].as_utc_int),
+			"times": times_object
+		})
+
+	return table_object
 
 #Josh
 #gets the next seven days from the moment called as utc integers 
@@ -225,8 +237,8 @@ def convert_int_to_frontend_str(day_int):
 	ret_str += str(months[to_date.month]) + ' ' + str(to_date.day)
 	return ret_str
 
-#Test case 1: Print today
-print('Today as frontend str: ')
+#Test case 1: Print today GMT
+print('Today (date only) as frontend str (GMT): ')
 print(convert_int_to_frontend_str(now))
 
 #done
@@ -236,9 +248,12 @@ print(convert_int_to_frontend_str(now))
 def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_out):
 	times_list = get_times_list(start_utc, n_days_out)
 	ret = []
-	for time in times_list:
-		if time_acceptable(time, client_offset) and time_acceptable(time, candidate_offset):
-			ret.append(time)
+	for day in times_list:
+		ret_day = []
+		for time in day:
+			if time_acceptable(time, client_offset) and time_acceptable(time, candidate_offset):
+				ret_day.append(time)
+		ret.append(ret_day)
 	return ret
 
 #Greg
@@ -251,21 +266,37 @@ def time_acceptable(time_utc_int, offset):
 #Greg
 # get date of a utc integer in the client timezone
 def get_date_in_tz(utc_int, tz_hour_offset):
-	to_date = datetime.datetime.fromtimestamp(time_utc_int)
+	to_date = datetime.datetime.fromtimestamp(utc_int)
 	to_date += timedelta(hours=tz_hour_offset)
-	return convert_int_to_frontend_str(to_date.timestamp())
+	date_str = convert_int_to_frontend_str(to_date.timestamp())
+	date_str += ' at ' + time_in_tz_str(utc_int, tz_hour_offset)
+	return date_str
+
+#Test case 1: Print today GMT
+print('Today (with hours) as frontend str (GMT): ')
+print(get_date_in_tz(now, 0))
+
+#Test case 2: Print today EDT
+print('Today (with hours) as frontend str (EDT): ')
+print(get_date_in_tz(now, -4))
+
 # Josh
 # Creates list o 24 * 7 utc times, separated by one hour, starting at start_utc
 def get_times_list(start_utc, n_days_out):
+
 	as_date_object = datetime.datetime.fromtimestamp(start_utc)
 	delta = timedelta(hours=1)
 	list_of_time_lists = []
-	for i in(0,7):
+
+	for i in range(0,7):
 		utc_int_list = []
-		for j in (0,24):
+
+		for j in range(0,24):
 			utc_int_list.append(as_date_object.totimestamp())			
 			as_date_object += delta
+
 		list_of_time_lists.append(utc_int_list)
+
 	return list_of_time_lists
 
 ##############################################################################################################################################
