@@ -234,7 +234,6 @@ print(convert_int_to_frontend_str(now))
 #waking hours. Basically, we assume that both parties are available between 6am and 9pm 
 #in their local times. Start at midnight of next day in terms of UTC(aka GMT+0)    
 def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_out):
-
 	times_list = get_times_list(start_utc, n_days_out)
 	ret = []
 	for time in times_list:
@@ -260,12 +259,14 @@ def get_date_in_tz(utc_int, tz_hour_offset):
 def get_times_list(start_utc, n_days_out):
 	as_date_object = datetime.datetime.fromtimestamp(start_utc)
 	delta = timedelta(hours=1)
-	utc_int_list = []
+	list_of_time_lists = []
 	for i in(0,7):
+		utc_int_list = []
 		for j in (0,24):
 			utc_int_list.append(as_date_object.totimestamp())			
 			as_date_object += delta
-	return utc_int_list
+		list_of_time_lists.append(utc_int_list)
+	return list_of_time_lists
 
 ##############################################################################################################################################
 #######################################START JAVASCRIPT BULLSHIT##############################################################################

@@ -135,6 +135,54 @@ function makeRow(time, index){
 
 
 
+//the actual shit is here
+function addButton(time, index ){
+      var as_utc_str = time.as_utc_int.toString()
+      var hour_as_str = time.hour_as_str.toString()
+      if(time == "..."){
+        $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');
+      }
+      else{
+      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc_str+'\');"' +
+       ' id ="'+as_utc_str+'">'+hour_as_str+'</button></td>');
+      }
+    }
+
+//fucntion that actualy constructs the rows of the table. This depends heavily on 
+function makeColumn(day_of_week_with_times, index){
+     $('.josh-class').append('<div>');
+     // "display: block" should make the buttons group togther vertically
+     $('.josh-class').append('<tr> \n <div class="btn-group" role="group"  style="display: block;" aria-label="First group">');
+    
+    //get the current day out of the object
+     cur_day_as_str = day_of_week_with_times.day_info_str 
+
+     //add the current day as a string 
+      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_as_str+'</button></td>');
+    // var day_strs = {{get_strs_for_next_7_days}}
+
+    // [{day_of_week_info: " Monday, August 10th",
+    // times: [{ display_hour: "23:00",
+    //           utc_timestamp:"217371987321389"
+    //           date: "Tuesday August 10th, 21:00"
+    // },
+    // { display_hour: "23:00",
+    //           utc_timestamp:"217371987321389"
+    // },
+    // { display_hour: "23:00",
+    //           utc_timestamp:"217371987321389"
+    // }]
+
+    // }]
+   times = day_of_week_with_times.times
+   times.forEach(makeButton);
+    
+
+    $('.josh-class').append('</div>');
+    $('.josh-class').append('</tr>');
+}
+
+
 
 
 /// functioon that actually initializes our stuff
