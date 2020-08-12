@@ -259,7 +259,7 @@ def get_date_in_tz(utc_int, tz_hour_offset):
 # Creates list o 24 * 7 utc times, separated by one hour, starting at start_utc
 def get_times_list(start_utc, n_days_out):
 	as_date_object = datetime.datetime.fromtimestamp(start_utc)
-	delta = timedelta(days=1)
+	delta = timedelta(hours=1)
 	utc_int_list = []
 	for i in(0,7):
 		for j in (0,24):
