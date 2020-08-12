@@ -9,6 +9,7 @@ import json
 from pytz import timezone
 import scheduler_app.timezone_module as tz_module
 import scheduler_app.email_module as mail_module
+import scheduler_app.zoom_module as zoom_module
 import datetime
 
 @login_manager.user_loader
@@ -143,9 +144,6 @@ def select_timezone(interview_id):
         print(candidate_timezone)
         candidate.timezone = candidate_timezone
    
-
-        # print("here")
-
         db.session.commit()
        
         print("Dank Candidate Timezone Memes II:")
@@ -166,7 +164,6 @@ def candidate_scheduler(interview_id):
     if request.method == "POST":
         print("Post operation called!!")
         candidate_time_info = request.form['submit_times']
-        # print(candidate_time_info)
         interview.candidate_times = candidate_time_info
         db.session.commit()
 
@@ -206,8 +203,9 @@ def client_scheduler(interview_id):
         client_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_client_tz, interview.client.timezone)
         cand_time_str = tz_module.int_time_representation_to_str_time_representation(selected_time_cand_tz, interview.candidate.timezone)
 
-        # need zoom integration to generate link
-        zoom_url = '<url>'
+        interview.client_selection = selected_time_utc
+        
+        zoom_url = zoom_module.create_zoom_room(interview)
 
         # send confirmation email to both with link
         mail_module.send_client_confirmation_email(interview.candidate, interview.client, interview, zoom_url, client_time_str)
@@ -215,6 +213,8 @@ def client_scheduler(interview_id):
 
         interview.status = 3
         db.session.commit()
+
+        return redirect(url_for("client_success"))
 
     times_int, times_str = tz_module.get_str_and_utc_lists_for_client(interview)
     times_object_list = []
