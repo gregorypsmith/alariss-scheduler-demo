@@ -16,15 +16,6 @@ import json
 # our use case. Assuming we are using milliseconds per hour based on javascript representation  
 utc_UNITS_PER_HOUR = 3600000
 
-
-def time_in_tz_str(utc_time, tz_hour_offset):
-	utc_time_in_tz = tz_hour_offset * utc_UNITS_PER_HOUR
-	hour_of_day = utc_time_in_tz % 24 * utc_UNITS_PER_HOUR
-	time_in_tz_str = ''
-	if hour_of_day < 10:
-		time_in_tz_str += '0'
-	return time_in_tz_str + str(hour_of_day) + ":00"
-
  # Returns the difference in hours between timezone1 and timezone2
  # for a given date.
 # def tz_diff(utc_int, tz1, tz2):
@@ -120,18 +111,38 @@ def get_str_and_utc_lists_for_client(interview):
 	return(utc_times_int_list, str_times_list)
 
 
+###################################################################################################
+###################################################################################################
+# 										NEW MODULE SHIT											  #
+###################################################################################################
+###################################################################################################
 
+# Greg
+def time_in_tz_str(utc_time, tz_hour_offset):
+	utc_time_in_tz = tz_hour_offset * utc_UNITS_PER_HOUR
+	hour_of_day = utc_time_in_tz % (24 * utc_UNITS_PER_HOUR)
+	time_in_tz_str = ''
+	if hour_of_day < 10:
+		time_in_tz_str += '0'
+	return time_in_tz_str + str(hour_of_day) + ":00"
+
+# Josh
 #helper function to get the next n days represented as strings of format
 # Weekday, Month, Day Number. These functions face other client modules
 #on the backend and directly feed critical info to frontend 
-def get_next_n_day_strs(n):
-	next_n_days = get_next_n_days_as_utc(n)
+def get_next_n_day_strs(n, candidate_offset):
+	start_time = get_tomorrow_midnight_cand_tz(candidate_offset)
+	next_n_days = get_next_n_days_int(n, start_time)
 	retList = [] 
-	for day_utc in next_n_days:
-		retList.append(convert_utc_to_frontend_str(day_utc))
+	for day_int in next_n_days:
+		retList.append(convert_int_to_frontend_str(day_int))
 	return retList 
 
 
+# Greg
+# get tomorrow at midnight's utc int for a given timezone
+def get_tomorrow_midnight_cand_tz(candidate_offset):
+	pass
 
 #helper function to get time information as object with two properties. First property is UTC integer in python 
 #representation , UTC seconds. Second property is the corresponding hour as a string, e.g. 23:00.  
@@ -139,10 +150,12 @@ def get_next_n_day_strs(n):
 def get_times_object(interview, n_days_out):
 	client_offset = int(interview.client.timezone)
 	candidate_offset = int(interview.candidate.timezone)
-	start_utc = Datetime.now()
+	start_time = get_tomorrow_midnight_cand_tz(candidate_offset)
+
 	#stores all the critical nfo for the frontedn in an a list of objects
 	times_object = []
-	acceptable_utc_times = get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_out):
+	acceptable_utc_times = get_acceptable_utc_times(client_offset, candidate_offset, start_time, n_days_out)
+
 	for utc_int in acceptable_utc_times:
 		times_object.append({
             "hour_as_str": time_in_tz_str(utc_int, tz_hour_offset),
@@ -151,23 +164,45 @@ def get_times_object(interview, n_days_out):
         })
 	return times_object 
 
+#Josh
 #gets the next seven days from the moment called as utc integers 
 #start at midnight of next day in UTC 
-def get_next_n_days_as_utc(n):
-	return "implemented"
-
-#maps a utc integer into a string of the form Weekday, Month Day Number 
-#leaves out info about hours, minutes, etc.  
-def convert_utc_to_frontend_str(day_utc):
+def get_next_n_days_int(n, start_time):
 	return "unimplemented"
 
+#Josh
+#maps a utc integer into a string of the form Weekday, Month Day Number 
+#leaves out info about hours, minutes, etc.  
+def convert_int_to_frontend_str(day_int):
+	return "unimplemented"
+
+#done
 #gets the times in utc that work for both client and candidate in terms of their 
 #waking hours. Basically, we assume that both parties are available between 6am and 9pm 
 #in their local times. Start at midnight of next day in terms of UTC(aka GMT+0)    
 def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_out):
-	return "unimplemented"
 
+	times_list = get_times_list(start_utc, n_days_out)
+	ret = []
+	for time in times_list:
+		if time_acceptable(time, client_offset) and time_acceptable(time, candidate_offset):
+			ret.append(time)
+	return ret
 
+#Greg
+# see whether a time is between 6am-10pm in the given timezone
+def time_acceptable(time, offset):
+	pass
+
+#Josh
+# get date of a utc integer in the client timezone
+def get_date_in_tz(utc_int, tz_hour_offset):
+	pass
+
+# Josh
+# Creates list o 24 * 7 utc times, separated by one hour, starting at start_utc
+def get_times_list(start_utc, n_days_out):
+	pass
 
 ##############################################################################################################################################
 #######################################START JAVASCRIPT BULLSHIT##############################################################################
