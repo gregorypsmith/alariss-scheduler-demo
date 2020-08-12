@@ -17,100 +17,6 @@ import json
 # our use case. Assuming we are using milliseconds per hour based on javascript representation  
 utc_UNITS_PER_HOUR = 3600
 
- # Returns the difference in hours between timezone1 and timezone2
- # for a given date.
-# def tz_diff(utc_int, tz1, tz2):
-
-# 	print("tz_diff(utc_int, tz1, tz2), utc_int = " + str(utc_int))
-# 	date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
-# 	return (tz2.localize(date) - 
-# 		tz1.localize(date).astimezone(tz2)).seconds/3600
-
-def tz_diff(utc_int, tz1, tz2):
-    '''
-    Returns the difference in hours between timezone1 and timezone2
-    for a given date.
-    '''
-    baseline_utc = timezone('Etc/GMT+0')
-    print(utc_int)
-    date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
-    tz1_localize = tz1.localize(date)
-    tz2_localize = tz2.localize(date)
-    as_timezone = tz2.localize(date).astimezone(tz2)
-    print(tz1_localize)
-    print(tz2_localize)
-   
-    diff = (tz2.localize(date).astimezone(baseline_utc) - tz1.localize(date).astimezone(baseline_utc)).seconds/3600
-    if (diff > 12):
-    	diff += -24
-    print(diff)
-    return diff
-# cur_utc_int = int(datetime.datetime.utcnow().timestamp())*1000
-# tz1 = timezone('Etc/GMT+4')
-# tz2 = timezone('Etc/GMT-7')
-# tz_diff(cur_utc_int, tz1, tz2)
-
-#takes a string that names a timezone and maps it to the integer offset relative to utc(GMT) 
-#the offest is in terms of hours. This is a critical note because utc is typically in milliseconds
-#or in seconds. Directly used to pass offset to frontend
-def timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):
-	print("timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int), utc_int = " + str(utc_int))
-	utc_timezone = timezone("Etc/GMT+0")
-	print("DANK MEMES")
-	print(timezone_str)
-	local_timezone = timezone(timezone_str)
-	timezone_offset_integer = tz_diff(utc_int, local_timezone, utc_timezone)
-	return timezone_offset_integer
-
-
-
-#takes a string name of a timezone and an integer representing utc time in 
-#seconds and then maps the int into its value in the new timezone 
-def utc_int_to_timezone_adjusted_int(timezone_str, utc_int):
-	print("utc_int_to_timezone_adjusted_int(timezone_str, utc_int), utc_int = " + str(utc_int))
-	offset = utc_UNITS_PER_HOUR * timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)
-	print('OFFSET: ' + str(offset / utc_UNITS_PER_HOUR))
-	return (offset + int(utc_int))
-
-#maps the int representation of a time(adjusted utc) into a string representation
-def int_time_representation_to_str_time_representation(int_representation, timezone_str):
-	#I assume we are converting from javascript representation to 
-	#python representation, i.e. milliseconds to seconds for utc
-	print("int_time_representation_to_str_time_representation(int_representation, timezone_str), int_representation = " + str(int_representation))
-	date = datetime.datetime.fromtimestamp(int_representation / 1000)
-	print("int_time_representation_to_str_time_representation(int_representation, timezone_str), date = " + str(date))
-	#Weekday, Month day number, year at hour:minute 
-	dateStr = date.strftime("%A, %B %d, %Y at %H:00 " + timezone_str)
-	return dateStr
-
-
-#maps a list of times represented in utc into a list of strings with time zone info 
-def int_times_list_to_str_times_list(utc_times_int_list, timezone_str):
-	print("int_times_list_to_str_times_list(utc_times_int_list, timezone_str), utc_times_int_list = " + str(utc_times_int_list))
-	str_times_list = []
-	for each in utc_times_int_list:
-		print("int_times_list_to_str_times_list(utc_times_int_list, timezone_str), each = " + str(each))
-		adjusted_int = utc_int_to_timezone_adjusted_int(timezone_str, int(each))
-		int_as_str_in_terms_of_utc = int_time_representation_to_str_time_representation(adjusted_int, timezone_str)
-		str_times_list.append(int_as_str_in_terms_of_utc)
-	return str_times_list 
-
-
-
-
-#this is the primary function used externally. It takes an interview object(db ref)
-#and returns two lists. The first is of strings. These functions face other client modules
-#on the backend and directly feed critical info to frontend 
-def get_str_and_utc_lists_for_client(interview):
-	utc_times_int_list = json.loads(interview.candidate_times)
-	timezone_str = interview.client.timezone
-	str_times_list = int_times_list_to_str_times_list(utc_times_int_list, timezone_str)
-
-	print("get_str_and_utc_lists_for_client(interview), utc_times_int_list = " + str(utc_times_int_list))
-	print("get_str_and_utc_lists_for_client(interview), str_times_int_list = " + str(str_times_list))
-	#lists need to be in exactly the same order 
-	return(utc_times_int_list, str_times_list)
-
 
 ###################################################################################################
 ###################################################################################################
@@ -118,7 +24,7 @@ def get_str_and_utc_lists_for_client(interview):
 ###################################################################################################
 ###################################################################################################
 
-# Greg
+# Given a utc time and an hour offset, provide the hour of day in tz as a string
 def time_in_tz_str(utc_time, tz_hour_offset):
 	utc_time_in_tz = utc_time + (tz_hour_offset * utc_UNITS_PER_HOUR)
 	date_in_tz = datetime.datetime.fromtimestamp(utc_time_in_tz)
@@ -127,22 +33,21 @@ def time_in_tz_str(utc_time, tz_hour_offset):
 		time_in_tz_str += '0'
 	return time_in_tz_str + str(date_in_tz.hour) + ":00"
 
-# Test Case 1: should give current hour in Eastern Daylight time
-now = int(datetime.datetime.utcnow().timestamp())
-print(datetime.datetime.fromtimestamp(now))
-print('- 4 = ')
-east_daylight_time = -4
-print(time_in_tz_str(now, east_daylight_time))
+# # Test Case 1: should give current hour in Eastern Daylight time
+# now = int(datetime.datetime.utcnow().timestamp())
+# print(datetime.datetime.fromtimestamp(now))
+# print('- 4 = ')
+# east_daylight_time = -4
+# print(time_in_tz_str(now, east_daylight_time))
 
-# Test Case 2: goes to next day (should return 5:00)
-time2 = 1597273200 # 19:00 GMT
-print(datetime.datetime.fromtimestamp(1597273200))
-print('+ 10 = ')
-gmt_plus_10 = 10 # + 10 should go to 9
-print(time_in_tz_str(time2, gmt_plus_10))
+# # Test Case 2: goes to next day (should return 5:00)
+# time2 = 1597273200 # 19:00 GMT
+# print(datetime.datetime.fromtimestamp(1597273200))
+# print('+ 10 = ')
+# gmt_plus_10 = 10 # + 10 should go to 9
+# print(time_in_tz_str(time2, gmt_plus_10))
 
-# Greg
-# get tomorrow/next day at midnight's utc int for a given timezone
+# get the utc timestamp of midnight tomorrow in a given timezone offset
 def get_tomorrow_midnight_cand_tz(candidate_offset):
 	today_utc = datetime.datetime.today()
 	tmrw_utc = today_utc + timedelta(days=2)
@@ -151,15 +56,15 @@ def get_tomorrow_midnight_cand_tz(candidate_offset):
 	midnight_tz_int = tmrw_tz_midnight.timestamp()
 	return midnight_tz_int
 
-# Test Case 1: when is it tomorrow midnight EDT? should be something 20:00
-print('EST midnight tomorrow: ')
-print(datetime.datetime.fromtimestamp(get_tomorrow_midnight_cand_tz(-4)))
+# # Test Case 1: when is it tomorrow midnight EDT? should be something 20:00
+# print('EST midnight tomorrow: ')
+# print(datetime.datetime.fromtimestamp(get_tomorrow_midnight_cand_tz(-4)))
 
-# Test Case 2: when is it tomorrow midnight China? should be something 8:00
-print('China midnight tomorrow: ')
-print(datetime.datetime.fromtimestamp(get_tomorrow_midnight_cand_tz(8)))
+# # Test Case 2: when is it tomorrow midnight China? should be something 8:00
+# print('China midnight tomorrow: ')
+# print(datetime.datetime.fromtimestamp(get_tomorrow_midnight_cand_tz(8)))
 
-# Josh
+
 #helper function to get the next n days represented as strings of format
 # Weekday, Month, Day Number. These functions face other client modules
 #on the backend and directly feed critical info to frontend 
@@ -171,38 +76,6 @@ def get_next_n_day_strs(n, candidate_offset):
 		retList.append(convert_int_to_frontend_str(day_int))
 	return retList 
 
-#helper function to get time information as object with two properties. First property is UTC integer in python 
-#representation , UTC seconds. Second property is the corresponding hour as a string, e.g. 23:00.  
-#These functions face other client modules on the backend and directly feed critical info to frontend 
-def get_times_object(interview, n_days_out):
-
-	# needed for helper function calls
-	client_offset = int(interview.client.timezone)
-	candidate_offset = int(interview.candidate.timezone)
-	start_time = get_tomorrow_midnight_cand_tz(candidate_offset)
-
-	# get info needed to construct table
-	table_object = []
-	acceptable_utc_times_by_day = get_acceptable_utc_times(client_offset, candidate_offset, start_time, n_days_out)
-	day_strs = get_next_n_day_strs(n_days_out, candidate_offset)
-
-	# put info in json/jinja readable format
-	for i in range(n_days_out):
-		times_object = []
-		for utc_time in acceptable_utc_times_by_day[i]:
-			times_object.append({
-				"hour_as_str": time_in_tz_str(utc_time, candidate_offset),
-				"as_utc_int": utc_int,
-				"date": get_date_in_tz(utc_int, candidate_offset)
-			})
-		table_object.append({
-			"day_info_string": convert_int_to_frontend_str(times_object[0].as_utc_int),
-			"times": times_object
-		})
-
-	return table_object
-
-#Josh
 #gets the next seven days from the moment called as utc integers 
 #start at midnight of next day in UTC 
 def get_next_n_days_int(n, start_time_int):
@@ -214,36 +87,26 @@ def get_next_n_days_int(n, start_time_int):
 		utc_int_list.append(as_date_object.timestamp())
 	return utc_int_list
 
-#Greg
 #maps a utc integer into a string of the form Weekday, Month Day Number 
 #leaves out info about hours, minutes, etc.  
 def convert_int_to_frontend_str(day_int):
 
-	weekday_dict = {
-		0: "Monday",
-		1: "Tuesday",
-		2: "Wednesday",
-		3: "Thursday",
-		4: "Friday",
-		5: "Saturday",
-		6: "Sunday"
-	}
-
+	# lists to get string representations
+	days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 	months = [None, "January", "February", "March", "April", "May", "June", "July", "August", "September", \
               "October", "November", "December"]
 
 	to_date = datetime.datetime.fromtimestamp(day_int)
-	ret_str = weekday_dict[to_date.weekday()] + ', '
+	ret_str = days[to_date.weekday()] + ', '
 	ret_str += str(months[to_date.month]) + ' ' + str(to_date.day)
 	return ret_str
 
-#Test case 1: Print today GMT
-print('Today (date only) as frontend str (GMT): ')
-print(convert_int_to_frontend_str(now))
+# #Test case 1: Print today GMT
+# print('Today (date only) as frontend str (GMT): ')
+# print(convert_int_to_frontend_str(datetime.datetime.utcnow().timestamp()))
 
-# Josh
-# Creates list o 24 * 7 utc times, separated by one hour, starting at start_utc
-# returns a single flat list with all times in the desired window
+
+# Creates list of 24 * n_days_out utc times, separated by one hour, starting at start_utc
 def get_times_list(start_utc, n_days_out):
 	as_date_object = datetime.datetime.fromtimestamp(start_utc)
 	all_list = []
@@ -258,7 +121,7 @@ def get_times_list(start_utc, n_days_out):
 
 	return all_list
 
-print(len(get_times_list(now, 7)))
+# print(len(get_times_list(now, 7)))
 # Get all times GMT between tmrw midnight GMT to 1 day from now
 # print(get_times_list(get_tomorrow_midnight_cand_tz(0), 1))
 
@@ -283,13 +146,13 @@ def get_date_in_tz(utc_int, tz_hour_offset):
 	date_str += ' at ' + time_in_tz_str(utc_int, tz_hour_offset)
 	return date_str
 
-#Test case 1: Print today GMT
-print('Today (with hours) as frontend str (GMT): ')
-print(get_date_in_tz(now, 0))
+# #Test case 1: Print today GMT
+# print('Today (with hours) as frontend str (GMT): ')
+# print(get_date_in_tz(now, 0))
 
-#Test case 2: Print today EDT
-print('Today (with hours) as frontend str (EDT): ')
-print(get_date_in_tz(now, -4))
+# #Test case 2: Print today EDT
+# print('Today (with hours) as frontend str (EDT): ')
+# print(get_date_in_tz(now, -4))
 
 
 def col_vectors_to_rows_fixed_table(col_vecs):
@@ -333,9 +196,8 @@ def filter_fucked_days(cand_offset, n, times_list):
 	return rowList
 
 
-#done
 #gets the times in utc that work for both client and candidate in terms of their 
-#waking hours. Basically, we assume that both parties are available between 6am and 9pm 
+#waking hours. Basically, we assume that both parties are available btwn 6am and 9pm 
 #in their local times. Start at midnight of next day in terms of UTC(aka GMT+0)    
 def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_out):
 	times_list = get_times_list(start_utc, n_days_out + 2)
@@ -347,19 +209,46 @@ def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_
 	with_fucked_days_removed = filter_fucked_days(candidate_offset, n_days_out, acceptable_times_list)
 	return with_fucked_days_removed
 
-# Test case 1: Client -3, cand 0, expect 9am-7pm
-midnight_tmrw_est = get_tomorrow_midnight_cand_tz(-5)
+# # Test case 1: Client -3, cand 0, expect 9am-7pm
+# midnight_tmrw_est = get_tomorrow_midnight_cand_tz(-5)
 
-times_get_acceptable_test = get_acceptable_utc_times(-5, 3, midnight_tmrw_est, 7)
-times_get_acceptable_test_2 = sorted(times_get_acceptable_test, key=list_comparator)
+# times_get_acceptable_test = get_acceptable_utc_times(-5, 3, midnight_tmrw_est, 7)
+# times_get_acceptable_test_2 = sorted(times_get_acceptable_test, key=list_comparator)
 
-# print(times_get_acceptable_test_2)
-for row in times_get_acceptable_test_2:
-	row_str = ''
-	for index in row:
-		row_str += str(get_date_in_tz(index, 3)) + "  "
-	print("["+row_str+"]")
-print("END OF OBJECT")
+# # print(times_get_acceptable_test_2)
+# for row in times_get_acceptable_test_2:
+# 	row_str = ''
+# 	for index in row:
+# 		row_str += str(get_date_in_tz(index, 3)) + "  "
+# 	print("["+row_str+"]")
+# print("END OF OBJECT")
+
+#helper function to get time information as object with two properties. First property is UTC integer in python 
+#representation , UTC seconds. Second property is the corresponding hour as a string, e.g. 23:00.  
+#These functions face other client modules on the backend and directly feed critical info to frontend 
+def get_times_object(interview, n_days_out):
+
+	# needed for helper function calls
+	client_offset = int(interview.client.timezone)
+	candidate_offset = int(interview.candidate.timezone)
+	start_time = get_tomorrow_midnight_cand_tz(candidate_offset)
+
+	# get info needed to construct table
+	table_object = []
+	acceptable_utc_times_by_hour = get_acceptable_utc_times(client_offset, candidate_offset, start_time, n_days_out)
+
+	# append new row for each hour, each with n_days_out elements
+	for row in acceptable_utc_times_by_hour:
+		row_list = []
+		for index in row:
+			row_list.append({
+				"hour_as_str": time_in_tz_str(index, candidate_offset),
+				"as_utc_time": index,
+				"date": get_date_in_tz(index, candidate_offset)
+			})
+		table_object.append(row_list)
+
+	return table_object
 
 
 ##############################################################################################################################################
@@ -474,3 +363,98 @@ print("END OF OBJECT")
 # var client_GMT_offset =parseInt({{client_GMT_offset}})
 # var candidate_GMT_offset = parseInt({{candidate_GMT_offset}})
 # times = get_acceptable_times(client_GMT_offset, candidate_GMT_offset)
+
+ # Returns the difference in hours between timezone1 and timezone2
+#  # for a given date.
+# # def tz_diff(utc_int, tz1, tz2):
+
+# # 	print("tz_diff(utc_int, tz1, tz2), utc_int = " + str(utc_int))
+# # 	date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
+# # 	return (tz2.localize(date) - 
+# # 		tz1.localize(date).astimezone(tz2)).seconds/3600
+
+# def tz_diff(utc_int, tz1, tz2):
+#     '''
+#     Returns the difference in hours between timezone1 and timezone2
+#     for a given date.
+#     '''
+#     baseline_utc = timezone('Etc/GMT+0')
+#     print(utc_int)
+#     date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
+#     tz1_localize = tz1.localize(date)
+#     tz2_localize = tz2.localize(date)
+#     as_timezone = tz2.localize(date).astimezone(tz2)
+#     print(tz1_localize)
+#     print(tz2_localize)
+   
+#     diff = (tz2.localize(date).astimezone(baseline_utc) - tz1.localize(date).astimezone(baseline_utc)).seconds/3600
+#     if (diff > 12):
+#     	diff += -24
+#     print(diff)
+#     return diff
+# # cur_utc_int = int(datetime.datetime.utcnow().timestamp())*1000
+# # tz1 = timezone('Etc/GMT+4')
+# # tz2 = timezone('Etc/GMT-7')
+# # tz_diff(cur_utc_int, tz1, tz2)
+
+# #takes a string that names a timezone and maps it to the integer offset relative to utc(GMT) 
+# #the offest is in terms of hours. This is a critical note because utc is typically in milliseconds
+# #or in seconds. Directly used to pass offset to frontend
+# def timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):
+# 	print("timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int), utc_int = " + str(utc_int))
+# 	utc_timezone = timezone("Etc/GMT+0")
+# 	print("DANK MEMES")
+# 	print(timezone_str)
+# 	local_timezone = timezone(timezone_str)
+# 	timezone_offset_integer = tz_diff(utc_int, local_timezone, utc_timezone)
+# 	return timezone_offset_integer
+
+
+
+# #takes a string name of a timezone and an integer representing utc time in 
+# #seconds and then maps the int into its value in the new timezone 
+# def utc_int_to_timezone_adjusted_int(timezone_str, utc_int):
+# 	print("utc_int_to_timezone_adjusted_int(timezone_str, utc_int), utc_int = " + str(utc_int))
+# 	offset = utc_UNITS_PER_HOUR * timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)
+# 	print('OFFSET: ' + str(offset / utc_UNITS_PER_HOUR))
+# 	return (offset + int(utc_int))
+
+# #maps the int representation of a time(adjusted utc) into a string representation
+# def int_time_representation_to_str_time_representation(int_representation, timezone_str):
+# 	#I assume we are converting from javascript representation to 
+# 	#python representation, i.e. milliseconds to seconds for utc
+# 	print("int_time_representation_to_str_time_representation(int_representation, timezone_str), int_representation = " + str(int_representation))
+# 	date = datetime.datetime.fromtimestamp(int_representation / 1000)
+# 	print("int_time_representation_to_str_time_representation(int_representation, timezone_str), date = " + str(date))
+# 	#Weekday, Month day number, year at hour:minute 
+# 	dateStr = date.strftime("%A, %B %d, %Y at %H:00 " + timezone_str)
+# 	return dateStr
+
+
+# #maps a list of times represented in utc into a list of strings with time zone info 
+# def int_times_list_to_str_times_list(utc_times_int_list, timezone_str):
+# 	print("int_times_list_to_str_times_list(utc_times_int_list, timezone_str), utc_times_int_list = " + str(utc_times_int_list))
+# 	str_times_list = []
+# 	for each in utc_times_int_list:
+# 		print("int_times_list_to_str_times_list(utc_times_int_list, timezone_str), each = " + str(each))
+# 		adjusted_int = utc_int_to_timezone_adjusted_int(timezone_str, int(each))
+# 		int_as_str_in_terms_of_utc = int_time_representation_to_str_time_representation(adjusted_int, timezone_str)
+# 		str_times_list.append(int_as_str_in_terms_of_utc)
+# 	return str_times_list 
+
+
+
+
+# #this is the primary function used externally. It takes an interview object(db ref)
+# #and returns two lists. The first is of strings. These functions face other client modules
+# #on the backend and directly feed critical info to frontend 
+# def get_str_and_utc_lists_for_client(interview):
+# 	utc_times_int_list = json.loads(interview.candidate_times)
+# 	timezone_str = interview.client.timezone
+# 	str_times_list = int_times_list_to_str_times_list(utc_times_int_list, timezone_str)
+
+# 	print("get_str_and_utc_lists_for_client(interview), utc_times_int_list = " + str(utc_times_int_list))
+# 	print("get_str_and_utc_lists_for_client(interview), str_times_int_list = " + str(str_times_list))
+# 	#lists need to be in exactly the same order 
+# 	return(utc_times_int_list, str_times_list)
+

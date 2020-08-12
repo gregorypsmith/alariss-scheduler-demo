@@ -12,6 +12,8 @@ import scheduler_app.email_module as mail_module
 import scheduler_app.zoom_module as zoom_module
 import datetime
 
+INTERVIEW_DAY_OPTIONS = 7
+
 @login_manager.user_loader
 def load_user(user_id):
     return Administrator.query.get(int(user_id))
@@ -166,7 +168,8 @@ def candidate_scheduler(interview_id):
         db.session.commit()
         return redirect(url_for('candidate_success'))
 
-    return render_template('candidate_scheduler.html', client_GMT_offset = interview.client.timezone, candidate_GMT_offset = interview.candidate.timezone)
+    return render_template('candidate_scheduler.html', column_headers=tz_module.get_next_n_day_strs(), \
+        table_obj=get_times_object(interview, INTERVIEW_DAY_OPTIONS)
 
 # Schedule for client
 @app.route("/interviews/<int:interview_id>/client_scheduler", methods=['GET', 'POST'])
