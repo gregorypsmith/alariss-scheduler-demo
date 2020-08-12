@@ -31,19 +31,23 @@ def tz_diff(utc_int, tz1, tz2):
     Returns the difference in hours between timezone1 and timezone2
     for a given date.
     '''
+    # print("\n\n\nStart Battery for tz_diff: ")
+    # print(tz1)
+    # print(tz2)
     baseline_utc = timezone('Etc/GMT+0')
-    print(utc_int)
+    # print(utc_int)
     date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
     tz1_localize = tz1.localize(date)
     tz2_localize = tz2.localize(date)
     as_timezone = tz2.localize(date).astimezone(tz2)
-    print(tz1_localize)
-    print(tz2_localize)
+    # print(tz1_localize)
+    # print(tz2_localize)
    
     diff = (tz2.localize(date).astimezone(baseline_utc) - tz1.localize(date).astimezone(baseline_utc)).seconds/3600
     if (diff > 12):
     	diff += -24
-    print(diff)
+    # print(diff)
+    # print("End Battery for tz_diff\n\n\n")
     return diff
 # cur_utc_int = int(datetime.datetime.utcnow().timestamp())*1000
 # tz1 = timezone('Etc/GMT+4')
@@ -54,12 +58,13 @@ def tz_diff(utc_int, tz1, tz2):
 #the offest is in terms of hours. This is a critical note because utc is typically in milliseconds
 #or in seconds. Directly used to pass offset to frontend
 def timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):
-	print("timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int), utc_int = " + str(utc_int))
+	# print("\n\n\n Start Battery for timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):")
+	# print("timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int), utc_int = " + str(utc_int))
 	utc_timezone = timezone("Etc/GMT+0")
-	print("DANK MEMES")
-	print(timezone_str)
 	local_timezone = timezone(timezone_str)
 	timezone_offset_integer = tz_diff(utc_int, local_timezone, utc_timezone)
+	# print("timezone_offset_integer: "+str(timezone_offset_integer))
+	# print("END Battery for timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)\n\n\n")
 	return timezone_offset_integer
 
 
@@ -67,9 +72,13 @@ def timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int):
 #takes a string name of a timezone and an integer representing utc time in 
 #seconds and then maps the int into its value in the new timezone 
 def utc_int_to_timezone_adjusted_int(timezone_str, utc_int):
+	print("\n\n\n Start Battery for utc_int_to_timezone_adjusted_int(timezone_str, utc_int):")
 	print("utc_int_to_timezone_adjusted_int(timezone_str, utc_int), utc_int = " + str(utc_int))
 	offset = utc_UNITS_PER_HOUR * timezone_str_to_utc_offset_int_in_hours(timezone_str, utc_int)
 	print('OFFSET: ' + str(offset / utc_UNITS_PER_HOUR))
+	print("raw utc date value:"+ int_time_representation_to_str_time_representation((int(utc_int)), timezone_str))
+	print("client adjusted date value::"+ int_time_representation_to_str_time_representation((offset + int(utc_int)), timezone_str))
+	print("END Battery for utc_int_to_timezone_adjusted_int(timezone_str, utc_int)\n\n\n")
 	return (offset + int(utc_int))
 
 #maps the int representation of a time(adjusted utc) into a string representation
