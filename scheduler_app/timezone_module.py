@@ -211,7 +211,7 @@ def get_next_n_days_int(n, start_time_int):
 	utc_int_list = []
 	for i in range(0, n):
 		as_date_object += delta
-		utc_int_list.append(as_date_object.totimestamp())
+		utc_int_list.append(as_date_object.timestamp())
 	return utc_int_list
 
 #Greg
@@ -243,27 +243,22 @@ print(convert_int_to_frontend_str(now))
 
 # Josh
 # Creates list o 24 * 7 utc times, separated by one hour, starting at start_utc
+# returns a single flat list with all times in the desired window
 def get_times_list(start_utc, n_days_out):
-
 	as_date_object = datetime.datetime.fromtimestamp(start_utc)
-	list_of_time_lists = []
-
+	all_list = []
 	outer_delta = timedelta(hours=1)
-
 	for hour in range(24):
 		loop_day = as_date_object 
 		inner_delta = timedelta(days=1)
-		row_list = []
-
 		for i in range(n_days_out):	
-			row_list.append(loop_day.timestamp()) 
+			all_list.append(loop_day.timestamp()) 
 			loop_day += inner_delta 
-
-		list_of_time_lists.append(row_list)
 		as_date_object += outer_delta 
 
-	return list_of_time_lists
+	return all_list
 
+print(len(get_times_list(now, 7)))
 # Get all times GMT between tmrw midnight GMT to 1 day from now
 # print(get_times_list(get_tomorrow_midnight_cand_tz(0), 1))
 
@@ -278,33 +273,6 @@ def time_acceptable(time_utc_int, offset):
 def list_comparator(list):
 	return int(list[0])
 
-#done
-#gets the times in utc that work for both client and candidate in terms of their 
-#waking hours. Basically, we assume that both parties are available between 6am and 9pm 
-#in their local times. Start at midnight of next day in terms of UTC(aka GMT+0)    
-def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_out):
-	times_list = get_times_list(start_utc, n_days_out)
-	ret = []
-	for hour in times_list:
-		ret_hour = []
-		if time_acceptable(hour[0], client_offset) and time_acceptable(hour[0], candidate_offset):
-			for day in hour:
-				ret_hour.append(day)
-		if ret_hour:
-			ret.append(ret_hour)
-	return ret
-
-# Test case 1: Client -3, cand 0, expect 9am-7pm
-midnight_tmrw_est = get_tomorrow_midnight_cand_tz(-5)
-
-times_get_acceptable_test = get_acceptable_utc_times(-5, 1, midnight_tmrw_est, 3)
-times_get_acceptable_test_2 = sorted(times_get_acceptable_test, key=list_comparator)
-
-for time in times_get_acceptable_test_2:
-	row_str = ''
-	for day in time:
-		row_str += str(datetime.datetime.fromtimestamp(day)) + "  "
-	print(row_str)
 
 #Greg
 # get date of a utc integer in the client timezone
@@ -322,6 +290,77 @@ print(get_date_in_tz(now, 0))
 #Test case 2: Print today EDT
 print('Today (with hours) as frontend str (EDT): ')
 print(get_date_in_tz(now, -4))
+
+
+def col_vectors_to_rows_fixed_table(col_vecs):
+	#assumes all col vectors have the same length 
+	ret_rows = [] 
+	for row in range(0, len(col_vecs[0])):
+		row_vec = [] 
+		for col in col_vecs: 
+			row_vec.append(col[row])
+		ret_rows.append(row_vec)
+	return ret_rows 
+
+
+# d_arr = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+# print("\n\n\n\n Fuckery")	
+# print(col_vectors_to_rows_fixed_table(d_arr))
+
+#each_day is a string returned by convert_int_to_frontend_str()
+#elesewhere and we direct;ly compare it against teh same representations 
+#for the other times. UNTESTED  
+def get_all_times_on_day(target_day_str, times_list, offset):
+	retList = [] 
+	for time in times_list:
+		time_as_str = convert_int_to_frontend_str(time + offset*utc_UNITS_PER_HOUR)
+		if(target_day_str == time_as_str):
+			retList.append(time)
+	return retList 
+
+
+#this is where we filter out the fucked days for the candidate
+def filter_fucked_days(cand_offset, n, times_list):
+	#string giving date for frontend column purposes 
+	the_n_days = get_next_n_day_strs(n, cand_offset)
+	colList = [] 
+	for each_day in the_n_days:
+		times_on_fixed_day = get_all_times_on_day(each_day, times_list, cand_offset) 
+		#this thing is a list of times on a fixed day sorted by hour 
+		sorted_times = times_on_fixed_day
+		colList.append(sorted_times)
+	rowList = col_vectors_to_rows_fixed_table(colList)
+	return rowList
+
+
+#done
+#gets the times in utc that work for both client and candidate in terms of their 
+#waking hours. Basically, we assume that both parties are available between 6am and 9pm 
+#in their local times. Start at midnight of next day in terms of UTC(aka GMT+0)    
+def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_out):
+	times_list = get_times_list(start_utc, n_days_out + 2)
+	acceptable_times_list = []
+	for hour in times_list:
+		if time_acceptable(hour, client_offset) and time_acceptable(hour, candidate_offset):
+			acceptable_times_list.append(hour)
+
+	with_fucked_days_removed = filter_fucked_days(candidate_offset, n_days_out, acceptable_times_list)
+	return with_fucked_days_removed
+
+# Test case 1: Client -3, cand 0, expect 9am-7pm
+midnight_tmrw_est = get_tomorrow_midnight_cand_tz(-5)
+
+times_get_acceptable_test = get_acceptable_utc_times(-5, 3, midnight_tmrw_est, 7)
+times_get_acceptable_test_2 = sorted(times_get_acceptable_test, key=list_comparator)
+
+# print(times_get_acceptable_test_2)
+for row in times_get_acceptable_test_2:
+	row_str = ''
+	for index in row:
+		row_str += str(get_date_in_tz(index, 3)) + "  "
+	print("["+row_str+"]")
+print("END OF OBJECT")
+
 
 ##############################################################################################################################################
 #######################################START JAVASCRIPT BULLSHIT##############################################################################
