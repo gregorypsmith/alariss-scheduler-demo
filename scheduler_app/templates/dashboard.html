@@ -3,10 +3,11 @@
   <div class="col-lg">
     <h2>Interviews Overview</h2>
     <a href="{{url_for('create_interview')}}" class="btn btn-primary">Create Interview</a>
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="font-size: 0.9em;">
       <thead>
         <tr>
-          <th scope="col">Interview ID</th>
+          <th scope="col">Internal ID</th>
+          <th scope="col">External ID</th>
           <th scope="col">Candidate's Name</th>
           <th scope="col">Candidate's Email</th>
           <th scope="col">Client's Name</th>
@@ -23,6 +24,7 @@
         {% for interview in interviews %}
           <tr>
             <th>{{ interview.id }}</th>
+            <td>{{ interview.uuid }}</td>
             <td>{{ interview.candidate.first_name }} {{interview.candidate.last_name }}</td>
             <td>{{ interview.candidate.email }}</td>
             <td>{{ interview.client.first_name }} {{interview.client.last_name }}</td>
