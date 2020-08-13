@@ -5,11 +5,11 @@ from flask import render_template, request, make_response, redirect, url_for, fl
 from flask_mail import Message
 import os 
 from flask import render_template
-import json 
-from pytz import timezone
+import json
 import scheduler_app.timezone_module as tz_module
 import scheduler_app.email_module as mail_module
 import scheduler_app.zoom_module as zoom_module
+import scheduler_app.dashboard_module as dashboard_module
 import datetime
 # import pickle 
 
@@ -27,7 +27,7 @@ def home():
 
 
 # need flask-login to authenticate
-@app.route("/administrator", methods=['GET', 'POST'])
+@app.route("/administrator/create", methods=['GET', 'POST'])
 @login_required
 def administrator():
     if request.method == 'POST':
@@ -159,6 +159,8 @@ def candidate_scheduler(interview_id):
     if request.method == "POST":
         candidate_time_info = request.form['submit_times']
         interview.candidate_times = candidate_time_info
+        print('\n\n\nFUCKFUCKFUCK')
+        print(candidate_time_info)
         db.session.commit()
 
         mail_module.send_candidate_confirmed_times(interview)
@@ -196,7 +198,7 @@ def client_scheduler(interview_id):
 
         # get formatted date strings we need for emails
         client_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.client.timezone)
-        cand_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.client.timezone)
+        cand_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.candidate.timezone)
 
         # send confirmation email to both with link
         zoom_url = zoom_module.create_zoom_room(interview)
@@ -205,8 +207,11 @@ def client_scheduler(interview_id):
 
         return redirect(url_for("client_success"))
 
-    times_int, times_str = tz_module.get_str_and_utc_lists_for_client(interview)
+    times_int = json.loads(interview.candidate_times)
+    times_str = []
     times_object_list = []
+    for time in times_int:
+        times_str.append(tz_module.get_date_in_tz(int(time), interview.client.timezone))
     
     for i in range(len(times_str)):
         times_object_list.append({
@@ -221,6 +226,11 @@ def client_scheduler(interview_id):
 @app.route("/confirmed")
 def confirmed():
     return render_template('index.html')
+
+# admin dashboard
+@app.route("/administrator/dashboard")
+def dashboard():
+    return render_template('dashboard.html')
 
 # confirmed page
 @app.route("/candidate_success")

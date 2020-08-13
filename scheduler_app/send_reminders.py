@@ -20,13 +20,18 @@ NUM_REMINDERS = 3 # how many days in a row do we send this?
 
 # Process the interviews, return a list of interviews to be processed
 def check_interviews():
-    ret = []
+    interview_list = []
     for interview in Interview.query():
         now = datetime.today()
-        diff = now - interview.last_updated_time
-        if diff.days >= 1 and diff.days <= 4:
-            ret.append(interview)
-    return ret
+        if interview.status != 3:
+            diff = now - interview.last_updated_time
+            if diff.days >= 1 and diff.days <= 1 + NUM_REMINDERS:
+                ret.append(interview)
+        else:
+            diff = now - datetime.fromtimestamp(int(interview.client_selection))
+            if diff.days < 1:
+                ret.append(interview)
+    return interview_list
 
 # given interviews and reminders, construct urls and send emails
 def send_reminders():
@@ -45,6 +50,7 @@ def send_reminders():
         elif interview.status == 2:
             url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.id)
             mail_module.send_client_reminder(interview, url)
-        else:
+        # interview happening within a day
+        elif interview.status == 3:
             url = interview.zoom_link
             mail_module.send_interview_soon_to_both(interview, url)

@@ -46,7 +46,7 @@ def send_client_scheduler_email(interview, url):
     sender=scheduler_email,
     recipients=[interview.client.email])
     msg.body = 'Dear ' + interview.client.first_name + ',\n\n'
-    msg.body += interview.candidate_full_name + ' has submitted their availibility to interview for the open ' + interview.position_name + ' position at your company.\n\n'
+    msg.body += candidate_full_name + ' has submitted their availibility to interview for the open ' + interview.position_name + ' position at your company.\n\n'
     msg.body += 'Please continue to the following link to select a time:\n\n'
     msg.body += url + '\n\n'
     msg.body += 'Thank you,\n'

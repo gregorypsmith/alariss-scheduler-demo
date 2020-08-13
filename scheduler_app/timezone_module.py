@@ -10,8 +10,6 @@
 
 import datetime
 from datetime import timedelta
-from pytz import timezone
-import pytz
 import json 
 # gloabl variable used to map from hours of offset to seconds or milliseconds depending on 
 # our use case. Assuming we are using milliseconds per hour based on javascript representation  
@@ -132,10 +130,6 @@ def time_acceptable(time_utc_int, offset):
 	to_date = to_date + timedelta(hours=offset)
 	return to_date.hour >= 6 and to_date.hour <= 21
 
-# compare lists
-def list_comparator(list):
-	return int(list[0])
-
 
 #Greg
 # get date of a utc integer in the client timezone
@@ -181,6 +175,9 @@ def get_all_times_on_day(target_day_str, times_list, offset):
 			retList.append(time)
 	return retList 
 
+# compare lists
+def list_comparator(list):
+	return int(list[0])
 
 #this is where we filter out the fucked days for the candidate
 def filter_fucked_days(cand_offset, n, times_list):
@@ -193,7 +190,8 @@ def filter_fucked_days(cand_offset, n, times_list):
 		sorted_times = times_on_fixed_day
 		colList.append(sorted_times)
 	rowList = col_vectors_to_rows_fixed_table(colList)
-	return rowList
+	rowList_sorted = sorted(rowList, key=list_comparator)
+	return rowList_sorted
 
 
 #gets the times in utc that work for both client and candidate in terms of their 
