@@ -12,23 +12,23 @@ import os
 from flask import url_for
 import scheduler_app.email_module as mail_module
 from scheduler_app.models import User, Interview
+import scheduler_app.timezone_module as tz_module
 
 # Configurable reminders
 SEND_REMINDERS = True
-REMINDER_INTERVAL = 24   # send reminder after x hours
 NUM_REMINDERS = 3 # how many days in a row do we send this?
 
 # Process the interviews, return a list of interviews to be processed
 def check_interviews():
     interview_list = []
     for interview in Interview.query():
-        now = datetime.today()
-        if interview.status != 3:
+        now = datetime.utcnow()
+        if interview.status == 1 or interview.status == 2:
             diff = now - interview.last_updated_time
             if diff.days >= 1 and diff.days <= 1 + NUM_REMINDERS:
                 ret.append(interview)
-        else:
-            diff = now - datetime.fromtimestamp(int(interview.client_selection))
+        elif interview.status == 3:
+            diff = now - datetime.fromtimestamp(int(interview.client_selection), timezone.utc)
             if diff.days < 1:
                 ret.append(interview)
     return interview_list
@@ -52,5 +52,10 @@ def send_reminders():
             mail_module.send_client_reminder(interview, url)
         # interview happening within a day
         elif interview.status == 3:
-            url = interview.zoom_link
-            mail_module.send_interview_soon_to_both(interview, url)
+            date_str_candidate = tz_module.get_date_in_tz(int(interview.client_selection), interview.candidate.timezone)
+            date_str_client = tz_module.get_date_in_tz(int(interview.client_selection), interview.client.timezone)
+            send_candidate_interview_soon_email(interview, date_str_candidate)
+            send_client_interview_soon_email(interview, date_str_client)
+
+# Main function call
+send_reminders()

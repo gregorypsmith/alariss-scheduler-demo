@@ -100,15 +100,15 @@ def send_candidate_reminder(interview, url):
     mail.send(msg)
 
 # email to client after inactivity
-def send_candidate_reminder(interview, url):
+def send_client_reminder(interview, url):
     candidate_full_name = interview.candidate.first_name + ' ' + interview.candidate.last_name
-    msg = Message('[ACTION REQUIRED] ' + candidate + ' is awaiting your response for their upcoming ' + interview.position_name + ' interview!',
+    msg = Message('[ACTION REQUIRED] ' + candidate_full_name + ' is awaiting your response for their upcoming ' + interview.position_name + ' interview!',
     sender=scheduler_email,
     recipients=[interview.client.email])
     msg.body = 'Dear ' + interview.client.first_name + ',\n\n'
     msg.body += 'We hope you\'re doing well! This is a friendly reminder to schedule your interview with '
     msg.body += candidate_full_name + ' for your open ' + interview.position_name + ' position.\n\n'
-    msg.body += 'Please select the time you\'d like to interview ' + candiddate_full_name + ' at the following link:\n\n'
+    msg.body += 'Please select the time you\'d like to interview ' + candidate_full_name + ' at the following link:\n\n'
     msg.body += url + '\n\n'
     msg.body += 'Best wishes and good luck,\n'
     msg.body += 'The Alariss Global Team'
@@ -130,7 +130,7 @@ def send_cancellation_email(interview):
     msg.body += 'The Alariss Global Team'
 
 # email to send candidate when interview is soon
-def send_candidate_interview_soon_email(interview, zoom_url, interview_date_cand):
+def send_candidate_interview_soon_email(interview, interview_date_cand):
     client_full_name = interview.client.first_name + ' ' + interview.client.last_name
     msg = Message('Reminder: Your ' + interview.company_name + ' interview is less than 24 hours away!',
     sender=scheduler_email,
@@ -140,12 +140,12 @@ def send_candidate_interview_soon_email(interview, zoom_url, interview_date_cand
     msg.body += interview.company_name + ' for the open ' + interview.position_name + ' role is in less than 24 hours!\n\n'
     msg.body += 'The interview is scheduled for ' + interview_date_cand + ' (in your timezone).'
     msg.body += 'Please join the following Zoom link 5 minutes prior to the interview:\n\n'
-    msg.body += zoom_url + '\n\n'
+    msg.body += interview.zoom_link + '\n\n'
     msg.body += 'Best of luck!'
     msg.body += 'The Alariss Global Team'
 
 # email to send client when interview is soon
-def send_client_interview_soon_email(interview, zoom_url, interview_date_client):
+def send_client_interview_soon_email(interview, interview_date_client):
     candidate_full_name = interview.candidate.first_name + ' ' + interview.candidate.last_name
     msg = Message('Reminder: Your interview with ' + candidate_full_name + 'is less than 24 hours away!',
     sender=scheduler_email,
@@ -155,6 +155,6 @@ def send_client_interview_soon_email(interview, zoom_url, interview_date_client)
     msg.body += 'for the open ' + interview.position_name + ' role is in less than 24 hours!\n\n'
     msg.body += 'The interview is scheduled for ' + interview_date_client + ' (in your timezone).'
     msg.body += 'Please join the following Zoom link when it is time to interview:\n\n'
-    msg.body += zoom_url + '\n\n'
+    msg.body += interview.zoom_link + '\n\n'
     msg.body += 'We hope they\'re a good fit!'
     msg.body += 'The Alariss Global Team'
