@@ -112,6 +112,8 @@ function update_selection(time, date){
         selected_list.push(time)
         property.style.backgroundColor = "#7FFF00"
     }
+    var date = new Date(parseInt(time))
+    // console.log("Selected Time:" + date.toLocaleString('en-US', { timeZone: 'Etc/GMT-4' }))
     console.log("Current Selected List:")
     console.log(selected_list)
 
@@ -140,9 +142,11 @@ function makeButton(time, index){
       else{
       $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc_str+'\', \''+date+'\');"' +
        ' id ="'+as_utc_str+'">'+hour_as_str+'</button></td>');
+
       }
     
     }
+
 
 
 function makeRow(times_list, index){
@@ -159,6 +163,7 @@ function makeRow(times_list, index){
 function makeHeader(cur_day_info, index){
 $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_info+'</button></td>');
 }
+
 
 
 
@@ -184,6 +189,7 @@ function init_table(){
   // $('.josh-class').append('</tr>');
   table_obj.forEach(makeRow);
   // $('.josh-class').append('</table>');
+
 }
 
 console.log("Bird is the word")
@@ -192,17 +198,3 @@ init_table()
 </script>
 
 
-
-<!--     // [{day_of_week_info: " Monday, August 10th",
-    // times: [{ display_hour: "23:00",
-    //           utc_timestamp:"217371987321389"
-    //           date: "Tuesday August 10th, 21:00"
-    // },
-    // { display_hour: "23:00",
-    //           utc_timestamp:"217371987321389"
-    // },
-    // { display_hour: "23:00",
-    //           utc_timestamp:"217371987321389"
-    // }]
-
-    // }] -->
