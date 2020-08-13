@@ -11,35 +11,72 @@
 
 	<div class="row">
 		<form method="POST" class="col">
+			{{ form.hidden_tag() }}
 			<div class="row">
 
 				<!-- CANDIDATES -->
 				<div id="candidate" class="col">
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Candidate First Name</b></label>
-							<input class="input form-control" type="text" name="candidate_fname">
+							{{ form.candidate_fname.label(class="form-control-label text-bold") }}
+							{% if form.candidate_fname.errors %}
+							{{ form.candidate_fname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_fname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_fname(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="lname"><b>Candidate Last Name</b></label>
-							<input class="input form-control" type="text" name="candidate_lname">
+							{{ form.candidate_lname.label(class="form-control-label text-bold") }}
+							{% if form.candidate_lname.errors %}
+							{{ form.candidate_lname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_lname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_lname(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Candidate Email</b></label>
-							<input class="input form-control" type="email" name="candidate_email">
+							{{ form.candidate_email.label(class="form-control-label text-bold") }}
+							{% if form.candidate_email.errors %}
+							{{ form.candidate_email(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_email.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_email(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="position"><b>Candidate Position</b></label>
-							<input class="input form-control" type="text" name="candidate_position">
+							{{ form.candidate_position.label(class="form-control-label text-bold") }}
+							{% if form.candidate_position.errors %}
+							{{ form.candidate_position(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_position.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_position(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 
@@ -49,67 +86,90 @@
 				<div id="client" class="col">
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Client First Name</b></label>
-							<input class="input form-control" type="text" name="client_fname">
+							{{ form.client_fname.label(class="form-control-label text-bold") }}
+							{% if form.client_fname.errors %}
+							{{ form.client_fname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_fname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_fname(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="lname"><b>Client Last name</b></label>
-							<input class="input form-control" type="text" name="client_lname">
+							{{ form.client_lname.label(class="form-control-label text-bold") }}
+							{% if form.client_lname.errors %}
+							{{ form.client_lname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_lname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_lname(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Client Email</b></label>
-							<input class="input form-control" type="email" name="client_email">
+							{{ form.client_email.label(class="form-control-label text-bold") }}
+							{% if form.client_email.errors %}
+							{{ form.client_email(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_email.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_email(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="client_company"><b>Client Company</b></label>
-							<input class="input form-control" type="text" name="client_company">
+							{{ form.client_company.label(class="form-control-label text-bold") }}
+							{% if form.client_company.errors %}
+							{{ form.client_company(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_company.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_company(class="form-control form-control-lg") }}
+							{% endif %}
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-8">
-					<label for="client_timezone"><b>Client timezone</label>
-						<select name="client_timezone" id="client_timezone" class="form-control">
-							<option value="None" selected="selected"> --- Please Select a Timezone --- </option>
-							<option value='US/Hawaii'>(GMT -10:00) Hawaii</option>
-							<option value="US/Alaska">(GMT -9:00) Alaska</option>
-							<option value="US/Pacific">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
-							<option value="US/Mountain">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
-							<option value="US/Central">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
-							<option value="US/Eastern">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
-							<option value="Canada/Atlantic">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
-							<option value="Brazil/East">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
-							<option value="America/Noronha">(GMT -2:00) Mid-Atlantic</option>
-							<option value="Atlantic/Azores">(GMT -1:00) Azores, Cape Verde Islands</option>
-							<option value="Europe/London">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
-							<option value="Europe/Paris">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
-							<option value="Africa/Johannesburg">(GMT +2:00) Kaliningrad, South Africa</option>
-							<option value="Asia/Baghdad">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
-							<option value="Asia/Kabul">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
-							<option value="Indian/Maldives">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-							<option value="Asia/Dhaka">(GMT +6:00) Almaty, Dhaka, Colombo</option>
-							<option value="Asia/Jakarta">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
-							<option value="Asia/Shanghai">(GMT +8:00) China, Perth, Singapore, Hong Kong</option>
-							<option value="Asia/Tokyo">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
-							<option value="Australia/Melbourne">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
-							<option value="Pacific/Noumea">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
-							<option value="Pacific/Auckland">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
-						</select>
+				<div class="form-group col-md-8">
+					{{ form.client_timezone.label(class="form-control-label text-bold") }}
+					{% if form.client_timezone.errors %}
+					{{ form.client_timezone(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+							{% for error in form.client_timezone.errors %}
+									<span>{{ error }}</span>
+							{% endfor %}
+					</div>
+					{% else %}
+							{{ form.client_timezone(class="form-control form-control-lg") }}
+					{% endif %}
 				</div>					
 			</div>
 
-			<button type="submit" id="submitbutton" class="btn btn-lg btn-primary mt-4">Create Interview</button>			
+			<div class="form-group">
+				{{ form.submit(class="btn btn-lg btn-primary mt-4") }}
+			</div>
+
 		</form>
 	</div>
 </div>

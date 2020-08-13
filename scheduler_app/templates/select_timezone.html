@@ -1,19 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-  	<title>Interview Scheduler</title>
-	<link rel="stylesheet" href="styles.css">
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
-</head>
-<body>
-    <div id="header" class="text-center pt-5">
-		<img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
-		<h1>Interview Scheduler</h1>
+{% extends "layout.html" %}
+{% block content %}
+<div class="col">
+	<div id="header" class="text-center pt-5">
+		<h3>Schedule an Interview: {{interview.position_name}} at {{interview.company_name}}</h3>
 	</div>
 	
 	<div id="instructions" class="text-center pt-5">
@@ -24,77 +13,27 @@
 
 	<div id="settings" class="text-center pt-5">
 		<form method="POST">
-			{{errormsg}}<br><br>
-			<label for="times">Choose a timezone:</label>
-			<select name="timezone" id="timezone" class="form-control">
-				<option value="None" selected="selected"> --- Please Select a Timezone --- </option>
-				<option value='US/Hawaii'>(GMT -10:00) Hawaii</option>
-				<option value="US/Alaska">(GMT -9:00) Alaska</option>
-				<option value="US/Pacific">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
-				<option value="US/Mountain">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
-				<option value="US/Central">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
-				<option value="US/Eastern">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
-				<option value="Canada/Atlantic">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
-				<option value="Brazil/East">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
-				<option value="America/Noronha">(GMT -2:00) Mid-Atlantic</option>
-				<option value="Atlantic/Azores">(GMT -1:00) Azores, Cape Verde Islands</option>
-				<option value="Europe/London">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
-				<option value="Europe/Paris">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
-				<option value="Africa/Johannesburg">(GMT +2:00) Kaliningrad, South Africa</option>
-				<option value="Asia/Baghdad">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
-				<option value="Asia/Kabul">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
-				<option value="Indian/Maldives">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-				<option value="Asia/Dhaka">(GMT +6:00) Almaty, Dhaka, Colombo</option>
-				<option value="Asia/Jakarta">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
-				<option value="Asia/Shanghai">(GMT +8:00) China, Perth, Singapore, Hong Kong</option>
-				<option value="Asia/Tokyo">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
-				<option value="Australia/Melbourne">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
-				<option value="Pacific/Noumea">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
-				<option value="Pacific/Auckland">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
-			</select>
+			{{ form.hidden_tag() }}
+			<div>
+				{{ form.candidate_timezone.label(class="form-control-label text-bold") }}
+				{% if form.candidate_timezone.errors %}
+				{{ form.candidate_timezone(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+						{% for error in form.candidate_timezone.errors %}
+								<span>{{ error }}</span>
+						{% endfor %}
+				</div>
+				{% else %}
+						{{ form.candidate_timezone(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+
 			<div id="submit" class="text-center pt-5">
-				<input type="submit" id="submitbutton" class="btn btn-lg btn-primary"></button>
+				<div class="">
+					{{ form.submit(class="btn btn-lg btn-primary mt-4") }}
+				</div>
 			</div>
 		</form>
 	</div>
-
-	<div id="schedule">
-		<!-- SCHEDULE GOES HERE!!!!!!! (Grid of Bootstrap Buttons???)-->
-
-		<!-- TO DO: Script that only lets candidate submit when 10 choices have been selected.-->
-	</div>
-	
-	<!-- <div id="submit" class="text-center pt-5">
-		<button id="button" type="button" class="btn btn-lg btn-primary" disabled>Submit</button>
-
-		<script type="text/javascript">
-			// check value of pulldown menu
-			var select = document.getElementById('timezone');
-			select.addEventListener('change', (event) => {
-				var selected = document.getElementById('timezone');
-				var message = document.getElementById('error-message');
-				console.log(selected.value);
-				var button = document.getElementById("button");
-				if (selected.value != "None") {
-					button.disabled = false;
-					message.textContent = "";
-				} else {
-					button.disabled = true;
-					message.textContent = "Please select a timezone before submitting";
-				}
-			});
-
-		</script>
-	</div>
-	<div id=error-message>
-		Please Select a timezone before submitting!
-	</div> -->
-	
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
-</body>
-</html>
+</div>
+{% endblock content %}
