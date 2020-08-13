@@ -130,8 +130,8 @@ def cancel_interview(interview_id):
     if interview:
         if interview.status != InterviewStatus["CANCELLED"]:
             interview.status = InterviewStatus["CANCELLED"]
+            interview.last_updated_time = datetime.utcnow()
             
-
             mail_module.send_cancellation_email(interview)
             db.session.commit()
             flash("Successfully canceled interview", "success")
@@ -175,6 +175,16 @@ def select_timezone(interview_uuid):
         flash("This interview could not be found.", "danger")
         return render_template('index.html')
 
+    # If interview cancelled
+    elif interview.status == InterviewStatus["CANCELLED"]:
+        flash("This interview has been cancelled.", "danger")
+        return render_template('index.html')
+
+    # If candidate has already scheduled the interview
+    elif interview.status != InterviewStatus["STARTED"]:
+        flash("You have already selected your availablity for this interview.", "danger")
+        return render_template('index.html')
+
     candidate = interview.candidate
     form = SelectTimezoneForm()
 
@@ -197,6 +207,16 @@ def candidate_scheduler(interview_uuid):
         flash("This interview could not be found.", "danger")
         return render_template('index.html')
 
+    # If interview cancelled
+    elif interview.status == InterviewStatus["CANCELLED"]:
+        flash("This interview has been cancelled.", "danger")
+        return render_template('index.html')
+    
+    # If candidate has already scheduled the interview
+    elif interview.status != InterviewStatus["STARTED"]:
+        flash("You have already selected your availablity for this interview.", "danger")
+        return render_template('index.html')
+
     form = CandidateSelectionForm()
     
     if form.validate_on_submit():
@@ -210,6 +230,7 @@ def candidate_scheduler(interview_uuid):
             mail_module.send_client_scheduler_email(interview, url)
 
             interview.status = InterviewStatus["CANDIDATE_CF"]
+            interview.last_updated_time = datetime.utcnow()
             db.session.commit()
             return redirect(url_for('candidate_success'))
         else:
@@ -232,29 +253,48 @@ def client_scheduler(interview_uuid):
         flash("This interview could not be found.", "danger")
         return render_template('index.html')
 
+    # If interview cancelled
+    elif interview.status == InterviewStatus["CANCELLED"]:
+        flash("This interview has been cancelled.", "danger")
+        return render_template('index.html')
+
+    # If interview already submitted
+    elif interview.status == InterviewStatus["CLIENT_CF"]:
+        flash("This interview is already scheduled.", "danger")
+        return render_template('index.html')
+    
+    # If candidate has not yet sent their availability
+    elif interview.status == InterviewStatus["STARTED"]:
+        flash("The candidate has not yet sent their availability.", "danger")
+        return render_template('index.html')
+
     if request.method == 'POST':
 
         # save information in db
-        selected_time_utc = int(request.form['time_int'])
-        if selected_time_utc:
-            interview.client_selection = selected_time_utc
-            interview.status = InterviewStatus["CLIENT_CF"]
+        
+        selected_time_utc = request.form['time_int']
+        if selected_time_utc == 'default':
+            flash("Please select a time that you are avaiable to interview.", "danger")
+            return redirect(url_for('client_scheduler', interview_uuid=interview.uuid))
 
-            # get formatted date strings we need for emails
-            client_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.client.timezone))
-            cand_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.candidate.timezone))
+        selected_time_utc = int(selected_time_utc)
+        interview.client_selection = selected_time_utc
+        interview.status = InterviewStatus["CLIENT_CF"]
+        interview.last_updated_time = datetime.utcnow()
 
-            # send confirmation email to both with link
-            zoom_url = zoom_module.create_zoom_room(interview)
-            interview.zoom_link = zoom_url
-            db.session.commit()
+        # get formatted date strings we need for emails
+        client_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.client.timezone))
+        cand_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.candidate.timezone))
 
-            mail_module.send_client_confirmation_email(interview, zoom_url, client_time_str)
-            mail_module.send_candidate_confirmation_email(interview, zoom_url, cand_time_str)
+        # send confirmation email to both with link
+        zoom_url = zoom_module.create_zoom_room(interview)
+        interview.zoom_link = zoom_url
+        db.session.commit()
 
-            return redirect(url_for("client_success"))
-        else:
-            flash("Please select an interview time.", "danger")
+        mail_module.send_client_confirmation_email(interview, zoom_url, client_time_str)
+        mail_module.send_candidate_confirmation_email(interview, zoom_url, cand_time_str)
+
+        return redirect(url_for("client_success"))
 
     times_int = json.loads(interview.candidate_times)
     times_str = []
@@ -269,13 +309,13 @@ def client_scheduler(interview_uuid):
         })
     return render_template('client_scheduler.html', times=times_object_list, candidate=interview.candidate)
 
-# confirmed page
+# confirmed page, candidate
 @app.route("/candidate_success")
 def candidate_success():
     return render_template('candidate_success_page.html')
 
 
-# confirmed page
+# confirmed page, client
 @app.route("/client_success")
 def client_success():
     return render_template('client_success_page.html')
