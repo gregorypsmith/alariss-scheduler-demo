@@ -1,9 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
+<head>
+	<link rel="stylesheet" href="../static/styles.css">
+	<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+    <img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
+    <h3><b>Hi Alariss!</b></h3>
+</head>
+
 <div class="col">
 	<div class="row">
 		<div id="instructions" class="col">
-			<h3><b>Hi Alariss!</b></h3>
 			<p>Welcome to the interview scheduler, created by the coolest interns ever.</p>
 			<p>Please fill out the information below to schedule an interview between a client and candidate!</p>
 		</div>	
@@ -18,28 +25,28 @@
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Candidate First Name</b></label>
-							<input class="input form-control" type="text" name="candidate_fname">
+							<input class="input form-control" type="text" name="candidate_fname" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="lname"><b>Candidate Last Name</b></label>
-							<input class="input form-control" type="text" name="candidate_lname">
+							<input class="input form-control" type="text" name="candidate_lname" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Candidate Email</b></label>
-							<input class="input form-control" type="email" name="candidate_email">
+							<input class="input form-control" type="email" name="candidate_email" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="position"><b>Candidate Position</b></label>
-							<input class="input form-control" type="text" name="candidate_position">
+							<input class="input form-control" type="text" name="candidate_position" required>
 						</div>
 					</div>
 
@@ -50,28 +57,28 @@
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Client First Name</b></label>
-							<input class="input form-control" type="text" name="client_fname">
+							<input class="input form-control" type="text" name="client_fname" required>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="lname"><b>Client Last name</b></label>
-							<input class="input form-control" type="text" name="client_lname">
+							<input class="input form-control" type="text" name="client_lname" required>
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="fname"><b>Client Email</b></label>
-							<input class="input form-control" type="email" name="client_email">
+							<input class="input form-control" type="email" name="client_email" required>
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
 							<label for="client_company"><b>Client Company</b></label>
-							<input class="input form-control" type="text" name="client_company">
+							<input class="input form-control" type="text" name="client_company" required>
 						</div>
 					</div>
 				</div>
@@ -80,31 +87,31 @@
 			<div class="row">
 				<div class="col-md-8">
 					<label for="client_timezone"><b>Client timezone</label>
-						<select name="client_timezone" id="client_timezone" class="form-control">
-							<option value="None" selected="selected"> --- Please Select a Timezone --- </option>
-							<option value='US/Hawaii'>(GMT -10:00) Hawaii</option>
-							<option value="US/Alaska">(GMT -9:00) Alaska</option>
-							<option value="US/Pacific">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
-							<option value="US/Mountain">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
-							<option value="US/Central">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
-							<option value="US/Eastern">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
-							<option value="Canada/Atlantic">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
-							<option value="Brazil/East">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
-							<option value="America/Noronha">(GMT -2:00) Mid-Atlantic</option>
-							<option value="Atlantic/Azores">(GMT -1:00) Azores, Cape Verde Islands</option>
-							<option value="Europe/London">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
-							<option value="Europe/Paris">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
-							<option value="Africa/Johannesburg">(GMT +2:00) Kaliningrad, South Africa</option>
-							<option value="Asia/Baghdad">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
-							<option value="Asia/Kabul">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
-							<option value="Indian/Maldives">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-							<option value="Asia/Dhaka">(GMT +6:00) Almaty, Dhaka, Colombo</option>
-							<option value="Asia/Jakarta">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
-							<option value="Asia/Shanghai">(GMT +8:00) China, Perth, Singapore, Hong Kong</option>
-							<option value="Asia/Tokyo">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
-							<option value="Australia/Melbourne">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
-							<option value="Pacific/Noumea">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
-							<option value="Pacific/Auckland">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+						<select name="client_timezone" id="client_timezone" class="form-control" required>
+							<option value=""> --- Please Select a Timezone --- </option>
+							<option value='-10'>GMT -10:00</option>
+							<option value='-9'>GMT -9:00</option>
+							<option value='-8'>GMT -8:00</option>
+							<option value='-7'>GMT -7:00</option>
+							<option value='-6'>GMT -6:00</option>
+							<option value='-5'>GMT -5:00</option>
+							<option value='-4'>GMT -4:00</option>
+							<option value='-3'>GMT -3:00</option>
+							<option value='-2'>GMT -2:00</option>
+							<option value='-1'>GMT -1:00</option>
+							<option value='0'>GMT +0:00</option>
+							<option value='1'>GMT +1:00</option>
+							<option value='2'>GMT +2:00</option>
+							<option value='3'>GMT +3:00</option>
+							<option value='4'>GMT +4:00</option>
+							<option value='5'>GMT +5:00</option>
+							<option value='6'>GMT +6:00</option>
+							<option value='7'>GMT +7:00</option>
+							<option value='8'>GMT +8:00</option>
+							<option value='9'>GMT +9:00</option>
+							<option value='10'>GMT +10:00</option>
+							<option value='11'>GMT +11:00</option>
+							<option value='12'>GMT +12:00</option>
 						</select>
 				</div>					
 			</div>
