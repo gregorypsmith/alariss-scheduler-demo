@@ -115,7 +115,7 @@ def create_interview():
         db.session.commit()
 
         # send email to candidate with scheduler
-        url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.id)
+        url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.uuid)
         mail_module.send_candidate_scheduler_email(interview, url)
         
         # flash(f"Successfully created interview process between {candidate_email} and {client_email}", "success")
@@ -164,14 +164,11 @@ def login():
     return render_template('login.html', errormsg='')
 
 
-# @app.route("/interviews/<int:interview_id>/confirm_email", methods=['GET', 'POST'])
-
-
 # Select your timezone
-@app.route("/interviews/<int:interview_id>/select_timezone", methods=['GET', 'POST'])
-def select_timezone(interview_id):
+@app.route("/interviews/<interview_uuid>/select_timezone", methods=['GET', 'POST'])
+def select_timezone(interview_uuid):
 
-    interview = Interview.query.filter_by(id=interview_id).first()
+    interview = Interview.query.filter_by(uuid=interview_uuid).first()
 
     # If interview is not found
     if not interview:
@@ -185,15 +182,15 @@ def select_timezone(interview_id):
         candidate.timezone = form.candidate_timezone.data
    
         db.session.commit()
-        return redirect(url_for('candidate_scheduler', interview_id=interview.id))
+        return redirect(url_for('candidate_scheduler', interview_uuid=interview.uuid))
 
     return render_template('select_timezone.html', form=form, interview=interview)
 
 
 # schedule for candidate
-@app.route("/interviews/<int:interview_id>/candidate_scheduler", methods=['GET', 'POST'])
-def candidate_scheduler(interview_id):
-    interview = Interview.query.filter_by(id=interview_id).first()
+@app.route("/interviews/<interview_uuid>/candidate_scheduler", methods=['GET', 'POST'])
+def candidate_scheduler(interview_uuid):
+    interview = Interview.query.filter_by(uuid=interview_uuid).first()
 
     # If interview is not found
     if not interview:
@@ -209,7 +206,7 @@ def candidate_scheduler(interview_id):
             db.session.commit()
 
             mail_module.send_candidate_confirmed_times(interview)
-            url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.id)
+            url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.uuid)
             mail_module.send_client_scheduler_email(interview, url)
 
             interview.status = InterviewStatus["CANDIDATE_CF"]
@@ -221,16 +218,14 @@ def candidate_scheduler(interview_id):
     candidate_offset = int(interview.candidate.timezone)
     headers = (tz_module.get_next_n_day_strs(7, candidate_offset))
     table = (tz_module.get_times_object(interview, INTERVIEW_DAY_OPTIONS))
-    print(headers)
-    print(table)
     return render_template('candidate_scheduler.html', column_headers=headers, table_obj=table, form=form)
 
 
 # Schedule for client
-@app.route("/interviews/<int:interview_id>/client_scheduler", methods=['GET', 'POST'])
-def client_scheduler(interview_id):
+@app.route("/interviews/<interview_uuid>/client_scheduler", methods=['GET', 'POST'])
+def client_scheduler(interview_uuid):
 
-    interview = Interview.query.filter_by(id=interview_id).first()
+    interview = Interview.query.filter_by(uuid=interview_uuid).first()
 
     # If interview is not found
     if not interview:

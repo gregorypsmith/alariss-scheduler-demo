@@ -12,13 +12,15 @@ def get_interview_test():
 	test_client_1 = User(
 		first_name='Jane',
 		last_name='Doe',
-		email='hung.nguyen.0428@gmail.com'
+		email='hung.nguyen.0428@gmail.com',
+		timezone="7"
 	)
 
 	test_client_2 = User(
 		first_name="Greg",
-		last_name="Greg",
-		email='gregory@alariss.com'
+		last_name="Smith",
+		email='gregory@alariss.com',
+		timezone="-7"
 	)
 
 	db.session.add(test_candidate)
@@ -29,11 +31,15 @@ def get_interview_test():
 	test_interview = Interview(
 		candidate=test_candidate,
 		client=test_client_1,
+		company_name="Alariss",
+		position_name="Intern",
 	)
 
 	test_interview_2 = Interview(
 		candidate=test_candidate,
 		client=test_client_2,
+		company_name="Alariss",
+		position_name="Assistant",
 	)
 
 	db.session.add(test_interview)
