@@ -296,6 +296,7 @@ def client_scheduler(interview_uuid):
         return redirect(url_for("client_success"))
 
     times_int = json.loads(interview.candidate_times)
+    times_int = sorted(times_int)
     times_str = []
     times_object_list = []
     for time in times_int:
