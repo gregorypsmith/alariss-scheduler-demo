@@ -9,7 +9,7 @@
 ###################################################################################################################
 
 import datetime
-from datetime import timedelta
+from datetime import timedelta, timezone
 import json 
 # gloabl variable used to map from hours of offset to seconds or milliseconds depending on 
 # our use case. Assuming we are using milliseconds per hour based on javascript representation  
@@ -25,7 +25,7 @@ utc_UNITS_PER_HOUR = 3600
 # Given a utc time and an hour offset, provide the hour of day in tz as a string
 def time_in_tz_str(utc_time, tz_hour_offset):
 	utc_time_in_tz = utc_time + (tz_hour_offset * utc_UNITS_PER_HOUR)
-	date_in_tz = datetime.datetime.fromtimestamp(utc_time_in_tz)
+	date_in_tz = datetime.datetime.fromtimestamp(utc_time_in_tz, timezone.utc)
 	time_in_tz_str = ''
 	if date_in_tz.hour < 10:
 		time_in_tz_str += '0'
@@ -77,7 +77,7 @@ def get_next_n_day_strs(n, candidate_offset):
 #gets the next seven days from the moment called as utc integers 
 #start at midnight of next day in UTC 
 def get_next_n_days_int(n, start_time_int):
-	as_date_object = datetime.datetime.fromtimestamp(start_time_int)
+	as_date_object = datetime.datetime.fromtimestamp(start_time_int, timezone.utc)
 	delta = timedelta(days=1)
 	utc_int_list = []
 	for i in range(0, n):
@@ -94,7 +94,7 @@ def convert_int_to_frontend_str(day_int):
 	months = [None, "January", "February", "March", "April", "May", "June", "July", "August", "September", \
               "October", "November", "December"]
 
-	to_date = datetime.datetime.fromtimestamp(day_int)
+	to_date = datetime.datetime.fromtimestamp(day_int, timezone.utc)
 	ret_str = days[to_date.weekday()] + ', '
 	ret_str += str(months[to_date.month]) + ' ' + str(to_date.day)
 	return ret_str
@@ -106,7 +106,7 @@ def convert_int_to_frontend_str(day_int):
 
 # Creates list of 24 * n_days_out utc times, separated by one hour, starting at start_utc
 def get_times_list(start_utc, n_days_out):
-	as_date_object = datetime.datetime.fromtimestamp(start_utc)
+	as_date_object = datetime.datetime.fromtimestamp(start_utc, timezone.utc)
 	all_list = []
 	outer_delta = timedelta(hours=1)
 	for hour in range(24):
@@ -126,7 +126,7 @@ def get_times_list(start_utc, n_days_out):
 #Greg
 # see whether a time is between 6am-10pm in the given timezone
 def time_acceptable(time_utc_int, offset):
-	to_date = datetime.datetime.fromtimestamp(time_utc_int)
+	to_date = datetime.datetime.fromtimestamp(time_utc_int, timezone.utc)
 	to_date = to_date + timedelta(hours=offset)
 	return to_date.hour >= 6 and to_date.hour <= 21
 
@@ -134,7 +134,7 @@ def time_acceptable(time_utc_int, offset):
 #Greg
 # get date of a utc integer in the client timezone
 def get_date_in_tz(utc_int, tz_hour_offset):
-	to_date = datetime.datetime.fromtimestamp(utc_int)
+	to_date = datetime.datetime.fromtimestamp(utc_int, timezone.utc)
 	to_date += timedelta(hours=tz_hour_offset)
 	date_str = convert_int_to_frontend_str(to_date.timestamp())
 	date_str += ' at ' + time_in_tz_str(utc_int, tz_hour_offset)
@@ -370,7 +370,6 @@ def get_times_object(interview, n_days_out):
 # # 	date = datetime.datetime.fromtimestamp(int(utc_int)/1000)
 # # 	return (tz2.localize(date) - 
 # # 		tz1.localize(date).astimezone(tz2)).seconds/3600
-
 
 # def tz_diff(utc_int, tz1, tz2):
 #     '''

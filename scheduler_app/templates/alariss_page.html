@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  	<title>Interview Scheduler</title>
+	<link rel="stylesheet" href="../static/styles.css">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+</head>
+<body>
+    <div id="header">
+		<img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
+		<h1>Interview Scheduler</h1>
+	</div>
+	
+	<div id="instructions">
+		<p><b>Hi Alariss fam!</b><br>Welcome to the interview scheduler, created by the coolest interns ever.<br>
+		Please fill out the information below to schedule an interview between a client and candidate!</p>
+	</div>	
+
+	<div id="info" class="text-center pt-1">
+		<form action="/action_page.php">
+			<div id="candidate">
+		  		<label for="fname"><b>Candidate First Name:</b></label><br>
+		  		<input type="text" class="is-invalid" id="cafname" name="fname" placeholder="Michael" value=""><br><br>
+		  		<label for="lname"><b>Candidate Last Name:</b></label><br>
+		  		<input type="text" class="is-invalid" id="calname" name="lname" placeholder="Scott" value=""><br><br>
+		  		<label for="fname"><b>Candidate Email:</b></label><br>
+		  		<input type="text" class="is-invalid" id="caemail" name="email" placeholder="mscott@dundermifflin.com" value=""><br><br><br>
+	  		</div>
+	  		<div id="client">
+		  		<label for="fname"><b>Client First Name:</b></label><br>
+		  		<input type="text" class="is-invalid" id="clfname" name="fname" placeholder="Jim" value=""><br><br>
+		  		<label for="lname"><b>Client Last name:</b></label><br>
+		  		<input type="text" class="is-invalid" id="cllname" name="lname" placeholder="Halpert" value=""><br><br>
+		  		<label for="fname"><b>Client Email:</b></label><br>
+		  		<input type="text" class="is-invalid" id="clemail" name="email" placeholder="jhalp@dundermifflin.com" value=""><br><br><br>
+		  		
+	  		</div>
+
+	 		<input type="submit" id="submitbutton" class="btn btn-lg btn-primary">
+
+		</form>
+	</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+</body>
+</html>
