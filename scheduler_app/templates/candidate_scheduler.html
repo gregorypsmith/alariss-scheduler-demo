@@ -54,7 +54,7 @@
 <input type="hidden" id="submit_times" name="submit_times"> -->
 <button type="submit" class="btn btn-primary" 
 style="width: 150px; height: 50px; background-color: #1E90FF; font-size:30px; color: #FFFAF0" 
-onclick= "on_submit();"> SUBMIT</button>
+> SUBMIT</button>
 <!-- </form> -->
 <center>
 
@@ -116,6 +116,12 @@ function update_selection(time, date){
     // console.log("Selected Time:" + date.toLocaleString('en-US', { timeZone: 'Etc/GMT-4' }))
     console.log("Current Selected List:")
     console.log(selected_list)
+
+    if(selected_list.length >= 10){
+      var select_button = document.getElementById(time);
+      select_button.onclick= "on_submit();"
+      
+    }
 
 
 }
