@@ -3,15 +3,35 @@ from flask_mail import Message
 from flask_login import login_user, login_required, fresh_login_required, logout_user, current_user
 
 from scheduler_app import app, db, mail, login_manager
-from scheduler_app.models import User, Interview, Administrator
+from scheduler_app.models import User, Interview, Administrator, InterviewStatus
 from scheduler_app.forms import InterviewForm, SelectTimezoneForm, CandidateSelectionForm
 import scheduler_app.timezone_module as tz_module
 import scheduler_app.email_module as mail_module
 import scheduler_app.zoom_module as zoom_module
 import scheduler_app.dashboard_module as dashboard_module
 
-import os, json, datetime
+import os, json
+from datetime import datetime, timezone, timedelta
 INTERVIEW_DAY_OPTIONS = 7
+
+
+@app.context_processor
+def utility_processor():
+    def parse_interview_status(input_key):
+        return [status for status, key in InterviewStatus.items() if key == input_key][0]
+
+    
+    def return_interview_datetime(ts):
+        print(ts)
+        if ts:
+            d = datetime.fromtimestamp(int(ts), tz=timezone.utc)
+            d -= timedelta(hours=7)
+            return d.strftime("%Y-%m-%d %H:%M:%S PST")
+        else:
+            return "Not Confirmed"
+
+    return dict(parse_interview_status=parse_interview_status, return_interview_datetime=return_interview_datetime)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -21,13 +41,22 @@ def load_user(user_id):
 @app.route("/")
 @app.route("/index")
 def home():
-    return render_template('index.html')
+    return redirect(url_for("admin_dashboard"))
+
+
+# admin dashboard
+@app.route("/administrator/dashboard")
+@login_required
+def admin_dashboard():
+    interviews = Interview.query.all()
+    
+    return render_template('dashboard.html', interviews=interviews)
 
 
 # need flask-login to authenticate
-@app.route("/administrator/create", methods=['GET', 'POST'])
+@app.route("/administrator/create_interview", methods=['GET', 'POST'])
 @login_required
-def administrator():
+def create_interview():
     form = InterviewForm()
     if form.validate_on_submit():
         # get and validate results from form
@@ -94,6 +123,24 @@ def administrator():
 
     return render_template('admin_page.html', form=form)
 
+@app.route("/interviews/<int:interview_id>/cancel", methods=['GET', 'POST'])
+@login_required
+def cancel_interview(interview_id):
+    interview = Interview.query.filter_by(id=interview_id).first()
+    if interview:
+        if interview.status != InterviewStatus["CANCELLED"]:
+            interview.status = InterviewStatus["CANCELLED"]
+            
+
+            mail_module.send_cancellation_email(interview)
+            db.session.commit()
+            flash("Successfully canceled interview", "success")
+        else:
+            flash("This interview is already cancelled", "danger")
+    else:
+        flash("This interview cannot be found", "danger")
+    return redirect(url_for("admin_dashboard"))
+
 
 # login page for nick
 @app.route("/login", methods=['GET', 'POST'])
@@ -108,7 +155,7 @@ def login():
             if admin.password == password_form:
                 login_user(admin)
                 # successful login
-                return redirect(url_for('administrator'))
+                return redirect(url_for('admin_dashboard'))
 
         # unsuccessful login        
         return render_template('login.html', errormsg='Incorrect email/password combination')
@@ -165,7 +212,7 @@ def candidate_scheduler(interview_id):
             url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.id)
             mail_module.send_client_scheduler_email(interview, url)
 
-            interview.status = 2
+            interview.status = InterviewStatus["CANDIDATE_CF"]
             db.session.commit()
             return redirect(url_for('candidate_success'))
         else:
@@ -196,8 +243,7 @@ def client_scheduler(interview_id):
         selected_time_utc = int(request.form['time_int'])
         if selected_time_utc:
             interview.client_selection = selected_time_utc
-            interview.status = 3
-            db.session.commit()
+            interview.status = InterviewStatus["CLIENT_CF"]
 
             # get formatted date strings we need for emails
             client_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.client.timezone))
@@ -205,6 +251,9 @@ def client_scheduler(interview_id):
 
             # send confirmation email to both with link
             zoom_url = zoom_module.create_zoom_room(interview)
+            interview.zoom_link = zoom_url
+            db.session.commit()
+
             mail_module.send_client_confirmation_email(interview, zoom_url, client_time_str)
             mail_module.send_candidate_confirmation_email(interview, zoom_url, cand_time_str)
 
@@ -225,22 +274,11 @@ def client_scheduler(interview_id):
         })
     return render_template('client_scheduler.html', times=times_object_list, candidate=interview.candidate)
 
-
-# confirmed page
-@app.route("/confirmed")
-def confirmed():
-    return render_template('index.html')
-
-# admin dashboard
-@app.route("/administrator/dashboard")
-def dashboard():
-    #need to add dashboard functions here 
-    return render_template('dashboard.html')
-
 # confirmed page
 @app.route("/candidate_success")
 def candidate_success():
     return render_template('candidate_success_page.html')
+
 
 # confirmed page
 @app.route("/client_success")

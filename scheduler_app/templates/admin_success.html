@@ -5,6 +5,7 @@
 		<h1>Interview scheduled!</h1>
         <p>Interview successfully created between <b>{{candidate_email}}</b> (the candidate) and <b>{{client_email}}</b> (the client).</p>
         <br>
-        <a href="{{url_for('administrator')}}" class="btn btn-primary home-btn">Schedule another interview</a>
+        <a href="{{url_for('create_interview')}}" class="btn btn-primary home-btn">Schedule another interview</a>
+        <a href="{{url_for('admin_dashboard')}}">Back to dashboard</a>
     </div>
 {% endblock content %}

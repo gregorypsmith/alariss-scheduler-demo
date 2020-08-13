@@ -15,7 +15,8 @@ class Administrator(UserMixin, db.Model):
 InterviewStatus = {
 	"STARTED": 1,
 	"CANDIDATE_CF": 2,
-	"CLIENT_CF": 3
+	"CLIENT_CF": 3,
+	"CANCELLED": 4
 }
 
 
