@@ -131,7 +131,6 @@ def cancel_interview(interview_id):
         if interview.status != InterviewStatus["CANCELLED"]:
             interview.status = InterviewStatus["CANCELLED"]
             interview.last_updated_time = datetime.utcnow()
-            
             mail_module.send_cancellation_email(interview)
             db.session.commit()
             flash("Successfully canceled interview", "success")
