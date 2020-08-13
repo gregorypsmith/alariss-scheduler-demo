@@ -9,14 +9,19 @@
       hours<br />
       3. Picking more times will help ensure you receive an interview.<br />
       4. Make sure you are actually available at the times you pick <br />
-      5. Click on the times you are available to interview,then click the SUBMIT
-      button
+      5. Click on the times you are available to interview, then click the SUBMIT
+      button<br>
+      <p style="color:RED"><b>A SUBMIT BUTTON WILL APPEAR AT THE BOTTOM OF THE SCREEN AFTER YOU SELECT TEN TIMES </b></p>
     </p>
   </div>
   <div class="table-responsive">
-    <table class="center">
-      <div class="candidate-times-table" role="group" aria-label="First group" style="text-align: center;"></div>
-  </table>
+    <!-- <table class="center"> -->
+  <center>
+    <table>
+        <div class="candidate-times-table" role="group" aria-label="First group" ></div>
+    </table>
+  </center>
+
   </div>
 
   <form method="POST" id="candidate-times-form">
@@ -33,9 +38,11 @@
       {% else %} {{ form.candidate_time_info(class="form-control
       form-control-lg") }} {% endif %}
     </div>
+    <center>
     <div id="submit_button" style="display: none;">
       {{ form.submit(class="btn btn-lg btn-primary mt-1 mb-4") }}
     </div>
+  </center>
   </form>
 </div>
 </div>

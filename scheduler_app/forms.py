@@ -3,15 +3,16 @@ from wtforms import StringField, PasswordField, SubmitField, SelectField, Hidden
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from scheduler_app.models import User, Interview
 
+#Note Josh removed email validations because they weren't recognizing Alariss Domain s
 class InterviewForm(FlaskForm):
     candidate_fname = StringField(label="Candidate First Name", validators=[DataRequired(), Length(min=2, max=20)])
     candidate_lname = StringField(label="Candidate Last Name", validators=[DataRequired(), Length(min=2, max=20)])
-    candidate_email = StringField(label="Candidate Email", validators=[DataRequired(), Email()])
+    candidate_email = StringField(label="Candidate Email", validators=[DataRequired()])
     candidate_position = StringField(label="Candidate Position", validators=[DataRequired(), Length(min=2, max=60)])
     client_fname = StringField(label="Client First Name", validators=[DataRequired(), Length(min=2, max=20)])
     client_lname = StringField(label="Client Last Name", validators=[DataRequired(), Length(min=2, max=20)])
     client_company = StringField(label="Client Company", validators=[DataRequired(), Length(min=2, max=100)])
-    client_email = StringField(label="Client Email", validators=[DataRequired(), Email()])
+    client_email = StringField(label="Client Email", validators=[DataRequired()])
     client_timezone = SelectField(label="Client Timezone", choices=[
         ("", " --- Please Select a Timezone --- "),
         ('-10', "GMT -10:00"),
@@ -73,4 +74,4 @@ class SelectTimezoneForm(FlaskForm):
 
 class CandidateSelectionForm(FlaskForm):
     candidate_time_info = HiddenField(label="Candidate Time Info", id="submit_times")
-    submit = SubmitField("Select Times")
+    submit = SubmitField("Submit")

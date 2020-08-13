@@ -12,7 +12,7 @@ h3 {
 
 table.center {
 	position: absolute;
-	left:50%;
+	padding-left:1000px;
 	bottom: 20px;
 	transform: translate(-50%);
 	border: 5px solid red;

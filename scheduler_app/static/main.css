@@ -30,6 +30,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid #dddddd;
     border-radius: 3px;
     margin-bottom: 20px;
+    float: center;
 }
 
 .article-metadata {
@@ -48,13 +49,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-group button {
-    background-color: #4CAF50; /* Green background */
+    background-color: #4CAF50; /* Green background 
     border: 1px solid green; /* Green border */
     color: white; /* White text */
     padding: 10px 24px; /* Some padding */
     cursor: pointer; /* Pointer/hand icon */
     width: 50%; /* Set a width if needed */
     display: block; /* Make the buttons appear below each other */
+
 }
   
 .btn-group button:not(:last-child) {
@@ -64,17 +66,19 @@ h1, h2, h3, h4, h5, h6 {
   /* Add a background color on hover */
 .btn-group button:hover {
     background-color: #3e8e41;
+    text-align:center;
 }
 
 .table {
     border-radius: 5px;
     width: 50%;
-    margin: 0px auto;
-    float: none;
+    margin: 1000px auto;
+    float: center;
+    position: fixed;
 }
 
 .col-centered {
     float: none;
     margin-right: auto;
     margin-left: auto;
-  }
+  }*/
