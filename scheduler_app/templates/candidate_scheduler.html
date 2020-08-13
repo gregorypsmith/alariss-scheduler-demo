@@ -14,13 +14,13 @@
   </div>
 
   <table class="table table-bordered">
-    <div class="josh-class" role="group" aria-label="First group">
+    <div class="candidate-times-table" role="group" aria-label="First group" style="text-align: center;">
       <!-- add buttons to this group -->
     </div>
   </table>
   <br />
 
-  <form method="POST" id="meme_doge">
+  <form method="POST" id="candidate-times-form">
     {{ form.hidden_tag() }}
     <div class="form-group col-md-9">
       {% if form.candidate_time_info.errors %} {{
@@ -46,6 +46,10 @@
   var selected_list = []
   var MS_PER_HOUR =  3600000
 
+  const candidateTimesForm = document.getElementById("candidate-times-form")
+
+  candidateTimesForm.addEventListener("submit", on_submit)
+
   //@Greg use this function for sending to backend
   function on_submit(){
     console.log("Submitting to backend")
@@ -59,19 +63,17 @@
     var jinja_submitter = document.getElementById("submit_times");
     jinja_submitter.value = myJSON
     console.log(jinja_submitter)
-    $("#meme_doge").submit();
-
+    // $("#candidate-times-form").submit();
   }
 
 
   function remove_item_from_selected_list(item){
-  for( var i = 0; i < selected_list.length; i++){
+    for( var i = 0; i < selected_list.length; i++){
       if (selected_list[i] === item) {
       selected_list.splice(i, 1);
-          }
-      }
+        }
+    }
   }
-
 
   function update_selection(time, date){
       console.log("You selected:"+date)
@@ -100,47 +102,42 @@
         var date = time.date
 
        if(time == "..."){
-          $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');
+          $('.candidate-times-table').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');
         }
         else{
-        $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc_str+'\', \''+date+'\');"' +
+        $('.candidate-times-table').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc_str+'\', \''+date+'\');"' +
          ' id ="'+as_utc_str+'">'+hour_as_str+'</button></td>');
         }
       }
 
 
   function makeRow(times_list, index){
-    $('.josh-class').append('<div>');
-    $('.josh-class').append('<tr> \n <div class="btn-group" role="group" aria-label="First group">');
+    $('.candidate-times-table').append('<div>');
+    $('.candidate-times-table').append('<tr> \n <div class="btn-group" role="group" aria-label="First group">');
 
     times_list.forEach(makeButton);
 
-    $('.josh-class').append('</div>');
-    $('.josh-class').append('</tr>');
+    $('.candidate-times-table').append('</div>');
+    $('.candidate-times-table').append('</tr>');
   }
 
 
   function makeHeader(cur_day_info, index){
-    $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_info+'</button></td>');
+    $('.candidate-times-table').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_info+'</button></td>');
   }
 
 
   function init_table(){
     var day_information = {{column_headers|safe}};
-    // {% for row in table_obj %}
-    // {% for time in row %}
-    // console.log({{time.as_utc_time}})
-    // {% endfor %}
-    // {% endfor %}
+    var table_obj = {{table_obj|safe}};
 
-    $('.josh-class').append('<tr>');
-    $('.josh-class').append('<div class="btn-group" role="group" aria-label="First group">');
+    $('.candidate-times-table').append('<tr>');
+    $('.candidate-times-table').append('<div class="btn-group" role="group" aria-label="First group">');
     day_information.forEach(makeHeader);
-    $('.josh-class').append('</div>');
+    $('.candidate-times-table').append('</div>');
     table_obj.forEach(makeRow);
-  }
+  };
 
-  console.log("Bird is the word")
   init_table()
 </script>
 {% endblock content %}

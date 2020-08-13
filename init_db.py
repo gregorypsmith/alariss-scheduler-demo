@@ -6,19 +6,19 @@ def get_interview_test():
 	test_candidate = User(
 		first_name='John',
 		last_name='Doe',
-		email='john@mail.com'
+		email='hung@alariss.com'
 	)
 
 	test_client_1 = User(
 		first_name='Jane',
 		last_name='Doe',
-		email='jane@mail.com'
+		email='hung.nguyen.0428@gmail.com'
 	)
 
 	test_client_2 = User(
 		first_name="Greg",
 		last_name="Greg",
-		email='greg@mail.com'
+		email='gregory@alariss.com'
 	)
 
 	db.session.add(test_candidate)

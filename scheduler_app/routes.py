@@ -174,7 +174,10 @@ def candidate_scheduler(interview_id):
     candidate_offset = int(interview.candidate.timezone)
     headers = (tz_module.get_next_n_day_strs(7, candidate_offset))
     table = (tz_module.get_times_object(interview, INTERVIEW_DAY_OPTIONS))
+    print(headers)
+    print(table)
     return render_template('candidate_scheduler.html', column_headers=headers, table_obj=table, form=form)
+
 
 # Schedule for client
 @app.route("/interviews/<int:interview_id>/client_scheduler", methods=['GET', 'POST'])
