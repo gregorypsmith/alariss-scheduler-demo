@@ -11,6 +11,7 @@ import scheduler_app.timezone_module as tz_module
 import scheduler_app.email_module as mail_module
 import scheduler_app.zoom_module as zoom_module
 import datetime
+# import pickle 
 
 INTERVIEW_DAY_OPTIONS = 7
 
@@ -168,8 +169,12 @@ def candidate_scheduler(interview_id):
         db.session.commit()
         return redirect(url_for('candidate_success'))
 
-    return render_template('candidate_scheduler.html', column_headers=tz_module.get_next_n_day_strs(), \
-        table_obj=get_times_object(interview, INTERVIEW_DAY_OPTIONS)
+    candidate_offset = int(interview.candidate.timezone)
+    headers = (tz_module.get_next_n_day_strs(7, candidate_offset))
+    table = (tz_module.get_times_object(interview, INTERVIEW_DAY_OPTIONS))
+    print(headers)
+    print(table)
+    return render_template('candidate_scheduler.html', column_headers= headers, table_obj= table)
 
 # Schedule for client
 @app.route("/interviews/<int:interview_id>/client_scheduler", methods=['GET', 'POST'])
