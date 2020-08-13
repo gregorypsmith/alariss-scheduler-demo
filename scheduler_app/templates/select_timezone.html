@@ -6,9 +6,11 @@
 	</div>
 	
 	<div id="instructions" class="text-center pt-5">
-		<p><b>Please read the intructions below:</b><br>1. Each interview is a 1 hour long video chat via Zoom.<br>
-		2. Please be considerate of your interviewer’s waking hours.<br>
-		3. Picking more times will help ensure you receive an interview.</p>
+		<p>Hello, welcome to the Alariss Interview Scheduling System! We have automatically detected that your timezone is<br></p>
+			<b><p id="timezone_str"></p></b>
+		<p>We have automatcially selected the associated GMT timezone offset. If the timezone listed above is incorrect, please look up <br>
+		the corresponding GMT ofset for your desried timezone and select it in the dropdown menu below. 
+		</p>
 	</div>	
 
 	<div id="settings" class="text-center pt-5">
@@ -24,7 +26,7 @@
 						{% endfor %}
 				</div>
 				{% else %}
-						{{ form.candidate_timezone(class="form-control form-control-lg") }}
+						{{ form.candidate_timezone(class="form-control form-control-lg", required=form.candidate_timezone.flags.required) }}
 				{% endif %}
 			</div>
 
@@ -34,6 +36,30 @@
 				</div>
 			</div>
 		</form>
-	</div>
+	</div>  
 </div>
+
+<script>
+	// Get the current time
+	var offset_in_hours = - (new Date().getTimezoneOffset())/60;
+	console.log("Offset in hours:"+offset_in_hours.toString())
+
+	const d = new Date();
+
+	// Get a DateTimeFormat object for the user's current culture (via undefined)
+	// Ask specifically for the long-form of the time zone name in the options
+	const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'long'});
+
+	// Format the date to parts, and pull out the value of the time zone name
+	const timezone_as_str = dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value
+	console.log(timezone_as_str)
+
+	// var default = document.getElementById("default");
+	var timezone_slot = document.getElementById(offset_in_hours.toString());;
+	timezone_slot.selected = "selected";
+
+	var paragraph = document.getElementById("timezone_str");
+
+	paragraph.textContent += timezone_as_str;
+</script>
 {% endblock content %}

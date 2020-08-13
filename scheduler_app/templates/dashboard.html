@@ -1,0 +1,208 @@
+
+<html>
+<style>
+.btn-group button {
+  background-color: #4CAF50; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 50%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+}
+
+.btn-group button:not(:last-child) {
+  border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+</style>
+
+
+<!-- Twitter Bootstrap Sandbox -->
+
+ <!-- <img style="float:right" id="logo" src="alarisslogo.png"  width="200" height="200"> -->
+<center>
+
+<div id="header">       
+        <h1>Alariss Candidate Interview Scheduler</h1>
+    </div>
+    
+    <div id="instructions">
+        <p><b>Please read the intructions below:</b><br>1. Each timeslot below corresponds to a 1 hour long video chat via Zoom.<br>
+        2. Note that the times listed are based upon your interviewer's waking hours<br>
+        3. Picking more times will help ensure you receive an interview.<br>
+        4. Make sure you are actually available at the times you pick <br>
+        5. Click on the times you are available to interview,then click the SUBMIT button</p>
+    </div>
+
+
+
+<table>
+
+<div class="josh-class" role="group" aria-label="First group">
+  <!-- add buttons to this group -->
+
+</div>
+</table>
+<br></br>
+
+<!-- <form method="POST">
+<input type="hidden" id="submit_times" name="submit_times"> -->
+<button type="submit" class="btn btn-primary" 
+style="width: 150px; height: 50px; background-color: #1E90FF; font-size:30px; color: #FFFAF0" 
+onclick= "on_submit();"> SUBMIT</button>
+<!-- </form> -->
+<center>
+
+<form method="POST" id="meme_doge">
+<input type="hidden" class="hidden-form" id="submit_times" name="submit_times" >
+</form>
+
+</html>
+
+<script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src= 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js'></script>
+<script>
+
+var selected_list = [] 
+var MS_PER_HOUR =  3600000
+
+//@Hung use this function for sending to backend 
+function on_submit(){
+  console.log("Submitting to backend")
+  console.log(selected_list)
+  info = selected_list 
+
+  //do some stuff to send the info to the backend here 
+  //also need to move off of the page to a "success" page that gives
+  //the candidate some more info and expectations
+  var myJSON = JSON.stringify(info);
+  var jinja_submitter = document.getElementById("submit_times");
+  jinja_submitter.value = myJSON 
+  console.log(jinja_submitter)
+  $("#meme_doge").submit(); 
+  
+}
+
+
+function remove_item_from_selected_list(item){
+for( var i = 0; i < selected_list.length; i++){ 
+    if (selected_list[i] === item) { 
+    selected_list.splice(i, 1); 
+        }
+    }
+}
+
+
+function update_selection(time, date){
+    console.log("You selected:"+date)
+    var property = document.getElementById(time);
+    console.log(property)
+    console.log("signaling time selection update");
+    console.log(time);
+    if(selected_list.includes(time)){
+        remove_item_from_selected_list(time)
+        property.style.backgroundColor = "#F5F5F5"
+    }else{
+        //add the new time to the list
+        selected_list.push(time)
+        property.style.backgroundColor = "#7FFF00"
+    }
+    console.log("Current Selected List:")
+    console.log(selected_list)
+
+
+}
+
+function makeButton(time, index){
+      console.log("\n\n\n")
+
+      // var x =JSON.parse(JSON.stringify(time|safe));
+      // console.log(Object.keys(time))
+      // var asJSON = JSON.parse(time)
+      // var time_memes = {{time|safe}}
+      // console.log(as_utc_str)
+      var hour_as_str = time.hour_as_str
+      var as_utc_str = time.as_utc_time.toString()
+      var date = time.date
+      
+      console.log(as_utc_str)
+      console.log(hour_as_str)
+      console.log(date)
+
+     if(time == "..."){
+        $('.josh-class').append('<td>\n<button class="btn" style="width: 100px;background-color: #AEB6BF;" > ... </button></td>');
+      }
+      else{
+      $('.josh-class').append('<td>\n<button class="btn" style="width: 100px; background-color: #F5F5F5;" onclick="update_selection(\''+as_utc_str+'\', \''+date+'\');"' +
+       ' id ="'+as_utc_str+'">'+hour_as_str+'</button></td>');
+      }
+    
+    }
+
+
+function makeRow(times_list, index){
+  $('.josh-class').append('<div>');
+  $('.josh-class').append('<tr> \n <div class="btn-group" role="group" aria-label="First group">');
+
+  times_list.forEach(makeButton);
+
+  $('.josh-class').append('</div>');
+  $('.josh-class').append('</tr>');
+}
+
+
+function makeHeader(cur_day_info, index){
+$('.josh-class').append('<td>\n<button class="btn" style="width: 100px;" >'+cur_day_info+'</button></td>');
+}
+
+
+
+function init_table(){
+  console.log("Printing shit!!")
+
+  var day_information = {{column_headers|safe}};
+  console.log(day_information)
+  // {% for row in table_obj %}
+  // {% for time in row %}
+  // console.log({{time.as_utc_time}})
+  // {% endfor %}
+  // {% endfor %}
+  var table_obj = {{table_obj|safe}};
+  console.log(table_obj)
+  console.log(table_obj[0].as_utc_str)
+
+  // $('.josh-class').append('<table>');
+  $('.josh-class').append('<tr>');
+  $('.josh-class').append('<div class="btn-group" role="group" aria-label="First group">');
+  day_information.forEach(makeHeader);
+  $('.josh-class').append('</div>');
+  // $('.josh-class').append('</tr>');
+  table_obj.forEach(makeRow);
+  // $('.josh-class').append('</table>');
+}
+
+console.log("Bird is the word")
+init_table()
+
+</script>
+
+
+
+<!--     // [{day_of_week_info: " Monday, August 10th",
+    // times: [{ display_hour: "23:00",
+    //           utc_timestamp:"217371987321389"
+    //           date: "Tuesday August 10th, 21:00"
+    // },
+    // { display_hour: "23:00",
+    //           utc_timestamp:"217371987321389"
+    // },
+    // { display_hour: "23:00",
+    //           utc_timestamp:"217371987321389"
+    // }]
+
+    // }] -->
