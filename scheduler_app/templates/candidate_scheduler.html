@@ -33,7 +33,7 @@
       {% else %} {{ form.candidate_time_info(class="form-control
       form-control-lg") }} {% endif %}
     </div>
-    <div class="text-center">
+    <div id="submit_button" style="display: none;">
       {{ form.submit(class="btn btn-lg btn-primary mt-1 mb-4") }}
     </div>
   </form>
@@ -92,6 +92,14 @@
       // console.log("Selected Time:" + date.toLocaleString('en-US', { timeZone: 'Etc/GMT-4' }))
       console.log("Current Selected List:")
       console.log(selected_list)
+
+            //  <div id="submit_button" style="display: none;">
+      var submit_button = document.getElementById("submit_button"); 
+      if(selected_list.length >= 10){
+        submit_button.style="display: inline;"
+      }else{
+        submit_button.style="display: none;"
+      }
 
   }
 
