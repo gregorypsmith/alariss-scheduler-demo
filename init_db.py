@@ -1,5 +1,6 @@
 from scheduler_app import db
 from scheduler_app.models import User, Interview, Administrator
+import os
 
 
 def get_interview_test():
@@ -48,8 +49,8 @@ def get_interview_test():
 
 
 	test_admin = Administrator(
-		email="nick@alariss.com",
-		password="123456"
+		email=os.getenv('ADMIN_EMAIL'),
+		password=os.getenv('ADMIN_PASSWORD')
 	)
 
 	db.session.add(test_admin)

@@ -6,5 +6,4 @@ tcl
 pyvenv.cfg
 .env
 scheduler_app/__pycache__
-*.sqlite
 .vscode
