@@ -1,3 +1,4 @@
+
 {% extends "layout.html" %} {% block content %}
 <div class="col">
   <div id="instructions">
@@ -11,14 +12,17 @@
       5. Click on the times you are available to interview,then click the SUBMIT
       button
     </p>
+    <p><b> YOU MUST SELECT AT LEAST TEN TIMES BEFORE THE SUBMIT BUTTON WILL APPEAR.</b></p>
   </div>
 
-  <table class="table table-bordered">
+
+  <p>DANK DOGE III </p>
+  <table class="table table-bordered table-striped text-center" style="border:100px solid black;margin-right:auto;">
     <div class="candidate-times-table" role="group" aria-label="First group" style="text-align: center;">
       <!-- add buttons to this group -->
     </div>
   </table>
-  <br />
+  <br>
 
   <form method="POST" id="candidate-times-form">
     {{ form.hidden_tag() }}
@@ -34,7 +38,7 @@
       {% else %} {{ form.candidate_time_info(class="form-control
       form-control-lg") }} {% endif %}
     </div>
-    <div>
+    <div id="submit_button" style="display: none;">
       {{ form.submit(class="btn btn-lg btn-primary mt-1 mb-4") }}
     </div>
   </form>
@@ -93,6 +97,13 @@
       // console.log("Selected Time:" + date.toLocaleString('en-US', { timeZone: 'Etc/GMT-4' }))
       console.log("Current Selected List:")
       console.log(selected_list)
+
+      var submit_button = document.getElementById("submit_button"); 
+      if(selected_list.length >= 10){
+        submit_button.style="display: inline;"
+      }else{
+        submit_button.style="display: none;"
+      }
 
   }
 
