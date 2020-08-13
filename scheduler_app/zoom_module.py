@@ -4,7 +4,7 @@ import json
 
 
 def _generate_payload(interview_obj):
-    time = int(interview_obj.client_selection)/1000
+    time = int(interview_obj.client_selection)
     time_payload = datetime.utcfromtimestamp(time).strftime('%Y-%m-%dT%H:%M:%S')
 
     payload = {
