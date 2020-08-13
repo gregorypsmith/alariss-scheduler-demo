@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   	<title>Interview Scheduler</title>
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="../static/styles.css">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,57 +17,43 @@
 	</div>
 	
 	<div id="instructions" class="text-center pt-5">
-		<p><b>Please read the intructions below:</b><br>1. Each interview is a 1 hour long video chat via Zoom.<br>
-		2. Please be considerate of your interviewer’s waking hours.<br>
-		3. Picking more times will help ensure you receive an interview.</p>
+		<p>Hello, welcome to the Alariss Interview Scheduling System! We have automatically detected that your timezone is<br></p>
+			<b><p id="timezone_str"></p></b>
+		<p>We have automatcially selected the associated GMT timezone offset. If the timezone listed above is incorrect, please look up <br>
+		the corresponding GMT ofset for your desried timezone and select it in the dropdown menu below. 
+		</p>
 	</div>	
+
 
 	<div id="settings" class="text-center pt-5">
 		<form method="POST">
 			{{errormsg}}<br><br>
 			<label for="times">Choose a timezone:</label>
-			<select name="timezone" id="timezone">
-				<option value="None" selected="selected"> --- Please Select a Timezone --- </option>
-				<option value="-12">(GMT -12:00) Eniwetok, Kwajalein</option>
-				<option value="-11">(GMT -11:00) Midway Island, Samoa</option>
-				<option value="-10">(GMT -10:00) Hawaii</option>
-				<option value="-9.5">(GMT -9:30) Taiohae</option>
-				<option value="-9">(GMT -9:00) Alaska</option>
-				<option value="-8">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
-				<option value="-7">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
-				<option value="-6">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
-				<option value="-5">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
-				<option value="-4.5">(GMT -4:30) Caracas</option>
-				<option value="-4">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
-				<option value="-3.5">(GMT -3:30) Newfoundland</option>
-				<option value="-3">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
-				<option value="-2">(GMT -2:00) Mid-Atlantic</option>
-				<option value="-1">(GMT -1:00) Azores, Cape Verde Islands</option>
-				<option value="0">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
-				<option value="1">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
-				<option value="2">(GMT +2:00) Kaliningrad, South Africa</option>
-				<option value="3">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
-				<option value="3.5">(GMT +3:30) Tehran</option>
-				<option value="4">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
-				<option value="4.5">(GMT +4:30) Kabul</option>
-				<option value="5">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-				<option value="5.5">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
-				<option value="5.75">(GMT +5:45) Kathmandu, Pokhara</option>
-				<option value="+6">(GMT +6:00) Almaty, Dhaka, Colombo</option>
-				<option value="6.5">(GMT +6:30) Yangon, Mandalay</option>
-				<option value="7">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
-				<option value="8">(GMT +8:00) China, Perth, Singapore, Hong Kong</option>
-				<option value="8.75">(GMT +8:45) Eucla</option>
-				<option value="9">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
-				<option value="9.5">(GMT +9:30) Adelaide, Darwin</option>
-				<option value="10">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
-				<option value="10.5">(GMT +10:30) Lord Howe Island</option>
-				<option value="11">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
-				<option value="11.5">(GMT +11:30) Norfolk Island</option>
-				<option value="12">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
-				<option value="12.75">(GMT +12:45) Chatham Islands</option>
-				<option value="13">(GMT +13:00) Apia, Nukualofa</option>
-				<option value="14">(GMT +14:00) Line Islands, Tokelau</option>
+			<select name="timezone" id="timezone" class="form-control">
+				<option value="None"  id="default"> --- Please Select a Timezone --- </option>
+				<option value='-10' id = '-10'>GMT -10:00</option>
+				<option value='-9' id='-9' >GMT -9:00</option>
+				<option value='-8' id='-8'>GMT -8:00</option>
+				<option value='-7' id='-7'>GMT -7:00</option>
+				<option value='-6' id='-6'>GMT -6:00</option>
+				<option value='-5' id='-5'>GMT -5:00</option>
+				<option value='-4' id='-4'>GMT -4:00</option>
+				<option value='-3' id='-3'>GMT -3:00</option>
+				<option value='-2' id='-2'>GMT -2:00</option>
+				<option value='-1' id='-1'>GMT -1:00</option>
+				<option value='0' id='0'>GMT +0:00</option>
+				<option value='1' id='1'>GMT +1:00</option>
+				<option value='2' id='2' >GMT +2:00</option>
+				<option value='3' id='3'>GMT +3:00</option>
+				<option value='4' id='4'>GMT +4:00</option>
+				<option value='5' id='5'>GMT +5:00</option>
+				<option value='6' id='6'>GMT +6:00</option>
+				<option value='7' id='7'>GMT +7:00</option>
+				<option value='8' id='8'>GMT +8:00</option>
+				<option value='9' id='9'>GMT +9:00</option>
+				<option value='10' id='10'>GMT +10:00</option>
+				<option value='11' id='11'>GMT +11:00</option>
+				<option value='12' id='12'>GMT +12:00</option>
 			</select>
 			<div id="submit" class="text-center pt-5">
 				<input type="submit" id="submitbutton" class="btn btn-lg btn-primary"></button>
@@ -113,5 +99,29 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+    <script>
+    	// get teh current time
+    	var offset_in_hours = - (new Date().getTimezoneOffset())/60;
+    	console.log("Offset in hours:"+offset_in_hours.toString())
+
+    	const d = new Date();
+
+		// Get a DateTimeFormat object for the user's current culture (via undefined)
+		// Ask specifically for the long-form of the time zone name in the options
+		const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'long'});
+
+		// Format the date to parts, and pull out the value of the time zone name
+		const timezone_as_str = dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value
+		console.log(timezone_as_str)
+
+		// var default = document.getElementById("default");
+		var timezone_slot = document.getElementById(offset_in_hours.toString());
+		// default.selected="unselected";
+		timezone_slot.selected = "selected";
+
+		var paragraph = document.getElementById("timezone_str");
+
+		paragraph.textContent += timezone_as_str;
+    </script>
 </body>
 </html>

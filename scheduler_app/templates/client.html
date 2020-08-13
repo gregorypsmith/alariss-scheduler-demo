@@ -11,13 +11,29 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
 </head>
 <body>
-    <div id="header" class="text-center">
-        <br><br><br></br>
-		<h1>Interview scheduled!</h1>
-        <p>Interview successfully created between <b>{{candidate_email}}</b> (the candidate) and <b>{{client_email}}</b> (the client).</p>
-        <br>
-        <a href="/administrator" class="btn btn-primary home-btn">Schedule another interview</a>
+    <div id="header">
+		<img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
+		<h1>Interview Scheduler</h1>
+	</div>
+	
+	<div id="instructions">
+		<p><b>Please select a time from the dropdown menu to interview with {client}</b></p>
 	</div>	
+
+	<div id="settings">
+		<label for="times">Choose a timezone:</label>
+		<form method="POST">
+			<select name="timeint" id="timeint">
+				<option value="None" selected="selected"> --- Please Select a Meeting Time --- </option>
+				{% for time in times %}
+				<option value="{{time.int}}">{{time.str}}</option>
+				{% endfor %}
+			</select>
+			<div id="submit" class="text-center pt-5">
+				<input id="button" type="submit" class="btn btn-lg btn-primary">Schedule Interview</input>
+			</div>
+		</form>
+	</div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -25,7 +25,7 @@ class User(db.Model):
 	first_name = db.Column(db.String(20), nullable=False)
 	last_name = db.Column(db.String(20), nullable=False)
 	email = db.Column(db.String(120), nullable=False, unique=True)
-	timezone = db.Column(db.Unicode)
+	timezone = db.Column(db.Integer)
 
 
 	def __repr__(self):

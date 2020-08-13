@@ -5,8 +5,15 @@ from flask import render_template, request, make_response, redirect, url_for, fl
 from flask_mail import Message
 import os 
 from flask import render_template
+import json
+import scheduler_app.timezone_module as tz_module
+import scheduler_app.email_module as mail_module
+import scheduler_app.zoom_module as zoom_module
+import scheduler_app.dashboard_module as dashboard_module
+import datetime
+# import pickle 
 
-scheduler_email = os.getenv('EMAIL_USERNAME')
+INTERVIEW_DAY_OPTIONS = 7
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -20,7 +27,7 @@ def home():
 
 
 # need flask-login to authenticate
-@app.route("/administrator", methods=['GET', 'POST'])
+@app.route("/administrator/create", methods=['GET', 'POST'])
 @login_required
 def administrator():
     if request.method == 'POST':
@@ -35,6 +42,8 @@ def administrator():
         client_company = request.form['client_company'].strip()
         client_email = request.form['client_email'].strip()
         client_timezone = request.form['client_timezone'].strip()
+        print("Dank Client Timezone Memes:")
+        print(client_timezone)
 
         if not candidate_fname or not candidate_email or not candidate_email \
             or not client_email or not client_fname or not client_fname:
@@ -47,31 +56,35 @@ def administrator():
 
         if not cand:
             cand = User(
-                first_name=candidate_fname,
-                last_name=candidate_lname,
-                email=candidate_email,
-                timezone=''
+                first_name=str(candidate_fname),
+                last_name=str(candidate_lname),
+                email=str(candidate_email)
             )
             db.session.add(cand)
+        else: 
+            cand.first_name=str(candidate_fname)
+            cand.last_name=str(candidate_lname)
+            cand.email=str(candidate_email)
         db.session.commit()
 
         if not client:
+            print("Yeet it wasn't client")
             client = User(
-                first_name=client_fname,
-                last_name=client_lname,
-                email=client_email,
-                timezone=client_timezone
+                first_name=str(client_fname),
+                last_name=str(client_lname),
+                email=str(client_email),
+                timezone=int(client_timezone)
             )
             db.session.add(client)
+        
+        else: 
+            client.first_name=str(client_fname)
+            client.last_name=str(client_lname)
+            client.email=str(client_email)
+            client.timezone=int(client_timezone)
         db.session.commit()
 
-        # delete existing interview between client/candidate, if exists already
-        interview = Interview.query.filter_by(client_id=client.id).filter_by(candidate_id=cand.id).first()
-        if interview:
-            db.session.delete(interview)
-            db.session.commit()
-
-        # create new interview    
+        # Create new interview    
         interview = Interview(
             candidate_id=cand.id,
             client_id=client.id,
@@ -81,18 +94,9 @@ def administrator():
         db.session.add(interview)
         db.session.commit()
 
-        # create email message for candidate
-        client_fullname = client_fname + ' ' + client_lname
-        msg = Message('[ACTION REQUIRED] Schedule your upcoming interview with ' + client_company,
-        sender=scheduler_email,
-        recipients=[cand.email])
-        msg.body = 'Dear ' + candidate_fname + ',\n\n'
-        msg.body += 'Congratulations! ' + client_company + ' would like you to interview as for an open ' + candidate_position + ' position.\n\n'
-        msg.body += 'Your point of contact is ' + client_fullname + '. Please continue to the following link to schedule your interview:\n\n'
-        msg.body += os.getenv("INDEX_URL") + url_for('select_timezone', cand_id = cand.id, client_id = client.id) + '\n\n'
-        msg.body += 'Best wishes and good luck,\n'
-        msg.body += 'The Alariss Global Team'
-        mail.send(msg)
+        # send email to candidate with scheduler
+        url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.id)
+        mail_module.send_candidate_scheduler_email(interview, url)
 
         return render_template('admin_success.html', candidate_email=candidate_email, client_email=client_email)
 
@@ -120,55 +124,102 @@ def login():
     # first time loading the page
     return render_template('login.html', errormsg='')
 
-# select your timezone
-@app.route("/select_timezone", methods=['GET', 'POST'])
-def select_timezone():
 
-    cand_id = request.args.get('cand_id')
-    client_id = request.args.get('client_id')
+# @app.route("/interviews/<int:interview_id>/confirm_email", methods=['GET', 'POST'])
 
-    # if something went wrong
-    if not User.query.filter_by(id=cand_id).first() or not User.query.filter_by(id=client_id).first():
-        return render_template('select_timezone.html', error_msg='It seems you are not scheduled for an interview. Please contact nick@alariss.com for assistance.')
+
+# Select your timezone
+@app.route("/interviews/<int:interview_id>/select_timezone", methods=['GET', 'POST'])
+def select_timezone(interview_id):
+
+    interview = Interview.query.filter_by(id=interview_id).first()
+
+    # If interview is not found
+    if not interview:
+        return render_template('select_timezone.html', error_msg='This interview could not be found.')
+
+    candidate = interview.candidate
 
     if request.method == "POST":
-
-        candidate_timezone = request.form['timezone']
-        candidate = User.query.filter_by(id=cand_id).first()
+        candidate_timezone = int(request.form['timezone'])
         candidate.timezone = candidate_timezone
-
+   
         db.session.commit()
-        return redirect(url_for('candidate_scheduler'), cand_id=cand_id, client_id=client_id)
-
+        return redirect(url_for('candidate_scheduler', interview_id=interview.id))
 
     return render_template('select_timezone.html', errormsg='')
 
 
 # schedule for candidate
-@app.route("/candidate_scheduler")
-def candidate_scheduler():
+@app.route("/interviews/<int:interview_id>/candidate_scheduler", methods=['GET', 'POST'])
+def candidate_scheduler(interview_id):
 
-    cand_id = request.args.get('cand_id')
-    client_id = request.args.get('client_id')
+    interview = Interview.query.filter_by(id=interview_id).first()
+
+    if request.method == "POST":
+        candidate_time_info = request.form['submit_times']
+        interview.candidate_times = candidate_time_info
+        print('\n\n\nFUCKFUCKFUCK')
+        print(candidate_time_info)
+        db.session.commit()
+
+        mail_module.send_candidate_confirmed_times(interview)
+        url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.id)
+        mail_module.send_client_scheduler_email(interview, url)
+
+        interview.status = 2
+        db.session.commit()
+        return redirect(url_for('candidate_success'))
+
+    candidate_offset = int(interview.candidate.timezone)
+    headers = (tz_module.get_next_n_day_strs(7, candidate_offset))
+    table = (tz_module.get_times_object(interview, INTERVIEW_DAY_OPTIONS))
+    print(headers)
+    print(table)
+    return render_template('candidate_scheduler.html', column_headers= headers, table_obj= table)
+
+# Schedule for client
+@app.route("/interviews/<int:interview_id>/client_scheduler", methods=['GET', 'POST'])
+def client_scheduler(interview_id):
+
+    interview = Interview.query.filter_by(id=interview_id).first()
 
     # if something went wrong
-    if not User.query.filter_by(id=cand_id).first() or not User.query.filter_by(id=client_id).first():
-        return render_template('select_timezone.html', error_msg='It seems you are not scheduled for an interview. Please contact nick@alariss.com for assistance.')
+    if not interview:
+        return render_template('select_timezone.html', error_msg='This interview could not be found. Please contact nick@alariss.com for assistance.')
 
-    return render_template('candidate_scheduler.html', cand_id=1, client_id=2)
+    if request.method == 'POST':
 
+        # save information in db
+        selected_time_utc = int(request.form['time_int'])
+        interview.client_selection = selected_time_utc
+        interview.status = 3
+        db.session.commit()
 
-# schedule for client
-@app.route("/client_scheduler")
-def client_scheduler():
+        # get formatted date strings we need for emails
+        client_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.client.timezone)
+        cand_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.candidate.timezone)
 
-    cand_id = request.args.get('cand_id')
-    client_id = request.args.get('client_id')
+        # send confirmation email to both with link
+        zoom_url = zoom_module.create_zoom_room(interview)
+        mail_module.send_client_confirmation_email(interview, zoom_url, client_time_str)
+        mail_module.send_candidate_confirmation_email(interview, zoom_url, cand_time_str)
 
-    # if something went wrong
-    if not User.query.filter_by(id=cand_id).first() or not User.query.filter_by(id=client_id).first():
-        return render_template('select_timezone.html', error_msg='It seems you are not scheduled for an interview. Please contact nick@alariss.com for assistance.')
-    return render_template('index.html', cand_id=1, client_id=1)
+        return redirect(url_for("client_success"))
+
+    times_int = json.loads(interview.candidate_times)
+    times_str = []
+    times_object_list = []
+    for time in times_int:
+        times_str.append(tz_module.get_date_in_tz(int(time), interview.client.timezone))
+    
+    for i in range(len(times_str)):
+        times_object_list.append({
+            "str": str(times_str[i]),
+            "int": int(times_int[i])
+        })
+    print("times_object_list:" + str(times_object_list))
+    return render_template('client_scheduler.html', times=times_object_list)
 
 
 # confirmed page
@@ -176,3 +227,18 @@ def client_scheduler():
 def confirmed():
     return render_template('index.html')
 
+# admin dashboard
+@app.route("/administrator/dashboard")
+def dashboard():
+    #need to add dashboard functions here 
+    return render_template('dashboard.html')
+
+# confirmed page
+@app.route("/candidate_success")
+def candidate_success():
+    return render_template('candidate_success_page.html')
+
+# confirmed page
+@app.route("/client_success")
+def client_success():
+    return render_template('client_success_page.html')

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   	<title>Interview Scheduler</title>
-	<link rel="stylesheet" href="../static/styles.css">
+	<link rel="stylesheet" href="styles.css">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,12 +11,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
 </head>
 <body>
-    <div id="header" class="text-center">
-        <br><br><br></br>
-		<h1>Interview scheduled!</h1>
-        <p>Interview successfully created between <b>{{candidate_email}}</b> (the candidate) and <b>{{client_email}}</b> (the client).</p>
-        <br>
-        <a href="/administrator" class="btn btn-primary home-btn">Schedule another interview</a>
+    <div id="header">
+		<img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
+		<h1>Interview Scheduler</h1>
+	</div>
+	
+	<div id="instructions">
+		<p id=error-message><b>Error!</b><br>{{erroe_msg}}.<br>Please try again or contact nick@alariss.com.</p>
 	</div>	
 
     <!-- Optional JavaScript -->
