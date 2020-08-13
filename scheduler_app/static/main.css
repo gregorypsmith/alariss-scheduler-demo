@@ -65,3 +65,16 @@ h1, h2, h3, h4, h5, h6 {
 .btn-group button:hover {
     background-color: #3e8e41;
 }
+
+.table {
+    border-radius: 5px;
+    width: 50%;
+    margin: 0px auto;
+    float: none;
+}
+
+.col-centered {
+    float: none;
+    margin-right: auto;
+    margin-left: auto;
+  }
