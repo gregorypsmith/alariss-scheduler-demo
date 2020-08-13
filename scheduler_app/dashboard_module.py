@@ -5,7 +5,7 @@
 #dashboard to manage open intervies, track their status, and cancel them 
 #if needed. 
 ########################################################################
-#from send_reminders import * 
+from scheduler_app.send_reminders import * 
 
 # Note: @Hung, we have created what we think is a reasonable outline of the 
 # functionality an admin dashboard would need to have. Feel free to add

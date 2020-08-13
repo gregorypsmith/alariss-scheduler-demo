@@ -121,7 +121,7 @@ def send_cancellation_email(interview):
     msg = Message('Your interview has been cancelled',
     sender=scheduler_email,
     recipients=[interview.client.email, interview.candidate.email])
-    msg.body += "Hello,\n\n"
+    msg.body = "Hello,\n\n"
     msg.body += 'The interview between ' + candidate_full_name + ' and ' + client_full_name + ' of '
     msg.body += interview.company_name + ' for the open ' + interview.position_name + ' role has been cancelled.\n\n'
     msg.body += 'If you believe this was in error, please contact nick@alariss.com for assistance.\n\n'

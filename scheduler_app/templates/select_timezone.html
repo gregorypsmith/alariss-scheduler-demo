@@ -1,127 +1,67 @@
-<!doctype html>
-<html lang="en">
-<head>
-  	<title>Interview Scheduler</title>
-	<link rel="stylesheet" href="../static/styles.css">
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
-</head>
-<body>
-    <div id="header" class="text-center pt-5">
-		<img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
-		<h1>Interview Scheduler</h1>
+{% extends "layout.html" %}
+{% block content %}
+<div class="col">
+	<div id="header" class="text-center pt-5">
+		<h3>Schedule an Interview: {{interview.position_name}} at {{interview.company_name}}</h3>
 	</div>
 	
 	<div id="instructions" class="text-center pt-5">
 		<p>Hello, welcome to the Alariss Interview Scheduling System! We have automatically detected that your timezone is<br></p>
 			<b><p id="timezone_str"></p></b>
 		<p>We have automatcially selected the associated GMT timezone offset. If the timezone listed above is incorrect, please look up <br>
-		the corresponding GMT ofset for your desried timezone and select it in the dropdown menu below. 
+		the corresponding GMT ofset for your desired timezone and select it in the dropdown menu below. 
 		</p>
 	</div>	
 
-
 	<div id="settings" class="text-center pt-5">
 		<form method="POST">
-			{{errormsg}}<br><br>
-			<label for="times">Choose a timezone:</label>
-			<select name="timezone" id="timezone" class="form-control">
-				<option value="None"  id="default"> --- Please Select a Timezone --- </option>
-				<option value='-10' id = '-10'>GMT -10:00</option>
-				<option value='-9' id='-9' >GMT -9:00</option>
-				<option value='-8' id='-8'>GMT -8:00</option>
-				<option value='-7' id='-7'>GMT -7:00</option>
-				<option value='-6' id='-6'>GMT -6:00</option>
-				<option value='-5' id='-5'>GMT -5:00</option>
-				<option value='-4' id='-4'>GMT -4:00</option>
-				<option value='-3' id='-3'>GMT -3:00</option>
-				<option value='-2' id='-2'>GMT -2:00</option>
-				<option value='-1' id='-1'>GMT -1:00</option>
-				<option value='0' id='0'>GMT +0:00</option>
-				<option value='1' id='1'>GMT +1:00</option>
-				<option value='2' id='2' >GMT +2:00</option>
-				<option value='3' id='3'>GMT +3:00</option>
-				<option value='4' id='4'>GMT +4:00</option>
-				<option value='5' id='5'>GMT +5:00</option>
-				<option value='6' id='6'>GMT +6:00</option>
-				<option value='7' id='7'>GMT +7:00</option>
-				<option value='8' id='8'>GMT +8:00</option>
-				<option value='9' id='9'>GMT +9:00</option>
-				<option value='10' id='10'>GMT +10:00</option>
-				<option value='11' id='11'>GMT +11:00</option>
-				<option value='12' id='12'>GMT +12:00</option>
-			</select>
+			{{ form.hidden_tag() }}
+			<div>
+				{% if form.candidate_timezone.errors %}
+				{{ form.candidate_timezone(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+						{% for error in form.candidate_timezone.errors %}
+								<span>{{ error }}</span>
+						{% endfor %}
+				</div>
+				{% else %}
+						{{ form.candidate_timezone(class="form-control form-control-lg", required=form.candidate_timezone.flags.required) }}
+				{% endif %}
+			</div>
+
 			<div id="submit" class="text-center pt-5">
-				<input type="submit" id="submitbutton" class="btn btn-lg btn-primary"></button>
+				<div class="">
+					{{ form.submit(class="btn btn-lg btn-primary mt-4") }}
+				</div>
 			</div>
 		</form>
-	</div>
+	</div>  
+</div>
 
-	<div id="schedule">
-		<!-- SCHEDULE GOES HERE!!!!!!! (Grid of Bootstrap Buttons???)-->
+<script>
+	// Get the current time
+	let offset_in_hours = - (new Date().getTimezoneOffset())/60;
+	console.log("Offset in hours:"+offset_in_hours.toString())
 
-		<!-- TO DO: Script that only lets candidate submit when 10 choices have been selected.-->
-	</div>
-	
-	<!-- <div id="submit" class="text-center pt-5">
-		<button id="button" type="button" class="btn btn-lg btn-primary" disabled>Submit</button>
+	const d = new Date();
 
-		<script type="text/javascript">
-			// check value of pulldown menu
-			var select = document.getElementById('timezone');
-			select.addEventListener('change', (event) => {
-				var selected = document.getElementById('timezone');
-				var message = document.getElementById('error-message');
-				console.log(selected.value);
-				var button = document.getElementById("button");
-				if (selected.value != "None") {
-					button.disabled = false;
-					message.textContent = "";
-				} else {
-					button.disabled = true;
-					message.textContent = "Please select a timezone before submitting";
-				}
-			});
+	// Get a DateTimeFormat object for the user's current culture (via undefined)
+	// Ask specifically for the long-form of the time zone name in the options
+	const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'long'});
 
-		</script>
-	</div>
-	<div id=error-message>
-		Please Select a timezone before submitting!
-	</div> -->
-	
+	// Format the date to parts, and pull out the value of the time zone name
+	const timezone_as_str = dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
-    <script>
-    	// get teh current time
-    	var offset_in_hours = - (new Date().getTimezoneOffset())/60;
-    	console.log("Offset in hours:"+offset_in_hours.toString())
+	let timezone_options = document.getElementById("candidate_timezone").childNodes;
 
-    	const d = new Date();
+	let timezone_slot = Array.from(timezone_options).filter(option => {
+		return option.value === offset_in_hours.toString()
+	})[0]
 
-		// Get a DateTimeFormat object for the user's current culture (via undefined)
-		// Ask specifically for the long-form of the time zone name in the options
-		const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'long'});
+	timezone_slot.selected = "selected";
 
-		// Format the date to parts, and pull out the value of the time zone name
-		const timezone_as_str = dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value
-		console.log(timezone_as_str)
+	var paragraph = document.getElementById("timezone_str");
 
-		// var default = document.getElementById("default");
-		var timezone_slot = document.getElementById(offset_in_hours.toString());
-		// default.selected="unselected";
-		timezone_slot.selected = "selected";
-
-		var paragraph = document.getElementById("timezone_str");
-
-		paragraph.textContent += timezone_as_str;
-    </script>
-</body>
-</html>
+	paragraph.textContent += timezone_as_str;
+</script>
+{% endblock content %}

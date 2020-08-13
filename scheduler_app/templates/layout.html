@@ -7,10 +7,11 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}"> -->
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  
     {% if title %}
         <title>Alariss Meeting Scheduler - {{ title }}</title>
     {% else %}
@@ -21,14 +22,13 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Alariss Meeting Scheduler</a>
+          <a class="navbar-brand mr-4" href="/">
+            <img id="logo" src="{{ url_for('static', filename='alarisslogo.png') }}" alt="Alariss logo" width="50" height="50">
+            Alariss Meeting Scheduler</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="#">Home</a>
-            </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
             </div>
@@ -38,7 +38,7 @@
     </header>
     <main role="main" class="container">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}

@@ -1,51 +1,81 @@
 {% extends "layout.html" %}
 {% block content %}
-<head>
-	<link rel="stylesheet" href="../static/styles.css">
-	<!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
-    <img id="logo" src="alarisslogo.png" alt="Alariss logo" width="100" height="100">
-    <h3><b>Hi Alariss!</b></h3>
-</head>
 
 <div class="col">
 	<div class="row">
 		<div id="instructions" class="col">
-			<p>Welcome to the interview scheduler, created by the coolest interns ever.<br>Please fill out the information below to schedule an interview between a client and candidate!</p>
+			<p>Please fill out the information below to schedule an interview between a client and candidate!</p>
 		</div>	
 	</div>
 
 	<div class="row">
 		<form method="POST" class="col">
+			{{ form.hidden_tag() }}
 			<div class="row">
 
 				<!-- CANDIDATES -->
 				<div id="candidate" class="col">
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Candidate First Name</b></label>
-							<input class="input form-control" type="text" name="candidate_fname" placeholder="Josh" required>
+							{{ form.candidate_fname.label(class="form-control-label text-bold") }}
+							{% if form.candidate_fname.errors %}
+							{{ form.candidate_fname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_fname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_fname(class="form-control form-control-lg", required=form.candidate_fname.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="lname"><b>Candidate Last Name</b></label>
-							<input class="input form-control" type="text" name="candidate_lname" placeholder="Gardner" required>
+							{{ form.candidate_lname.label(class="form-control-label text-bold") }}
+							{% if form.candidate_lname.errors %}
+							{{ form.candidate_lname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_lname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_lname(class="form-control form-control-lg", required=form.candidate_lname.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Candidate Email</b></label>
-							<input class="input form-control" type="email" name="candidate_email" placeholder="josh@gmail.com" required>
+							{{ form.candidate_email.label(class="form-control-label text-bold") }}
+							{% if form.candidate_email.errors %}
+							{{ form.candidate_email(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_email.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_email(class="form-control form-control-lg", required=form.candidate_email.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="position"><b>Candidate Position</b></label>
-							<input class="input form-control" type="text" name="candidate_position" placeholder="Meme Lord" required>
+							{{ form.candidate_position.label(class="form-control-label text-bold") }}
+							{% if form.candidate_position.errors %}
+							{{ form.candidate_position(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.candidate_position.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.candidate_position(class="form-control form-control-lg", required=form.candidate_position.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 
@@ -55,67 +85,90 @@
 				<div id="client" class="col">
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Client First Name</b></label>
-							<input class="input form-control" type="text" name="client_fname" placeholder="Greg" required>
+							{{ form.client_fname.label(class="form-control-label text-bold") }}
+							{% if form.client_fname.errors %}
+							{{ form.client_fname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_fname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_fname(class="form-control form-control-lg", required=form.client_fname.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="lname"><b>Client Last name</b></label>
-							<input class="input form-control" type="text" name="client_lname" placeholder="Gregson" required>
+							{{ form.client_lname.label(class="form-control-label text-bold") }}
+							{% if form.client_lname.errors %}
+							{{ form.client_lname(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_lname.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_lname(class="form-control form-control-lg", required=form.client_lname.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="fname"><b>Client Email</b></label>
-							<input class="input form-control" type="email" name="client_email" placeholder="greg@greg.com" required>
+							{{ form.client_email.label(class="form-control-label text-bold") }}
+							{% if form.client_email.errors %}
+							{{ form.client_email(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_email.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_email(class="form-control form-control-lg", required=form.client_email.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 					
 					<div class="row">
 						<div class="form-group col-md-9">
-							<label for="client_company"><b>Client Company</b></label>
-							<input class="input form-control" type="text" name="client_company" placeholder="Dunder Mifflin Paper Co." required>
+							{{ form.client_company.label(class="form-control-label text-bold") }}
+							{% if form.client_company.errors %}
+							{{ form.client_company(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+									{% for error in form.client_company.errors %}
+											<span>{{ error }}</span>
+									{% endfor %}
+							</div>
+							{% else %}
+									{{ form.client_company(class="form-control form-control-lg", required=form.client_company.flags.required) }}
+							{% endif %}
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-8">
-					<label for="client_timezone"><b>Client timezone</label>
-						<select name="client_timezone" id="client_timezone" class="form-control" required>
-							<option value=""> --- Please Select a Timezone --- </option>
-							<option value='-10'>GMT -10:00</option>
-							<option value='-9'>GMT -9:00</option>
-							<option value='-8'>GMT -8:00</option>
-							<option value='-7'>GMT -7:00</option>
-							<option value='-6'>GMT -6:00</option>
-							<option value='-5'>GMT -5:00</option>
-							<option value='-4'>GMT -4:00</option>
-							<option value='-3'>GMT -3:00</option>
-							<option value='-2'>GMT -2:00</option>
-							<option value='-1'>GMT -1:00</option>
-							<option value='0'>GMT +0:00</option>
-							<option value='1'>GMT +1:00</option>
-							<option value='2'>GMT +2:00</option>
-							<option value='3'>GMT +3:00</option>
-							<option value='4'>GMT +4:00</option>
-							<option value='5'>GMT +5:00</option>
-							<option value='6'>GMT +6:00</option>
-							<option value='7'>GMT +7:00</option>
-							<option value='8'>GMT +8:00</option>
-							<option value='9'>GMT +9:00</option>
-							<option value='10'>GMT +10:00</option>
-							<option value='11'>GMT +11:00</option>
-							<option value='12'>GMT +12:00</option>
-						</select>
+				<div class="form-group col-md-8">
+					{{ form.client_timezone.label(class="form-control-label text-bold") }}
+					{% if form.client_timezone.errors %}
+					{{ form.client_timezone(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+							{% for error in form.client_timezone.errors %}
+									<span>{{ error }}</span>
+							{% endfor %}
+					</div>
+					{% else %}
+							{{ form.client_timezone(class="form-control form-control-lg", required=form.client_timezone.flags.required) }}
+					{% endif %}
 				</div>					
 			</div>
 
-			<button type="submit" id="submitbutton" class="btn btn-lg btn-primary mt-4">Create Interview</button>			
+			<div class="form-group">
+				{{ form.submit(class="btn btn-lg btn-primary mt-4") }}
+			</div>
+
 		</form>
 	</div>
 </div>
