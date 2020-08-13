@@ -5,7 +5,7 @@
 #dashboard to manage open intervies, track their status, and cancel them 
 #if needed. 
 ########################################################################
-from send_reminders import * 
+from scheduler_app.send_reminders import * 
 
 # Note: @Hung, we have created what we think is a reasonable outline of the 
 # functionality an admin dashboard would need to have. Feel free to add
@@ -26,7 +26,7 @@ def get_open_interviews():
 def get_all_open_interview_info():
 	all_open_interviews = get_open_interviews()
 	all_interview_info = []
-	for each interview in all_open_interviews:
+	for interview in all_open_interviews:
 		#do stuff here 
 		data_object.append({
 				"example 1": "@Hung please change this, this an example",

@@ -197,8 +197,8 @@ def client_scheduler(interview_id):
         db.session.commit()
 
         # get formatted date strings we need for emails
-        client_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.client.timezone)
-        cand_time_str = tz_module.get_date_in_tz(selected_time_utc, interview.candidate.timezone)
+        client_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.client.timezone))
+        cand_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.candidate.timezone))
 
         # send confirmation email to both with link
         zoom_url = zoom_module.create_zoom_room(interview)
@@ -211,7 +211,7 @@ def client_scheduler(interview_id):
     times_str = []
     times_object_list = []
     for time in times_int:
-        times_str.append(tz_module.get_date_in_tz(int(time), interview.client.timezone))
+        times_str.append(tz_module.get_date_in_tz(int(time), int(interview.client.timezone)))
     
     for i in range(len(times_str)):
         times_object_list.append({
