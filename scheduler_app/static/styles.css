@@ -19,8 +19,8 @@ h3 {
 #instructions p {
 	text-align: center; 
 	font-size: 18px;
-	padding-bottom: 20px;
-	padding-top: 20px;
+	padding-bottom: 5px;
+	padding-top: 5px;
 }
 
 #settings {
@@ -32,8 +32,4 @@ h3 {
 #error-message {
 	color: red;
 	text-align: center;
-}
-
-input:invalid:required {
-	border: 2px solid red;
 }

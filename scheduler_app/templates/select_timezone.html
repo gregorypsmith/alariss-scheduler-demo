@@ -17,7 +17,6 @@
 		<form method="POST">
 			{{ form.hidden_tag() }}
 			<div>
-				{{ form.candidate_timezone.label(class="form-control-label text-bold") }}
 				{% if form.candidate_timezone.errors %}
 				{{ form.candidate_timezone(class="form-control form-control-lg is-invalid") }}
 				<div class="invalid-feedback">
@@ -41,7 +40,7 @@
 
 <script>
 	// Get the current time
-	var offset_in_hours = - (new Date().getTimezoneOffset())/60;
+	let offset_in_hours = - (new Date().getTimezoneOffset())/60;
 	console.log("Offset in hours:"+offset_in_hours.toString())
 
 	const d = new Date();
@@ -52,10 +51,13 @@
 
 	// Format the date to parts, and pull out the value of the time zone name
 	const timezone_as_str = dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value
-	console.log(timezone_as_str)
 
-	// var default = document.getElementById("default");
-	var timezone_slot = document.getElementById(offset_in_hours.toString());;
+	let timezone_options = document.getElementById("candidate_timezone").childNodes;
+
+	let timezone_slot = Array.from(timezone_options).filter(option => {
+		return option.value === offset_in_hours.toString()
+	})[0]
+
 	timezone_slot.selected = "selected";
 
 	var paragraph = document.getElementById("timezone_str");

@@ -89,7 +89,7 @@ def administrator():
         url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.id)
         mail_module.send_candidate_scheduler_email(interview, url)
         
-        flash(f"Successfully created interview process between {candidate_email} and {client_email}", "success")
+        # flash(f"Successfully created interview process between {candidate_email} and {client_email}", "success")
         return render_template('admin_success.html', candidate_email=candidate_email, client_email=client_email)
 
     return render_template('admin_page.html', form=form)
