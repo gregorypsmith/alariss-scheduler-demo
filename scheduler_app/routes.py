@@ -230,6 +230,7 @@ def confirmed():
 # admin dashboard
 @app.route("/administrator/dashboard")
 def dashboard():
+    #need to add dashboard functions here 
     return render_template('dashboard.html')
 
 # confirmed page
