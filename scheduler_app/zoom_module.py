@@ -13,7 +13,7 @@ def _generate_payload(interview_obj):
         "start_time": time_payload,
         "duration": "60",
         "timezone": "UTC",
-        "password": "alariss_interview",
+        "password": "abcabc",
         "agenda": f"Interview for {interview_obj.position_name} - {interview_obj.company_name}",
         "settings": {
             "host_video": True,

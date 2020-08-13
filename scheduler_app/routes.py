@@ -115,7 +115,7 @@ def create_interview():
         db.session.commit()
 
         # send email to candidate with scheduler
-        url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_id=interview.uuid)
+        url = os.getenv("INDEX_URL") + url_for('select_timezone', interview_uuid=interview.uuid)
         mail_module.send_candidate_scheduler_email(interview, url)
         
         # flash(f"Successfully created interview process between {candidate_email} and {client_email}", "success")
@@ -206,7 +206,7 @@ def candidate_scheduler(interview_uuid):
             db.session.commit()
 
             mail_module.send_candidate_confirmed_times(interview)
-            url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_id=interview.uuid)
+            url = os.getenv("INDEX_URL") + url_for('client_scheduler', interview_uuid=interview.uuid)
             mail_module.send_client_scheduler_email(interview, url)
 
             interview.status = InterviewStatus["CANDIDATE_CF"]
