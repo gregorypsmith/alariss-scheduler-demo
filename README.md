@@ -67,10 +67,69 @@ The following files are used for formatting:
 
 * login.html = file for the login page
 
-* dashboar
+* dashboard.html = renders the user dashboard for keeping track of all interviews and their 
+  associated information. 
 
 * admin_page.html = file used to generate the interview creation page. Note that this page is only 
   accessible by users who have already logged in. 
 
 * admin_success.html = page that renders to indicate to the user that an interview has been successfully created 
   contains buttons to allow them to create another interview or return to the dashboard. 
+
+* select_timezone.html = file that generates the page where candidates select their timezone. This page occurs 
+  before the candidate is able to select their available times in candidate_scheduler.html
+
+* candidate_scheduler.html= file used to generate a table of interview slots for the candidate to select from. 
+  The candidate is only able to submit after first selecting ten or more timeslots. This file uses jquery and jinja
+  to generate the table using data from the backend. This file contains the most opportunities for bugs to occur. 
+  Pleasure use caution in making any alterations to this file or its coresponding route in routes.py. 
+
+* candidate_success_page.html = file used to generate a confirmation page to inform the user of successful submission 
+
+* client_scheduler.html = file that renders the page where the client selects their preferred meeeting time from a 
+  dropdown list. 
+
+* client_success_page.html = file that renders a success message inform the user that their choice has been submitted. 
+
+* index.html = the default empyt page featuring the Alariss navbar and an error message. This is used if the candidate 
+  or client attempts to access a page out of our predefined flow. 
+
+DATABASE STRUCTURE 
+
+The database code is contained within scheduler_app/models.py. The database itself is contained in scheduler_app/alariss.sqlite.
+There are three tables in the database organized as follows: 
+
+* Administrator = A necessary table for the Flask-Login package. Contains the following fields:
+  - id: internal ID representation, primary key
+  - first_name: first name of administrator
+  - email: email address used to login to the admin dashboard
+  - password: password used to login to the admin dashboard
+
+* User = Table which stores information on our users, both clients and candidates. Note that these are in one shared table because
+  one individual could be both roles in two different interviews.
+  - id: internal ID representation, primary key
+  - first_name: first name of user
+  - last_name: last name of user
+  - email: email address of user, used for sending automated scheduling emails
+  - timezone: integer representation of the user's timezone, by GMT offset in hours
+
+* Interview = Table which stores information on each interview; the most involved table in the database
+  - id: internal ID representation, primary key
+  - uuid: external ID representation, passed in URLs to identify an interview
+  - candidate: the User object of the candidate in this interview
+  - client: the User object of the client in this interview
+  - candidate_times: a JSON string of UTC timestamps that the candidate is available to interview for
+  - client_selection: an integer UTC timestamp of the client's selected interview time
+  - company_name: Name of interviewing company, provided by admin
+  - postion_name: Name of position to be interviewed for, provided by admin
+  - status: Integer representing the current stage of the interview scheduling process
+      1 = 'STARTED' = interview created
+      2 = 'CANDIDATE_CF' = candidate has picked times
+      3 = 'CLIENT_CF' = client has made a selection
+      4 = 'CANCELLED' = Interview cancelled by administrator
+  - created_time: DateTime object representing when this interview was created by admin
+  - last_updated_time: Datetime object representing the last time the status field of this interview was updated
+  - zoom_link: URL to the Zoom Room for the interview
+  - archived: boolean value representing whether the admin has archived the interview in the dashboard, which takes
+    it out of the primary view
+  - zoom_pwd: password given to both client and candidate in interview confirmation email
