@@ -69,13 +69,13 @@ h1, h2, h3, h4, h5, h6 {
     text-align:center;
 }
 
-.table {
+/* .table {
     border-radius: 5px;
     width: 50%;
     margin: 1000px auto;
     float: center;
     position: fixed;
-}
+} */
 
 .col-centered {
     float: none;
