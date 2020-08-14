@@ -206,7 +206,7 @@ def select_timezone(interview_uuid):
 
     # If candidate has already scheduled the interview
     elif interview.status != InterviewStatus["STARTED"]:
-        flash("You have already selected your availablity for this interview.", "danger")
+        flash("You have already selected your availability for this interview.", "danger")
         return render_template('index.html')
 
     candidate = interview.candidate
@@ -238,7 +238,7 @@ def candidate_scheduler(interview_uuid):
     
     # If candidate has already scheduled the interview
     elif interview.status != InterviewStatus["STARTED"]:
-        flash("You have already selected your availablity for this interview.", "danger")
+        flash("You have already selected your availability for this interview.", "danger")
         return render_template('index.html')
 
     form = CandidateSelectionForm()
@@ -258,9 +258,14 @@ def candidate_scheduler(interview_uuid):
             db.session.commit()
             return redirect(url_for('candidate_success'))
         else:
-            flash("Please select a few time options.", "danger")
+            flash("Please select at least 10 options.", "danger")
 
-    candidate_offset = int(interview.candidate.timezone)
+    candidate_offset = interview.candidate.timezone
+    if not candidate_offset:
+        flash("Please select a timezone before providing us with your availability.", "danger")
+        return redirect(url_for("select_timezone", interview_uuid=interview.uuid))
+
+    candidate_offset = int(candidate_offset)
     headers = (tz_module.get_next_n_day_strs(7, candidate_offset))
     table = (tz_module.get_times_object(interview, INTERVIEW_DAY_OPTIONS))
     return render_template('candidate_scheduler.html', column_headers=headers, table_obj=table, form=form)
@@ -298,7 +303,7 @@ def client_scheduler(interview_uuid):
         
         selected_time_utc = request.form['time_int']
         if selected_time_utc == 'default':
-            flash("Please select a time that you are avaiable to interview.", "danger")
+            flash("Please select a time that you are available to interview.", "danger")
             return redirect(url_for('client_scheduler', interview_uuid=interview.uuid))
 
         selected_time_utc = int(selected_time_utc)

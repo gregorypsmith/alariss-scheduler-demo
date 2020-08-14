@@ -44,7 +44,6 @@ class InterviewForm(FlaskForm):
 
 class SelectTimezoneForm(FlaskForm):
     candidate_timezone = SelectField(label="Client Timezone", choices=[
-        ("None", " --- Please Select a Timezone --- "),
         ('-10', "GMT -10:00"),
         ('-9', "GMT -9:00"),
         ('-8', "GMT -8:00"),

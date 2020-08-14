@@ -11,6 +11,7 @@ class Administrator(UserMixin, db.Model):
 	email=db.Column(db.String(20))
 	password=db.Column(db.String(40))
 
+IS_PRODUCTION = int(os.getenv('IS_PRODUCTION'))
 
 InterviewStatus = {
 	"STARTED": 1,
@@ -55,7 +56,7 @@ class Interview(db.Model):
 	def __repr__(self):
 		return f"Interview between Client {self.client_id} and Candidate {self.candidate_id}"
 
-
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Interview, db.session))
-admin.add_view(ModelView(Administrator, db.session))
+if not IS_PRODUCTION:
+	admin.add_view(ModelView(User, db.session))
+	admin.add_view(ModelView(Interview, db.session))
+	admin.add_view(ModelView(Administrator, db.session))
