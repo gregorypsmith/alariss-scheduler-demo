@@ -49,6 +49,7 @@ def home():
 @login_required
 def admin_dashboard():
     interviews = Interview.query.all()
+    interviews.reverse()
     
     return render_template('dashboard.html', interviews=interviews)
 
