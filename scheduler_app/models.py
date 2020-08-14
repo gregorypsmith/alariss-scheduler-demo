@@ -3,7 +3,6 @@ from datetime import datetime
 from scheduler_app import db, admin, mail
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin
-import uuid
 
 class Administrator(UserMixin, db.Model):
 	__tablename__ = 'administrator'
@@ -37,7 +36,7 @@ class User(db.Model):
 class Interview(db.Model):
 	__tablename__ = 'interview'
 	id = db.Column(db.Integer, primary_key=True)
-	uuid = db.Column(db.String(50), default=str(uuid.uuid4()))
+	uuid = db.Column(db.String(50), nullable=False)
 	candidate_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 	client_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 	candidate = db.relationship("User", foreign_keys=candidate_id, backref='as_interviewee')

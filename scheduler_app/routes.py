@@ -10,7 +10,7 @@ import scheduler_app.email_module as mail_module
 import scheduler_app.zoom_module as zoom_module
 import scheduler_app.dashboard_module as dashboard_module
 
-import os, json
+import os, json, uuid
 from datetime import datetime, timezone, timedelta
 INTERVIEW_DAY_OPTIONS = 7
 
@@ -106,6 +106,7 @@ def create_interview():
 
         # Create new interview    
         interview = Interview(
+            uuid=str(uuid.uuid4()),
             candidate_id=cand.id,
             client_id=client.id,
             company_name = client_company,
