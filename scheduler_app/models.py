@@ -49,6 +49,7 @@ class Interview(db.Model):
 	last_updated_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 	status = db.Column(db.Integer, default=InterviewStatus["STARTED"], nullable=False)
 	zoom_link = db.Column(db.String(1000))
+	archived = db.Column(db.Boolean, default=False)
 
 
 	def __repr__(self):

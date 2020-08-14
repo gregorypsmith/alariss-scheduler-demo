@@ -25,9 +25,9 @@ def utility_processor():
         if is_ts:
             if dt:
                 dt = datetime.fromtimestamp(int(dt), tz=timezone.utc)
-                dt -= timedelta(hours=7)
             else:
                 return "Not Confirmed"
+        dt -= timedelta(hours=7)
         return dt.strftime("%Y-%m-%d %H:%M:%S PST")
 
     return dict(parse_interview_status=parse_interview_status, return_str_datetime=return_str_datetime)
@@ -48,10 +48,13 @@ def home():
 @app.route("/administrator/dashboard")
 @login_required
 def admin_dashboard():
-    interviews = Interview.query.all()
-    interviews.sort(key=lambda interview: interview.last_updated_time,reverse=True)
+    active_interviews = Interview.query.filter_by(archived=False).all()
+    active_interviews.sort(key=lambda interview: interview.last_updated_time,reverse=True)
 
-    return render_template('dashboard.html', interviews=interviews)
+    archived_interviews = Interview.query.filter_by(archived=True).all()
+    archived_interviews.sort(key=lambda interview: interview.last_updated_time,reverse=True)
+
+    return render_template('dashboard.html', active_interviews=active_interviews, archived_interviews=archived_interviews)
 
 
 # need flask-login to authenticate
@@ -125,7 +128,7 @@ def create_interview():
 
     return render_template('admin_page.html', form=form)
 
-@app.route("/interviews/<int:interview_id>/cancel", methods=['GET', 'POST'])
+@app.route("/interviews/<int:interview_id>/cancel", methods=["GET"])
 @login_required
 def cancel_interview(interview_id):
     interview = Interview.query.filter_by(id=interview_id).first()
@@ -140,6 +143,26 @@ def cancel_interview(interview_id):
             flash("This interview is already cancelled", "danger")
     else:
         flash("This interview cannot be found", "danger")
+    return redirect(url_for("admin_dashboard"))
+
+
+@app.route("/interviews/<int:interview_id>/archive", methods=['GET'])
+@login_required
+def archive_interview(interview_id):
+    interview = Interview.query.filter_by(id=interview_id).first()
+    if interview:
+        if interview.status not in [InterviewStatus["CLIENT_CF"], InterviewStatus["CANCELLED"]]:
+            flash("This interview is still in progress. You have to wait until the process in finished, or cancel the interview first.", "danger")
+        else:
+            if not interview.archived:
+                interview.archived = True
+                interview.last_updated_time = datetime.utcnow()
+                db.session.commit()
+                flash("Successfully archived interview.", "success")
+            else:
+                flash("The interview is already archived.", "danger")
+    else:
+        flash("This interview cannot be found.", "danger")
     return redirect(url_for("admin_dashboard"))
 
 
