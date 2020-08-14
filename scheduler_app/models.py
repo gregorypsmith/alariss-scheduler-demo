@@ -50,8 +50,8 @@ class Interview(db.Model):
 	status = db.Column(db.Integer, default=InterviewStatus["STARTED"], nullable=False)
 	zoom_link = db.Column(db.String(1000))
 	archived = db.Column(db.Boolean, default=False)
-
-
+	zoom_pwd = db.Column(db.String(10))
+  
 	def __repr__(self):
 		return f"Interview between Client {self.client_id} and Candidate {self.candidate_id}"
 
