@@ -54,7 +54,7 @@ def send_client_scheduler_email(interview, url):
     mail.send(msg)
 
 # email to client to confirm time / Zoom link
-def send_client_confirmation_email(interview, zoom_url, interview_datetime_client):
+def send_client_confirmation_email(interview, zoom_info, interview_datetime_client):
     candidate_full_name = interview.candidate.first_name + ' ' + interview.candidate.last_name
     msg = Message('Confirmed: Interview with ' + candidate_full_name + ' on ' + interview_datetime_client,
     sender=scheduler_email,
@@ -63,13 +63,14 @@ def send_client_confirmation_email(interview, zoom_url, interview_datetime_clien
     msg.body += 'Thank you for your selection! Your interview with ' + candidate_full_name + ' for the ' + interview.position_name + ' has been scheduled and the candidate has been notified of your selection.\n\n'
     msg.body += 'The interview has been scheduled for ' + interview_datetime_client + '.\n\n'
     msg.body += 'When it is time for the interview, click this Zoom link to meet:\n\n'
-    msg.body += zoom_url + '\n\n'
+    msg.body += zoom_info[0] + '\n'
+    msg.body += f"Use this password: {zoom_info[1]} \n\n"
     msg.body += 'Best wishes and good luck,\n'
     msg.body += 'The Alariss Global Team'
     mail.send(msg)
 
 # email to candidate with client's confirmed time / Zoom link
-def send_candidate_confirmation_email(interview, zoom_url, interview_datetime_candidate):
+def send_candidate_confirmation_email(interview, zoom_info, interview_datetime_candidate):
     client_full_name = interview.client.first_name + ' ' + interview.client.last_name
     msg = Message('Confirmed: Interview with ' + client_full_name + ' of ' + interview.company_name + ' on ' + interview_datetime_candidate,
     sender=scheduler_email,
@@ -78,8 +79,8 @@ def send_candidate_confirmation_email(interview, zoom_url, interview_datetime_ca
     msg.body += 'Great news! ' + client_full_name + ' has selected a time to interview you for the ' + interview.position_name + ' position.\n\n'
     msg.body += 'The interview has been scheduled for ' + interview_datetime_candidate + '.\n\n'
     msg.body += 'When it is time for the interview, click this Zoom link to meet:\n\n'
-    msg.body += zoom_url + '\n\n'
-    msg.body += 'Best wishes and good luck,\n'
+    msg.body += zoom_info[0] + '\n'
+    msg.body += f"Use this password: {zoom_info[1]} \n\n"
     msg.body += 'The Alariss Global Team'
     mail.send(msg)
 
