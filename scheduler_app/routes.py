@@ -125,6 +125,7 @@ def create_interview():
 
     return render_template('admin_page.html', form=form)
 
+
 @app.route("/interviews/<int:interview_id>/cancel", methods=['GET', 'POST'])
 @login_required
 def cancel_interview(interview_id):
@@ -288,12 +289,13 @@ def client_scheduler(interview_uuid):
         cand_time_str = tz_module.get_date_in_tz(selected_time_utc, int(interview.candidate.timezone))
 
         # send confirmation email to both with link
-        zoom_url = zoom_module.create_zoom_room(interview)
-        interview.zoom_link = zoom_url
+        zoom_info = zoom_module.create_zoom_room(interview)
+        interview.zoom_link = zoom_info[0]
+        interview.zoom_pwd = zoom_info[1]
         db.session.commit()
 
-        mail_module.send_client_confirmation_email(interview, zoom_url, client_time_str)
-        mail_module.send_candidate_confirmation_email(interview, zoom_url, cand_time_str)
+        mail_module.send_client_confirmation_email(interview, zoom_info, client_time_str)
+        mail_module.send_candidate_confirmation_email(interview, zoom_info, cand_time_str)
 
         return redirect(url_for("client_success"))
 
