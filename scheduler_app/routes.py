@@ -21,16 +21,16 @@ def utility_processor():
         return [status for status, key in InterviewStatus.items() if key == input_key][0]
 
     
-    def return_interview_datetime(ts):
-        print(ts)
-        if ts:
-            d = datetime.fromtimestamp(int(ts), tz=timezone.utc)
-            d -= timedelta(hours=7)
-            return d.strftime("%Y-%m-%d %H:%M:%S PST")
-        else:
-            return "Not Confirmed"
+    def return_str_datetime(dt, is_ts=False):
+        if is_ts:
+            if dt:
+                dt = datetime.fromtimestamp(int(dt), tz=timezone.utc)
+                dt -= timedelta(hours=7)
+            else:
+                return "Not Confirmed"
+        return dt.strftime("%Y-%m-%d %H:%M:%S PST")
 
-    return dict(parse_interview_status=parse_interview_status, return_interview_datetime=return_interview_datetime)
+    return dict(parse_interview_status=parse_interview_status, return_str_datetime=return_str_datetime)
 
 
 @login_manager.user_loader
@@ -49,7 +49,8 @@ def home():
 @login_required
 def admin_dashboard():
     interviews = Interview.query.all()
-    
+    interviews.sort(key=lambda interview: interview.last_updated_time,reverse=True)
+
     return render_template('dashboard.html', interviews=interviews)
 
 

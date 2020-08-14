@@ -6,8 +6,9 @@
     <table class="table table-bordered" style="font-size: 0.9em;">
       <thead>
         <tr>
-          <th scope="col">Internal ID</th>
-          <th scope="col">External ID</th>
+          <th scope="col">Int ID</th>
+          <th scope="col">Ext ID</th>
+          <th scope="col">Last Updated Time</th>
           <th scope="col">Candidate's Name</th>
           <th scope="col">Candidate's Email</th>
           <th scope="col">Client's Name</th>
@@ -16,7 +17,8 @@
           <th scope="col">Company</th>
           <th scope="col">Status</th>
           <th scope="col">Interview Time</th>
-          <th scope="col">Zoom Link</th>
+          <th scope="col">Zoom Meeting</th>
+          <th scope="col">Meeting Password</th>
           <th scope="col">Actions</th>
         </tr>
       </thead>
@@ -25,6 +27,7 @@
           <tr>
             <th>{{ interview.id }}</th>
             <td>{{ interview.uuid }}</td>
+            <td>{{ return_str_datetime(interview.last_updated_time) }}</td>
             <td>{{ interview.candidate.first_name }} {{interview.candidate.last_name }}</td>
             <td>{{ interview.candidate.email }}</td>
             <td>{{ interview.client.first_name }} {{interview.client.last_name }}</td>
@@ -32,8 +35,13 @@
             <td>{{ interview.position_name }}</td>
             <td>{{ interview.company_name }}</td>
             <td>{{ parse_interview_status(interview.status) }}</td>
-            <td>{{ return_interview_datetime(interview.client_selection) }}</td>
-            <td>{{ interview.zoom_link }}</td>
+            <td>{{ return_str_datetime(interview.client_selection, is_ts=True) }}</td>
+            <td>
+              {% if interview.zoom_link %}
+                <a href="{{ interview.zoom_link }}" target="_blank" rel="noopener noreferrer">Link</a>
+              {% endif %}
+            </td>
+            <td>{{ interview.zoom_pwd }}</td>
             <td><a href="{{url_for('cancel_interview', interview_id=interview.id)}}">Cancel</a></td>
           </tr>
         {% endfor %}
