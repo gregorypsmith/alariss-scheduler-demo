@@ -48,7 +48,7 @@ def time_in_tz_str(utc_time, tz_hour_offset):
 # get the utc timestamp of midnight tomorrow in a given timezone offset
 def get_tomorrow_midnight_cand_tz(candidate_offset):
 	today_utc = datetime.datetime.today()
-	tmrw_utc = today_utc + timedelta(days=2)
+	tmrw_utc = today_utc + timedelta(days=0)
 	tmrw_utc_midnight = datetime.datetime(tmrw_utc.year, tmrw_utc.month, tmrw_utc.day)
 	tmrw_tz_midnight = tmrw_utc_midnight + timedelta(hours=candidate_offset)
 	midnight_tz_int = tmrw_tz_midnight.timestamp()
@@ -179,8 +179,8 @@ def get_all_times_on_day(target_day_str, times_list, offset):
 def list_comparator(list):
 	return int(list[0])
 
-#this is where we filter out the fucked days for the candidate
-def filter_fucked_days(cand_offset, n, times_list):
+#this is where we filter out the bad days for the candidate
+def filter_bad_days(cand_offset, n, times_list):
 	#string giving date for frontend column purposes 
 	the_n_days = get_next_n_day_strs(n, cand_offset)
 	colList = [] 
@@ -204,8 +204,8 @@ def get_acceptable_utc_times(client_offset, candidate_offset, start_utc, n_days_
 		if time_acceptable(hour, client_offset) and time_acceptable(hour, candidate_offset):
 			acceptable_times_list.append(hour)
 
-	with_fucked_days_removed = filter_fucked_days(candidate_offset, n_days_out, acceptable_times_list)
-	return with_fucked_days_removed
+	with_bad_days_removed = filter_bad_days(candidate_offset, n_days_out, acceptable_times_list)
+	return with_bad_days_removed
 
 # # Test case 1: Client -3, cand 0, expect 9am-7pm
 # midnight_tmrw_est = get_tomorrow_midnight_cand_tz(-5)

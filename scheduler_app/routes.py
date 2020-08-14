@@ -8,7 +8,6 @@ from scheduler_app.forms import InterviewForm, SelectTimezoneForm, CandidateSele
 import scheduler_app.timezone_module as tz_module
 import scheduler_app.email_module as mail_module
 import scheduler_app.zoom_module as zoom_module
-import scheduler_app.dashboard_module as dashboard_module
 
 import os, json, uuid
 from datetime import datetime, timezone, timedelta
