@@ -1,6 +1,6 @@
 from scheduler_app import db
 from scheduler_app.models import User, Interview, Administrator
-import os
+import os, uuid
 
 
 def get_interview_test():
@@ -30,6 +30,7 @@ def get_interview_test():
 	db.session.commit()
 
 	test_interview = Interview(
+		uuid=str(uuid.uuid4()),
 		candidate=test_candidate,
 		client=test_client_1,
 		company_name="Alariss",
@@ -37,6 +38,7 @@ def get_interview_test():
 	)
 
 	test_interview_2 = Interview(
+		uuid=str(uuid.uuid4()),
 		candidate=test_candidate,
 		client=test_client_2,
 		company_name="Alariss",
