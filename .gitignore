@@ -1,9 +1,0 @@
-bin
-include
-lib
-Scripts
-tcl
-pyvenv.cfg
-.env
-scheduler_app/__pycache__
-.vscode
