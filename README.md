@@ -1,14 +1,5 @@
 # Interview Scheduler for Clients and Candidates of Alariss
 
-CAUTION NOTES: Database 
-We are currently using a SqlLite Database. This was chosen due to time constraints and 
-for ease of development. Ech time you push to the master branch you will overwrite the 
-existing entries in the database. Consequently, switching to a better database system 
-would be a massive improvemtn. Moreover you need to take care to record the contents 
-of the remote database(accessible throught the admin dashboard) prior to making any 
-pushes to the master branch. This is a major design flaw, however it is known and
-deliberate due to the constraints under which the app was initially developed.
-
 How to set up a local environment
 
 1. Clone the alariss-scheduler Github repository on your local machine.
